@@ -20,8 +20,19 @@ class Pdf:
             self.text = self.text + " " + page.extractText()
         opened_file.close()
 
-    def get_text(self):
-        return self.text
+
+    def get_text_in_paragraph(self):
+        array_of_strings = self.text.split(" ")
+        result = ""
+        line = ""
+
+        for string in array_of_strings:
+            line = line + " " + string
+            if len(line) > 100:
+                result = result + line + "\n"
+                line = ""
+        result = result + line
+        return result.strip(" ")
 
     @staticmethod
     def is_file_a_pdf(file_path):
