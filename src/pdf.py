@@ -24,5 +24,6 @@ class Pdf:
         return self.text
 
     @staticmethod
-    def is_path_correct(file_path):
-        return True
+    def is_file_a_pdf(file_path):
+        return file_path[-4: len(file_path)] == ".pdf"
+
