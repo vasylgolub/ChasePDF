@@ -32,8 +32,11 @@ class Pdf:
         opened_file.close()
 
 
-    def get_text_in_paragraph(self):
-        array_of_strings = self.text.split(" ")
+    def get_text_in_paragraph_style(self, txt=None):
+        if txt is None:
+            txt = self.text
+
+        array_of_strings = txt.split(" ")
         result = ""
         line = ""
 
@@ -49,3 +52,7 @@ class Pdf:
     def is_file_a_pdf(file_path):
         return file_path[-4: len(file_path)] == ".pdf"
 
+    @staticmethod
+    def highlight_a_word_in_text(text, word):
+        colored_word = "{}" + f"{word}" + "{}"
+        return text.replace(word, colored_word.format(Fore.BLUE, Fore.RESET))
