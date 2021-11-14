@@ -48,6 +48,11 @@ class Pdf:
         result = result + line
         return result.strip(" ")
 
+    def get_document_header(self):
+        till_desired_position = self.text.find("CHECKING SUMMARY")
+        top_of_document = self.text[:till_desired_position]
+        return self.get_text_in_paragraph_style(top_of_document)
+
     @staticmethod
     def is_file_a_pdf(file_path):
         return file_path[-4: len(file_path)] == ".pdf"
