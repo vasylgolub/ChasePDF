@@ -1,10 +1,21 @@
 from PyPDF2 import PdfFileReader
+from colorama import Fore
 
 
 class Pdf:
     def __init__(self, pdf_file_path):
         # let's save the path just in case
         self.file_path = pdf_file_path
+
+        # The chase statement pdf document is broken down into these sections, called:
+        self.document_sections = ["CHECKING SUMMARY",
+                                  "DEPOSITS AND ADDITIONS",
+                                  "ATM & DEBIT CARD WITHDRAWALS",
+                                  "ATM & DEBIT CARD SUMMARY",
+                                  "ELECTRONIC WITHDRAWAL",
+                                  "FEES",
+                                  "DAILY ENDING BALANCE",
+                                  "SERVICE CHARGE SUMMARY"]
 
         opened_file = open(pdf_file_path, 'rb')
         read_pdf_file = PdfFileReader(opened_file)
