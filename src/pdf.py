@@ -53,6 +53,12 @@ class Pdf:
         top_of_document = self.text[:till_desired_position]
         return self.get_text_in_paragraph_style(top_of_document)
 
+    def get_text_with_sections_highlighted(self):
+        new_text = self.text
+        for each in self.document_sections:
+            new_text = self.highlight_a_word_in_text(new_text, each)
+        return new_text
+
     @staticmethod
     def is_file_a_pdf(file_path):
         return file_path[-4: len(file_path)] == ".pdf"
