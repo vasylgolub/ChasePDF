@@ -46,7 +46,10 @@ class Pdf:
             if len(line) > 100:
                 result = result + line + "\n"
                 line = ""
+
+        # Add the remaining text that wasn't added in the loop
         result = result + line
+
         return result.strip(" ")
 
     def get_document_header_text(self):
@@ -57,11 +60,13 @@ class Pdf:
     def get_text_with_sections_highlighted(self, text=None, words_to_highlight=None):
         if text is None:
             text = self.text
+
         if words_to_highlight is None:
             words_to_highlight = self.document_sections
+
         new_text = text
-        for each in words_to_highlight:
-            new_text = self.highlight_a_word_in_text(new_text, each)
+        for word in words_to_highlight:
+            new_text = self.highlight_a_word_in_text(new_text, word)
         return new_text
 
     def get_text_of_desired_section(self, name_of_the_section):
@@ -88,5 +93,5 @@ class Pdf:
 
     @staticmethod
     def highlight_a_word_in_text(text, word):
-        colored_word = "{}" + f"{word}" + "{}"
-        return text.replace(word, colored_word.format(Fore.BLUE, Fore.RESET))
+        word_to_be_highlighted = "{}" + f"{word}" + "{}"
+        return text.replace(word, word_to_be_highlighted.format(Fore.BLUE, Fore.RESET))
