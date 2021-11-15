@@ -63,7 +63,15 @@ class Pdf:
             new_text = self.highlight_a_word_in_text(new_text, each)
         return new_text
 
-
+    def get_text_of_desired_section(self, name_of_the_section):
+        start = self.text.find(name_of_the_section)
+        if name_of_the_section == self.document_sections[-1]:
+            length_of_text = len(self.text)
+            return self.text[start: length_of_text]
+        index_of_next_section = self.document_sections.index(name_of_the_section) + 1
+        next_section_name = self.document_sections[index_of_next_section]
+        end = self.text.find(next_section_name)
+        return self.text[start: end]
 
     def get_count_of_occurrences(self, target_str, text=None):
         if text is None:
