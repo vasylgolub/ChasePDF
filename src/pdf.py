@@ -62,18 +62,9 @@ class Pdf:
 
 
     def get_count_of_occurrences(self, target_str, text=None):
-        count = 0
-        len_of_str = len(target_str)
         if text is None:
             text = self.text
-        len_of_text = len(text)
-
-        for i in range(0, len_of_text):
-            four_characters = text[i: i + len_of_str]
-            if four_characters == target_str:
-                count += 1
-
-        return count
+        return text.count(target_str)
 
 
     @staticmethod
