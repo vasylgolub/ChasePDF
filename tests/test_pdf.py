@@ -22,3 +22,21 @@ def test_if_all_sections_are_present_in_the_document():
         is_it_present_in_text = my_pdf.text.find(each) != -1
         result = result and is_it_present_in_text
     assert result
+
+
+def test_count_of_occurrences():
+    test_text = "This is a text for testing. text for testing"
+    result = my_pdf.get_count_of_occurrences("text", test_text)
+    assert result == 2
+
+    test_text = "textThis is a text for testing. text for testing"
+    result = my_pdf.get_count_of_occurrences("text", test_text)
+    assert result == 3
+
+    test_text = "texttexttext"
+    result = my_pdf.get_count_of_occurrences("text", test_text)
+    assert result == 3
+
+    test_text = "adfadfad"
+    result = my_pdf.get_count_of_occurrences("text", test_text)
+    assert result == 0
