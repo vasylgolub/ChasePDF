@@ -7,7 +7,8 @@ class Pdf:
         # let's save the path just in case
         self.file_path = pdf_file_path
 
-        # The chase statement pdf document is broken down into these sections, called:
+        # The chase statement pdf document is broken down into these sections.
+        # The header is not included.
         self.document_sections = ["CHECKING SUMMARY",
                                   "DEPOSITS AND ADDITIONS",
                                   "ATM & DEBIT CARD WITHDRAWALS",
@@ -48,10 +49,10 @@ class Pdf:
         result = result + line
         return result.strip(" ")
 
-    def get_document_header(self):
+    def get_document_header_text(self):
         till_desired_position = self.text.find("CHECKING SUMMARY")
         top_of_document = self.text[:till_desired_position]
-        return self.get_text_in_paragraph_style(top_of_document)
+        return top_of_document
 
     def get_text_with_sections_highlighted(self, text=None, words_to_highlight=None):
         if text is None:
