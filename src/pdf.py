@@ -53,9 +53,13 @@ class Pdf:
         top_of_document = self.text[:till_desired_position]
         return self.get_text_in_paragraph_style(top_of_document)
 
-    def get_text_with_sections_highlighted(self):
-        new_text = self.text
-        for each in self.document_sections:
+    def get_text_with_sections_highlighted(self, text=None, words_to_highlight=None):
+        if text is None:
+            text = self.text
+        if words_to_highlight is None:
+            words_to_highlight = self.document_sections
+        new_text = text
+        for each in words_to_highlight:
             new_text = self.highlight_a_word_in_text(new_text, each)
         return new_text
 
