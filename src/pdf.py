@@ -78,6 +78,8 @@ class Pdf:
             text = self.text
         return text.count(target_str)
 
+    def get_text_to_show_what_sections_are(self):
+        return self.get_text_with_sections_highlighted(self.get_text_in_paragraph_style(self.text))
 
     @staticmethod
     def is_file_a_pdf(file_path):
