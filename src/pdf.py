@@ -7,7 +7,8 @@ class Pdf:
         # let's save the path just in case
         self.file_path = pdf_file_path
 
-        # The chase statement pdf document is broken down into these sections, called:
+        # The chase statement pdf document is broken down into these sections.
+        # The header is not included.
         self.document_sections = ["CHECKING SUMMARY",
                                   "DEPOSITS AND ADDITIONS",
                                   "ATM & DEBIT CARD WITHDRAWALS",
@@ -48,16 +49,38 @@ class Pdf:
         result = result + line
         return result.strip(" ")
 
-    def get_document_header(self):
+    def get_document_header_text(self):
         till_desired_position = self.text.find("CHECKING SUMMARY")
         top_of_document = self.text[:till_desired_position]
-        return self.get_text_in_paragraph_style(top_of_document)
+        return top_of_document
 
-    def get_text_with_sections_highlighted(self):
-        new_text = self.text
-        for each in self.document_sections:
+    def get_text_with_sections_highlighted(self, text=None, words_to_highlight=None):
+        if text is None:
+            text = self.text
+        if words_to_highlight is None:
+            words_to_highlight = self.document_sections
+        new_text = text
+        for each in words_to_highlight:
             new_text = self.highlight_a_word_in_text(new_text, each)
         return new_text
+
+    def get_text_of_desired_section(self, name_of_the_section):
+        start = self.text.find(name_of_the_section)
+        if name_of_the_section == self.document_sections[-1]:
+            length_of_text = len(self.text)
+            return self.text[start: length_of_text]
+        index_of_next_section = self.document_sections.index(name_of_the_section) + 1
+        next_section_name = self.document_sections[index_of_next_section]
+        end = self.text.find(next_section_name)
+        return self.text[start: end]
+
+    def get_count_of_occurrences(self, target_str, text=None):
+        if text is None:
+            text = self.text
+        return text.count(target_str)
+
+    def get_text_to_show_what_sections_are(self):
+        return self.get_text_with_sections_highlighted(self.get_text_in_paragraph_style(self.text))
 
     @staticmethod
     def is_file_a_pdf(file_path):
