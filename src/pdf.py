@@ -59,6 +59,23 @@ class Pdf:
             new_text = self.highlight_a_word_in_text(new_text, each)
         return new_text
 
+
+
+    def get_count_of_occurrences(self, target_str, text=None):
+        count = 0
+        len_of_str = len(target_str)
+        if text is None:
+            text = self.text
+        len_of_text = len(text)
+
+        for i in range(0, len_of_text):
+            four_characters = text[i: i + len_of_str]
+            if four_characters == target_str:
+                count += 1
+
+        return count
+
+
     @staticmethod
     def is_file_a_pdf(file_path):
         return file_path[-4: len(file_path)] == ".pdf"
