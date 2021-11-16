@@ -12,3 +12,11 @@ class ListOfFiles:
             self.path_to_folder = "IT'S NOT DIRECTORY"
         else:
             self.list_of_files = os.listdir(path_to_folder)
+        self.remove_non_pdf_files()
+
+
+    def remove_non_pdf_files(self):
+        self.list_of_files = [each_file
+                              for each_file in self.list_of_files
+                              if ".pdf" in each_file]
+
