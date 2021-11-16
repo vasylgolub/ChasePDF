@@ -1,7 +1,9 @@
 from src.pdf import Pdf
+from src.file_path import ListOfFiles
 
 file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
 my_pdf = Pdf(file_path)
+my_list_of_files = FileList("")
 
 
 def test_is_path_correct():
@@ -62,3 +64,18 @@ def test_count_of_occurrences():
     test_text = "adfadfad"
     result = my_pdf.get_count_of_occurrences("text", test_text)
     assert result == 0
+
+
+#--------------------------------------------------------------------------------------------------------------
+def test_get_sorted_list_of_files():
+    list_of_files = ['20200430-statements-7190-.pdf',
+                     '20200529-statements-7190-.pdf',
+                     '20200131-statements-7190-.pdf',
+                     '20200930-statements-7190-.pdf']
+    expected_list_of_files = ['20200131-statements-7190-.pdf',
+                              '20200430-statements-7190-.pdf',
+                              '20200529-statements-7190-.pdf',
+                              '20200930-statements-7190-.pdf']
+
+    print(my_list_of_files.get_sorted_list_based_on_month(list_of_files))
+    assert my_list_of_files.get_sorted_list_based_on_month(list_of_files) == expected_list_of_files
