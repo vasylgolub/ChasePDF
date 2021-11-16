@@ -20,6 +20,12 @@ class ListOfFiles:
                               for each_file in self.list_of_files
                               if ".pdf" in each_file]
 
+    def get_list_of_files_with_full_path(self):
+        result_list = []
+        for each in self.list_of_files:
+            result_list.append(os.path.join(self.path_to_folder, each))
+        return result_list
+
     def get_sorted_list_based_on_month(self, list_to_sort=None):
         if list_to_sort is None:
             return sorted(self.list_of_files, key=lambda x: x[4:])
