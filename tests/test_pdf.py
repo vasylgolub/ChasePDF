@@ -1,9 +1,9 @@
 from src.pdf import Pdf
-from src.file_path import ListOfFiles
+from src.list_of_files_from_directory import ListOfFilesFromDirectory
 
 file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
 my_pdf = Pdf(file_path)
-my_list_of_files = FileList("")
+my_list_of_files = ListOfFilesFromDirectory("")
 
 
 def test_is_path_correct():

@@ -1,7 +1,7 @@
 import os
 
 
-class ListOfFiles:
+class ListOfFilesFromDirectory:
     def __init__(self, path_to_folder):
         self.list_of_files = []
         if os.path.exists(path_to_folder):
