@@ -31,10 +31,11 @@ class Pdf:
             page = read_pdf_file.getPage(i)
             # extracting text from page
             self.text = self.text + " " + page.extractText()
+        self.text_length = len(self.text)
         opened_file.close()
 
 
-    def get_wrapped_text(self, txt=None, lines=100):
+    def get_wrapped_text(self, lines=100, txt=None):
         if txt is None:
             txt = self.text
         return textwrap.fill(txt, lines)
@@ -44,17 +45,23 @@ class Pdf:
         top_of_document = self.text[:till_desired_position]
         return top_of_document
 
-    def get_text_with_sections_highlighted(self, text=None, words_to_highlight=None):
+# ------------------------------------highlighting-----------------------------------------------------------
+    def get_text_with_sections_highlighted(self, text=None, sections_to_highlight=None):
+        # Default text value is class' text variable: self.text
         if text is None:
             text = self.text
+        whole_text = text
+        if sections_to_highlight is None:
+            sections_to_highlight = self.document_sections
+        for word in sections_to_highlight:
+            whole_text = self.highlight_a_word_in_text(whole_text, word)
+        return whole_text
 
-        if words_to_highlight is None:
-            words_to_highlight = self.document_sections
 
-        new_text = text
-        for word in words_to_highlight:
-            new_text = self.highlight_a_word_in_text(new_text, word)
-        return new_text
+    @staticmethod
+    def highlight_a_word_in_text(text, word):
+        return text.replace(word, f"{Fore.BLUE}{word}{Fore.RESET}")
+# ------------------------------------------------------------------------------------------------------
 
     @staticmethod
     def get_sides_of_text(whole_text, middle_text):
@@ -77,7 +84,7 @@ class Pdf:
         return text.count(target_str)
 
     def get_text_to_show_what_sections_are(self):
-        return self.get_text_with_sections_highlighted(self.get_text_in_paragraph_style(self.text))
+        return self.get_text_with_sections_highlighted(self.get_wrapped_text(self.text))
 
     @staticmethod
     def is_file_a_pdf(file_path):
