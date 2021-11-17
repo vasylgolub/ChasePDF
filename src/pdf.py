@@ -56,7 +56,12 @@ class Pdf:
             new_text = self.highlight_a_word_in_text(new_text, word)
         return new_text
 
-    def get_text_of_desired_section(self, name_of_the_section):
+    @staticmethod
+    def get_sides_of_text(whole_text, middle_text):
+        index = whole_text.find(middle_text)
+        return whole_text[:index], whole_text[index + len(middle_text):]
+
+    def get_desired_section(self, name_of_the_section):
         start = self.text.find(name_of_the_section)
         if name_of_the_section == self.document_sections[-1]:
             length_of_text = len(self.text)
