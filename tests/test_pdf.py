@@ -10,20 +10,33 @@ def test_is_path_correct():
     assert Pdf.is_file_a_pdf(file_path) is True
 
 
-def test_if_the_paragraph_doesnt_loose_any_chars_when_selecting_sections():
+def test_if_the_paragraph_doesnt_loose_any_chars_when_selecting_the_header():
     original_text = my_pdf.text
-    result = my_pdf.get_document_header_text()
+    result = my_pdf.get_header_text()
     for i in my_pdf.document_sections:
         result += my_pdf.get_desired_section(i)
     assert original_text == result
 
 
+# Instead of comparing text to text, we just compare
+# the length size of original text with the sum of
+# text of each section extracted from the original text.
+# This is just to see if extraction is accurate.
+def test_if_extraction_is_accurate():
+    whole_text_len = len(my_pdf.text)
+
+    # We start by adding header's text length
+    all_sections_len = len(my_pdf.get_header_text())
+
+    # length of other sections put together
+    for each in my_pdf.document_sections:
+        section = my_pdf.get_desired_section(each)
+        all_sections_len += len(section)
+
+    assert whole_text_len == all_sections_len
+
+
 def test_if_returns_desired_text_for_count_of_occurrences():
-    test_text = "Number: 000000253227190CUSTOMER SERVICE INFORMATIONWeb site:Chase.comService " \
-           "Center:1-800-242-7338Deaf and Hard of Hearing:1-800-242-7383Para Espanol:1-888-622-4273International " \
-           "Calls:1-713-262-1679CHECKING SUMMARY Chase Total Business CheckingINSTANCESAMOUNTBeginning " \
-           "Balance$7,501.88Deposits and Additions114,462.51ATM & Debit Card Withdrawals134-6,896.00Electronic " \
-           "Withdrawals5-657.61Fees4-21.10Ending Balance154$4,389.68DEPOSITS AND ADDITIONSDATEDESCRIPTIONAM"
     result = my_pdf.get_desired_section("CHECKING SUMMARY")
     expected_result = "CHECKING SUMMARY Chase Total Business CheckingINSTANCESAMOUNTBeginning " \
                       "Balance$7,501.88Deposits and Additions114,462.51ATM & Debit " \
@@ -61,10 +74,8 @@ def test_count_of_occurrences():
 
 def test_split_text_in_three():
     text = "this is a test text"
-    expected_left = "this is a "
-    expected_right = " text"
     left, right = my_pdf.get_sides_of_text(text, "test")
-    assert text == expected_left + "test" + expected_right
+    assert text == left + "test" + right
 
 
 #--------------------------------------------------------------------------------------------------------------
