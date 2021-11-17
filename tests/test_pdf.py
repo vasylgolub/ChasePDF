@@ -14,7 +14,7 @@ def test_if_the_paragraph_doesnt_loose_any_chars_when_selecting_sections():
     original_text = my_pdf.text
     result = my_pdf.get_document_header_text()
     for i in my_pdf.document_sections:
-        result += my_pdf.get_text_of_desired_section(i)
+        result += my_pdf.get_desired_section(i)
     assert original_text == result
 
 
@@ -24,7 +24,7 @@ def test_if_returns_desired_text_for_count_of_occurrences():
            "Calls:1-713-262-1679CHECKING SUMMARY Chase Total Business CheckingINSTANCESAMOUNTBeginning " \
            "Balance$7,501.88Deposits and Additions114,462.51ATM & Debit Card Withdrawals134-6,896.00Electronic " \
            "Withdrawals5-657.61Fees4-21.10Ending Balance154$4,389.68DEPOSITS AND ADDITIONSDATEDESCRIPTIONAM"
-    result = my_pdf.get_text_of_desired_section("CHECKING SUMMARY")
+    result = my_pdf.get_desired_section("CHECKING SUMMARY")
     expected_result = "CHECKING SUMMARY Chase Total Business CheckingINSTANCESAMOUNTBeginning " \
                       "Balance$7,501.88Deposits and Additions114,462.51ATM & Debit " \
                       "Card Withdrawals134-6,896.00Electronic " \
@@ -57,6 +57,14 @@ def test_count_of_occurrences():
     test_text = "adfadfad"
     result = my_pdf.get_count_of_occurrences("text", test_text)
     assert result == 0
+
+
+def test_split_text_in_three():
+    text = "this is a test text"
+    expected_left = "this is a "
+    expected_right = " text"
+    left, right = my_pdf.get_sides_of_text(text, "test")
+    assert text == expected_left + "test" + expected_right
 
 
 #--------------------------------------------------------------------------------------------------------------
