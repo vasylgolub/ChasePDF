@@ -8,17 +8,6 @@ class Pdf:
         # let's save the path just in case
         self.file_path = pdf_file_path
 
-        # The chase statement pdf document is broken down into these sections.
-        # The header is not included.
-        self.document_sections = ["CHECKING SUMMARY",
-                                  "DEPOSITS AND ADDITIONS",
-                                  "ATM & DEBIT CARD WITHDRAWALS",
-                                  "ATM & DEBIT CARD SUMMARY",
-                                  "ELECTRONIC WITHDRAWAL",
-                                  "FEES",
-                                  "DAILY ENDING BALANCE",
-                                  "SERVICE CHARGE SUMMARY"]
-
         opened_file = open(pdf_file_path, 'rb')
         read_pdf_file = PdfFileReader(opened_file)
         if read_pdf_file.isEncrypted:
@@ -34,6 +23,24 @@ class Pdf:
         self.text_length = len(self.text)
         opened_file.close()
 
+        # The chase statement pdf document is broken down into these sections.
+        # The header is not included.
+        self.document_sections = ["CHECKING SUMMARY",
+                                  "DEPOSITS AND ADDITIONS",
+                                  "CHECKS PAID",
+                                  "ATM & DEBIT CARD WITHDRAWALS",
+                                  "ATM & DEBIT CARD SUMMARY",
+                                  "ELECTRONIC WITHDRAWAL",
+                                  "FEES",
+                                  "DAILY ENDING BALANCE",
+                                  "SERVICE CHARGE SUMMARY"]
+        self.remove_sections_not_in_the_text()
+
+    # For example: sometimes the pdf file doesn't have "CHECKS PAID" section.
+    def remove_sections_not_in_the_text(self):
+        for i in self.document_sections:
+            if i not in self.text:
+                self.document_sections.remove(i)
 
     def get_wrapped_text(self, lines=100, txt=None):
         if txt is None:
