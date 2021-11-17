@@ -77,14 +77,3 @@ class Pdf:
     @staticmethod
     def is_file_a_pdf(file_path):
         return file_path[-4: len(file_path)] == ".pdf"
-
-
-    def get_text_from_wrapped_format_to_text_format(self, wrapped_text):
-        # to get a long string without new lines
-        wrapped_text = wrapped_text.replace("\n", " ")
-
-        # Remove different characters
-        for i in range(0, self.text_length):
-            if self.text[i] != wrapped_text[i]:
-                wrapped_text = wrapped_text[:i] + wrapped_text[i+1:]
-        return wrapped_text

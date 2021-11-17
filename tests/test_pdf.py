@@ -10,14 +10,7 @@ def test_is_path_correct():
     assert Pdf.is_file_a_pdf(file_path) is True
 
 
-def test_if_the_paragraph_didnt_loose_any_chars():
-    original_text = my_pdf.text.strip(" ")
-    text_from_paragraph = my_pdf.get_text_in_paragraph_style(original_text)
-    text_from_paragraph_joined = "".join(text_from_paragraph.split("\n"))
-    assert original_text == text_from_paragraph_joined
-
-
-def test_if_the_paragraph_didnt_loose_any_chars_2():
+def test_if_the_paragraph_doesnt_loose_any_chars_when_selecting_sections():
     original_text = my_pdf.text
     result = my_pdf.get_document_header_text()
     for i in my_pdf.document_sections:
