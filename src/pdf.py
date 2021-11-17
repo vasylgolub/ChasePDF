@@ -47,7 +47,7 @@ class Pdf:
             txt = self.text
         return textwrap.fill(txt, lines)
 
-    def get_document_header_text(self):
+    def get_header_text(self):
         till_desired_position = self.text.find("CHECKING SUMMARY")
         top_of_document = self.text[:till_desired_position]
         return top_of_document
@@ -60,14 +60,17 @@ class Pdf:
         whole_text = text
         if sections_to_highlight is None:
             sections_to_highlight = self.document_sections
-        for word in sections_to_highlight:
-            whole_text = self.highlight_a_word_in_text(whole_text, word)
+        for section in sections_to_highlight:
+            whole_text = self.highlight_in_text(whole_text, section)
         return whole_text
 
 
     @staticmethod
-    def highlight_a_word_in_text(text, word):
-        return text.replace(word, f"{Fore.BLUE}{word}{Fore.RESET}")
+    def highlight_in_text(whole_text, text):
+        highlighted_words = ""
+        for word in text:
+            highlighted_words += f"{Fore.BLUE}{word}{Fore.RESET}"
+        return whole_text.replace(text, highlighted_words, 1)
 # ------------------------------------------------------------------------------------------------------
 
     @staticmethod
@@ -77,9 +80,10 @@ class Pdf:
 
     def get_desired_section(self, name_of_the_section):
         start = self.text.find(name_of_the_section)
+
+        # If we want to get the "SERVICE CHARGE SUMMARY" section, then get text from that point till end of whole text
         if name_of_the_section == self.document_sections[-1]:
-            length_of_text = len(self.text)
-            return self.text[start: length_of_text]
+            return self.text[start: self.text_length]
         index_of_next_section = self.document_sections.index(name_of_the_section) + 1
         next_section_name = self.document_sections[index_of_next_section]
         end = self.text.find(next_section_name)
