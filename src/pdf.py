@@ -47,6 +47,15 @@ class Pdf:
             txt = self.text
         return textwrap.fill(txt, lines)
 
+    def get_wrapped_and_highlighted_text(self):
+        top = self.get_wrapped_text(115, self.get_header_text())
+        body = ""
+        for section in self.document_sections:
+            desired_section = self.get_desired_section(section)
+            wrapped = self.get_wrapped_text(115, desired_section)
+            body += self.get_text_with_sections_highlighted(wrapped) + "\n"
+        return top + "\n" + body
+
     def get_header_text(self):
         till_desired_position = self.text.find("CHECKING SUMMARY")
         top_of_document = self.text[:till_desired_position]
