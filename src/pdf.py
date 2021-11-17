@@ -1,5 +1,6 @@
 from PyPDF2 import PdfFileReader
 from colorama import Fore
+import textwrap
 
 
 class Pdf:
@@ -33,24 +34,10 @@ class Pdf:
         opened_file.close()
 
 
-    def get_text_in_paragraph_style(self, txt=None):
+    def get_wrapped_text(self, txt=None, lines=100):
         if txt is None:
             txt = self.text
-
-        array_of_strings = txt.split(" ")
-        result = ""
-        line = ""
-
-        for string in array_of_strings:
-            line = line + " " + string
-            if len(line) > 100:
-                result = result + line + "\n"
-                line = ""
-
-        # Add the remaining text that wasn't added in the loop
-        result = result + line
-
-        return result.strip(" ")
+        return textwrap.fill(txt, lines)
 
     def get_document_header_text(self):
         till_desired_position = self.text.find("CHECKING SUMMARY")
