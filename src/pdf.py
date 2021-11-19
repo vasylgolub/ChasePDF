@@ -6,7 +6,8 @@ import textwrap
 class Pdf:
     def __init__(self, pdf_file_path):
         # let's save the path just in case
-        self.file_path = pdf_file_path
+        self.file_full_path = pdf_file_path
+        self.file_name = os.path.basename(self.file_full_path)
 
         opened_file = open(pdf_file_path, 'rb')
         read_pdf_file = PdfFileReader(opened_file)
