@@ -36,6 +36,21 @@ class Pdf:
                                   "SERVICE CHARGE SUMMARY"]
         self.remove_sections_not_in_the_text()
 
+    def get_date_of_this_statement(self, text=None):
+        # The header has the information regarding the statement's date.
+        if text is None:
+            text = self.get_header_text()
+        # We cut the text till word "through".
+        cut_text = text[:text.find("through")]
+        months = ['January', 'February', 'March', 'April', 'May',
+                  'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        index_of_month = 0
+        for month in months:
+            index_of_month = cut_text.find(month)
+            if index_of_month >= 0:
+                break
+        return cut_text[index_of_month:]
+
     # For example: sometimes the pdf file doesn't have "CHECKS PAID" section.
     def remove_sections_not_in_the_text(self):
         for i in self.document_sections:
