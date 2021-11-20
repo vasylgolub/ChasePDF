@@ -12,3 +12,8 @@ class FileRename:
         the_pdf = Pdf(self.file_full_path)
         date = the_pdf.get_date_of_this_statement()
         return date
+
+    def rename_file(self, desired_name=None):
+        if desired_name is None:
+            desired_name = self.file_date
+        os.rename(self.file_full_path, desired_name)
