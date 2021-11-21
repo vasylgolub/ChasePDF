@@ -1,12 +1,17 @@
 from PyPDF2 import PdfFileReader
 from colorama import Fore
 import textwrap
+import os
+
+# This class is supposed to work on a Chase Bank statement in pdf format.
+# A bank statement is a list of all transactions for a bank account over a set period, usually monthly.
 
 
 class Pdf:
     def __init__(self, pdf_file_path):
         # let's save the path just in case
-        self.file_path = pdf_file_path
+        self.file_full_path = pdf_file_path
+        self.file_name = os.path.basename(self.file_full_path)
 
         opened_file = open(pdf_file_path, 'rb')
         read_pdf_file = PdfFileReader(opened_file)
@@ -30,11 +35,28 @@ class Pdf:
                                   "CHECKS PAID",
                                   "ATM & DEBIT CARD WITHDRAWALS",
                                   "ATM & DEBIT CARD SUMMARY",
-                                  "ELECTRONIC WITHDRAWAL",
+                                  "ELECTRONIC WITHDRAWALS",
+                                  "OTHER WITHDRAWALS",
                                   "FEES",
                                   "DAILY ENDING BALANCE",
                                   "SERVICE CHARGE SUMMARY"]
         self.remove_sections_not_in_the_text()
+
+    def get_date_of_this_statement(self, text=None):
+        # The header has the information regarding the statement's date.
+        if text is None:
+            text = self.get_header_text()
+        # We cut the text till word "through".
+        cut_text = text[:text.find("through")]
+        months = ['January', 'February', 'March', 'April', 'May',
+                  'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        index_of_month = 0
+        for month in months:
+            index_of_month = cut_text.find(month)
+            if index_of_month >= 0:
+                break
+        # We also strip the spaces if those are present in the string
+        return cut_text[index_of_month:].strip()
 
     # For example: sometimes the pdf file doesn't have "CHECKS PAID" section.
     def remove_sections_not_in_the_text(self):
