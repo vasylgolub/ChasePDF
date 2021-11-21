@@ -55,7 +55,8 @@ class Pdf:
             index_of_month = cut_text.find(month)
             if index_of_month >= 0:
                 break
-        return cut_text[index_of_month:]
+        # We also strip the spaces if those are present in the string
+        return cut_text[index_of_month:].strip()
 
     # For example: sometimes the pdf file doesn't have "CHECKS PAID" section.
     def remove_sections_not_in_the_text(self):
