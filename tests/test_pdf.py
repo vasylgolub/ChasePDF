@@ -1,7 +1,9 @@
 from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
 
-file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
+# file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
+list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
+file_path = list_of_files.get_list_of_files_with_full_path()[0]
 my_pdf = Pdf(file_path)
 my_list_of_files = ListOfFilesFromDirectory("")
 
@@ -37,11 +39,11 @@ def test_if_extraction_is_accurate():
 
 
 def test_if_returns_desired_text_for_count_of_occurrences():
-    result = my_pdf.get_desired_section("CHECKING SUMMARY")
-    expected_result = "CHECKING SUMMARY Chase Total Business CheckingINSTANCESAMOUNTBeginning " \
-                      "Balance$7,501.88Deposits and Additions114,462.51ATM & Debit " \
-                      "Card Withdrawals134-6,896.00Electronic " \
-                      "Withdrawals5-657.61Fees4-21.10Ending Balance154$4,389.68"
+    a_pdf = Pdf(file_path)
+    a_pdf.text = "CHECKING SUMMARY Chase Total Business CheckingINSTANCESAMOUNTBeginning Balance$1,598. and " \
+                 "DEPOSITS AND ADDITIONSDATEDESCRIPTIONAMOUNT06/03Payment Received 06/03 "
+    result = a_pdf.get_desired_section("CHECKING SUMMARY")
+    expected_result = "CHECKING SUMMARY Chase Total Business CheckingINSTANCESAMOUNTBeginning Balance$1,598. and "
     assert result == expected_result
 
 
