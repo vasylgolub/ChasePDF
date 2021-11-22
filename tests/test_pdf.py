@@ -81,18 +81,27 @@ def test_split_text_in_three():
 
 
 #--------------------------------------------------------------------------------------------------------------
+# list must have 12 elements
 def test_get_sorted_list_of_files():
-    list_of_files = ['20200430-statements-7190-.pdf',
-                     '20200529-statements-7190-.pdf',
-                     '20200131-statements-7190-.pdf',
-                     '20200930-statements-7190-.pdf']
-    expected_list_of_files = ['20200131-statements-7190-.pdf',
-                              '20200430-statements-7190-.pdf',
-                              '20200529-statements-7190-.pdf',
-                              '20200930-statements-7190-.pdf']
+    list_of_unordered_files = ['June 01, 2019.pdf', 'June 29, 2019.pdf', 'May 01, 2019.pdf', 'January 01, 2019.pdf',
+                               'October 01, 2019.pdf', 'March 01, 2019.pdf', 'March 30, 2019.pdf',
+                               'November 01, 2019.pdf', 'November 30, 2019.pdf', 'August 01, 2019.pdf',
+                               'August 31, 2019.pdf', 'February 01, 2019.pdf']
 
-    print(my_list_of_files.get_sorted_list_based_on_month(list_of_files))
-    assert my_list_of_files.get_sorted_list_based_on_month(list_of_files) == expected_list_of_files
+    expected_list_of_files = ['January 01, 2019.pdf',
+                              'February 01, 2019.pdf',
+                              'March 01, 2019.pdf',
+                              'March 30, 2019.pdf',
+                              'May 01, 2019.pdf',
+                              'June 01, 2019.pdf',
+                              'June 29, 2019.pdf',
+                              'August 01, 2019.pdf',
+                              'August 31, 2019.pdf',
+                              'October 01, 2019.pdf',
+                              'November 01, 2019.pdf',
+                              'November 30, 2019.pdf']
+    result = my_list_of_files.sorted(list_of_unordered_files)
+    assert result == expected_list_of_files
 
 
 def test_function_et_date_of_this_statement():
