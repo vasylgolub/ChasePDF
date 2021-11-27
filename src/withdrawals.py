@@ -5,7 +5,8 @@ class Withdrawals:
     def __init__(self, withdrawal_text_section):
         self.withdrawal_text_section = withdrawal_text_section
 
-    def get_transactions_list(self):
+    # ------------------------------------------------------------------------------------------------
+    def get_list_of_information_about_withdrawals(self):
         return self.get_cleaner_list()
 
     def get_cleaner_list(self):
@@ -20,13 +21,17 @@ class Withdrawals:
     def inline_based_on_key_words(section_str):
         section_str = section_str.replace("Recurring Card Purchase", "\nRecurring Card Purchase")
         section_str = section_str.replace("Card Purchase", "\nCard Purchase")
+
+        # little fix because both previous operations have "Purchase" word
         section_str = section_str.replace("Recurring \n", "Recurring ")
+
         section_str = section_str.replace("Total ATM & Debit Card Withdrawals", "\nTotal ATM & Debit Card Withdrawals")
         section_str = section_str.replace("ATM Withdrawal ", "\nATM Withdrawal ")
         section_str = section_str.replace("Payment Sent", "\nPayment Sent")
         section_str = section_str.replace("Non-Chase ATM Withdraw", "\nNon-Chase ATM Withdraw")
         return section_str
 
+    #------------------------------------------------------------------------------------------------
     def remove_unnecessary_info_from_some_elements(self, a_list):
         count_elements = len(a_list)
         for position in range(0, count_elements):
@@ -36,16 +41,16 @@ class Withdrawals:
         return a_list
 
     # Delegate
-    @staticmethod
-    def get_lef_side_and_date_at_the_end(string):
-        pattern = re.compile(r'\d\d\.\d\d')
-        match = pattern.search(string)
+    def get_lef_side_and_date_at_the_end(self, string):
+        end_position = self.get_end_position_of_target(string)
         last_five_chars = string[-5:]
-        return string[: match.end()] + last_five_chars
+        return string[: end_position] + last_five_chars
 
-    # Delegate
+    # def get_unnecessary_text(self, string):
+    #     end_position = self.get_end_position_of_target(string)
+    #     return string[end_position: -5]
+
     @staticmethod
-    def get_unnecessary_text(string):
+    def get_end_position_of_target(string):
         pattern = re.compile(r'\d\d\.\d\d')
-        match = pattern.search(string)
-        return string[match.end(): -5]
+        return pattern.search(string).end()

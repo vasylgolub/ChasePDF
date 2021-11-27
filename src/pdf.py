@@ -137,6 +137,6 @@ class Pdf:
     def get_transactions_list(self):
         section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
         withdrawals = Withdrawals(section)
-        return withdrawals.get_transactions_list()
+        return withdrawals.get_list_of_information_about_withdrawals()
 
 #------------------------------------------------------------------------------------------------------
