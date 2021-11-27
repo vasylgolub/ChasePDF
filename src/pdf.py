@@ -98,11 +98,11 @@ class Pdf:
 
 
     @staticmethod
-    def highlight_in_text(whole_text, text):
+    def highlight_in_text(whole_text, text, how_many=1):
         highlighted_words = ""
         for word in text:
             highlighted_words += f"{Fore.BLUE}{word}{Fore.RESET}"
-        return whole_text.replace(text, highlighted_words, 1)
+        return whole_text.replace(text, highlighted_words, how_many)
 # ------------------------------------------------------------------------------------------------------
 
     @staticmethod
