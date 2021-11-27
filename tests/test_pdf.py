@@ -1,11 +1,12 @@
 from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
+from src.withdrawals import Withdrawals
 
 # file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
-file_path = list_of_files.get_list_of_files_with_full_path()[0]
+file_path = list_of_files.with_full_path()[0]
 my_pdf = Pdf(file_path)
-my_list_of_files = ListOfFilesFromDirectory("")
+# my_list_of_files = ListOfFilesFromDirectory("")
 
 
 def test_is_path_correct():
@@ -100,7 +101,7 @@ def test_get_sorted_list_of_files():
                               'October 01, 2019.pdf',
                               'November 01, 2019.pdf',
                               'November 30, 2019.pdf']
-    result = my_list_of_files.sorted(list_of_unordered_files)
+    result = list_of_files.sorted(list_of_unordered_files)
     assert result == expected_list_of_files
 
 
@@ -113,3 +114,30 @@ def test_function_et_date_of_this_statement():
     text = "...August 31, 2019through September 30 ..."
     result = my_pdf.get_date_of_this_statement(text).strip()
     assert result == expected_result
+
+
+#-------------------------------------------Withdrawals class---------------------------------------------------------
+def test_get_cleaner_list():
+    line1 = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.09 " \
+                "46Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawal*start*atmanddebitcardsummary*end*" \
+                "atmanddebitcardsummary*start*electronicwithdrawal*end*electronicwithdrawal*start*" \
+                "otherwithdrawals*end*otherwithdrawals*start*feessection*end*feessection*start*" \
+                "postfeesmessage*end*postfeesmessageFebruary 01, 2020 through February 28, 2020Account Number: " \
+                "000000253227190ATM & DEBIT CARD WITHDRAWALS (continued)DATEDESCRIPTIONAMOUNT02/27"
+    line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.03 " \
+            "26Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawalFebruary 01, 2020 through February 28, " \
+            "2020Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS (continued)DATEDESCRIPTIONAMOUNT02/03"
+    line3 = "Card Purchase 02/13 Paypal *Theau 402-935-7733 CA Card 642759.00 " \
+            "1015440030200000006336Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawalFebruary 01, " \
+            "2020 through February 28, 2020Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS " \
+            "(continued)DATEDESCRIPTIONAMOUNT 02/14"
+    list_of_text_to_clean = [line1, line2, line3]
+
+    expected_line = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.0902/27"
+    expected_line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.0302/03"
+    expected_line3 = "Card Purchase 02/13 Paypal *Theau 402-935-7733 CA Card 642759.0002/14"
+    expected_list = [expected_line, expected_line2, expected_line3]
+    my_withdrawals = Withdrawals("")
+    assert my_withdrawals.remove_unnecessary_info_from_some_elements(list_of_text_to_clean)[0] == expected_list[0]
+    assert my_withdrawals.remove_unnecessary_info_from_some_elements(list_of_text_to_clean)[1] == expected_list[1]
+    assert my_withdrawals.remove_unnecessary_info_from_some_elements(list_of_text_to_clean)[2] == expected_list[2]
