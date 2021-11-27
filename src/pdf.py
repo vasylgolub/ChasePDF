@@ -2,6 +2,7 @@ from PyPDF2 import PdfFileReader
 from colorama import Fore
 import textwrap
 import os
+from src.withdrawals import Withdrawals
 
 # This class is supposed to work on a Chase Bank statement in pdf format.
 # A bank statement is a list of all transactions for a bank account over a set period, usually monthly.
@@ -131,3 +132,11 @@ class Pdf:
     @staticmethod
     def is_file_a_pdf(file_path):
         return file_path[-4: len(file_path)] == ".pdf"
+
+#-------------------------------------ATM & DEBIT CARD WITHDRAWALS--------------------------------------------------
+    def get_transactions_list(self):
+        section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
+        withdrawals = Withdrawals(section)
+        return withdrawals.get_transactions_list()
+
+#------------------------------------------------------------------------------------------------------
