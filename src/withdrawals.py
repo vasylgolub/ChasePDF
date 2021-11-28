@@ -43,8 +43,8 @@ class Withdrawals:
     # Delegate
     def get_lef_side_and_date_at_the_end(self, string):
         end_position = self.get_end_position_of_target(string)
-        last_five_chars = string[-5:]
-        return string[: end_position] + last_five_chars
+        last_5_chars = string[-5:]
+        return string[: end_position] + last_5_chars
 
     # def get_unnecessary_text(self, string):
     #     end_position = self.get_end_position_of_target(string)
@@ -54,3 +54,20 @@ class Withdrawals:
     def get_end_position_of_target(string):
         pattern = re.compile(r'\d\d\.\d\d')
         return pattern.search(string).end()
+    #------------------------------------------------------------------------------------------------
+
+    def get_str_with_date_moved_from_end_to_beginning(self, string):
+        if self.has_date_at_the_end(string):
+            date_string = self.extract_date_at_the_end(string)
+            string_without_end_date = string[:-5]
+            return date_string + " " + string_without_end_date
+
+    def extract_date_at_the_end(self, string):
+        if self.has_date_at_the_end(string):
+            return string[-5:]
+        return ""
+
+    @staticmethod
+    def has_date_at_the_end(string):
+        last_5_chars = string[-5:]
+        return last_5_chars.find("/") != -1

@@ -6,8 +6,7 @@ from src.withdrawals import Withdrawals
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
 file_path = list_of_files.with_full_path()[0]
 my_pdf = Pdf(file_path)
-# my_list_of_files = ListOfFilesFromDirectory("")
-
+my_withdrawals = Withdrawals("")
 
 def test_is_path_correct():
     assert Pdf.is_file_a_pdf(file_path) is True
@@ -137,7 +136,23 @@ def test_get_cleaner_list():
     expected_line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.0302/03"
     expected_line3 = "Card Purchase 02/13 Paypal *Theau 402-935-7733 CA Card 642759.0002/14"
     expected_list = [expected_line, expected_line2, expected_line3]
-    my_withdrawals = Withdrawals("")
+
     assert my_withdrawals.remove_unnecessary_info_from_some_elements(list_of_text_to_clean)[0] == expected_list[0]
     assert my_withdrawals.remove_unnecessary_info_from_some_elements(list_of_text_to_clean)[1] == expected_list[1]
     assert my_withdrawals.remove_unnecessary_info_from_some_elements(list_of_text_to_clean)[2] == expected_list[2]
+
+
+def test_extract_date_at_the_end_of_a_string():
+    txt_test = "Card Purchase 02/01 Tst* Vegan Picnic - San Francisco CA Card 642718.2902/03"
+    assert my_withdrawals.extract_date_at_the_end(txt_test) == "02/03"
+
+
+def test_extract_date_at_the_end_of_a_string2():
+    txt_test2 = "Card Purchase With Pin 02/28 Nst Best Buy 0630 Colma CA Card 6427243.48"
+    assert my_withdrawals.extract_date_at_the_end(txt_test2) == ""
+
+
+def test_move_date_from_end_to_beginning():
+    txt_test = "Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.1502/27"
+    expected_string = "02/27 Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.15"
+    my_withdrawals.get_str_with_date_moved_from_end_to_beginning(txt_test) == expected_string
