@@ -152,7 +152,13 @@ def test_extract_date_at_the_end_of_a_string2():
     assert my_withdrawals.extract_date_at_the_end(txt_test2) == ""
 
 
-def test_move_date_from_end_to_beginning():
+def test_get_str_with_date_removed_at_the_end():
     txt_test = "Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.1502/27"
-    expected_string = "02/27 Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.15"
-    my_withdrawals.get_str_with_date_moved_from_end_to_beginning(txt_test) == expected_string
+    expected_string = "Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.15"
+    my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
+
+
+def test_get_str_with_date_removed_at_the_end2():
+    txt_test = "Total ATM & Debit Card Withdrawals $5,375.22"
+    expected_string = "Total ATM & Debit Card Withdrawals $5,375.22"
+    my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
