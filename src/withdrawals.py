@@ -4,6 +4,8 @@ import re
 class Withdrawals:
     def __init__(self, withdrawal_text_section):
         self.withdrawal_text_section = withdrawal_text_section
+        self.list = self.get_list_of_information_about_withdrawals()
+        self.list = self.get_new_fixed_list()
 
     # ------------------------------------------------------------------------------------------------
     def get_list_of_information_about_withdrawals(self):
@@ -56,11 +58,27 @@ class Withdrawals:
         return pattern.search(string).end()
     #------------------------------------------------------------------------------------------------
 
-    def get_str_with_date_moved_from_end_to_beginning(self, string):
+    def get_new_fixed_list(self):
+        result_list = []
+        list_of_dates = self.get_list_of_last_position_dates()
+        length = len(self.list)
+        for position in range(0, length):
+            string = self.list[position]
+            new_string = list_of_dates[position] + " " + self.get_str_with_date_removed_at_the_end(string)
+            result_list.append(new_string)
+        return result_list
+
+
+    def get_list_of_last_position_dates(self):
+        result_list = [""]  # Because the first element in list is a description
+        for each in self.list:
+            result_list.append(self.extract_date_at_the_end(each))
+        return result_list
+
+    def get_str_with_date_removed_at_the_end(self, string):
         if self.has_date_at_the_end(string):
-            date_string = self.extract_date_at_the_end(string)
-            string_without_end_date = string[:-5]
-            return date_string + " " + string_without_end_date
+            return string[:-5]
+        return string
 
     def extract_date_at_the_end(self, string):
         if self.has_date_at_the_end(string):
