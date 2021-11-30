@@ -2,6 +2,7 @@ from PyPDF2 import PdfFileReader
 from colorama import Fore
 import textwrap
 import os
+from src.withdrawals import Withdrawals
 
 # This class is supposed to work on a Chase Bank statement in pdf format.
 # A bank statement is a list of all transactions for a bank account over a set period, usually monthly.
@@ -41,6 +42,9 @@ class Pdf:
                                   "DAILY ENDING BALANCE",
                                   "SERVICE CHARGE SUMMARY"]
         self.remove_sections_not_in_the_text()
+
+        withdrawals_section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
+        self.withdrawals = Withdrawals(withdrawals_section)
 
     def get_date_of_this_statement(self, text=None):
         # The header has the information regarding the statement's date.
@@ -97,11 +101,11 @@ class Pdf:
 
 
     @staticmethod
-    def highlight_in_text(whole_text, text):
+    def highlight_in_text(whole_text, text, how_many=1):
         highlighted_words = ""
         for word in text:
             highlighted_words += f"{Fore.BLUE}{word}{Fore.RESET}"
-        return whole_text.replace(text, highlighted_words, 1)
+        return whole_text.replace(text, highlighted_words, how_many)
 # ------------------------------------------------------------------------------------------------------
 
     @staticmethod

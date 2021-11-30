@@ -1,11 +1,12 @@
 from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
+from src.withdrawals import Withdrawals
 
 # file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
-file_path = list_of_files.get_list_of_files_with_full_path()[0]
+file_path = list_of_files.with_full_path()[0]
 my_pdf = Pdf(file_path)
-my_list_of_files = ListOfFilesFromDirectory("")
+my_withdrawals = Withdrawals()
 
 
 def test_is_path_correct():
@@ -100,7 +101,7 @@ def test_get_sorted_list_of_files():
                               'October 01, 2019.pdf',
                               'November 01, 2019.pdf',
                               'November 30, 2019.pdf']
-    result = my_list_of_files.sorted(list_of_unordered_files)
+    result = list_of_files.sorted(list_of_unordered_files)
     assert result == expected_list_of_files
 
 
@@ -113,3 +114,66 @@ def test_function_et_date_of_this_statement():
     text = "...August 31, 2019through September 30 ..."
     result = my_pdf.get_date_of_this_statement(text).strip()
     assert result == expected_result
+
+
+#-------------------------------------------Withdrawals class---------------------------------------------------------
+def test_get_lef_side_and_date_at_the_end():
+    line1 = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.09 " \
+                "46Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawal*start*atmanddebitcardsummary*end*" \
+                "atmanddebitcardsummary*start*electronicwithdrawal*end*electronicwithdrawal*start*" \
+                "otherwithdrawals*end*otherwithdrawals*start*feessection*end*feessection*start*" \
+                "postfeesmessage*end*postfeesmessageFebruary 01, 2020 through February 28, 2020Account Number: " \
+                "000000253227190ATM & DEBIT CARD WITHDRAWALS (continued)DATEDESCRIPTIONAMOUNT02/27"
+    line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.03 " \
+            "26Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawalFebruary 01, 2020 through February 28, " \
+            "2020Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS (continued)DATEDESCRIPTIONAMOUNT02/03"
+    line3 = "Card Purchase 02/13 Paypal *Theau 402-935-7733 CA Card 642759.00 " \
+            "1015440030200000006336Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawalFebruary 01, " \
+            "2020 through February 28, 2020Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS " \
+            "(continued)DATEDESCRIPTIONAMOUNT 02/14"
+
+    expected_line = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.0902/27"
+    expected_line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.0302/03"
+    expected_line3 = "Card Purchase 02/13 Paypal *Theau 402-935-7733 CA Card 642759.0002/14"
+
+    assert my_withdrawals.get_lef_side_and_date_at_the_end(line1) == expected_line
+    assert my_withdrawals.get_lef_side_and_date_at_the_end(line2) == expected_line2
+    assert my_withdrawals.get_lef_side_and_date_at_the_end(line3) == expected_line3
+
+
+
+def test_extract_date_at_the_end_of_a_string():
+    txt_test = "Card Purchase 02/01 Tst* Vegan Picnic - San Francisco CA Card 642718.2902/03"
+    assert my_withdrawals.extract_date_at_the_end(txt_test) == "02/03"
+
+
+def test_extract_date_at_the_end_of_a_string2():
+    txt_test2 = "Card Purchase With Pin 02/28 Nst Best Buy 0630 Colma CA Card 6427243.48"
+    assert my_withdrawals.extract_date_at_the_end(txt_test2) == ""
+
+
+def test_get_str_with_date_removed_at_the_end():
+    txt_test = "Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.1502/27"
+    expected_string = "Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.15"
+    assert my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
+
+
+def test_get_str_with_date_removed_at_the_end_that_doesnt_need_removal():
+    txt_test = "Total ATM & Debit Card Withdrawals $5,375.22"
+    expected_string = "Total ATM & Debit Card Withdrawals $5,375.22"
+    assert my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
+
+
+def test_get_total_from_string():
+    txt_test = " Total ATM & Debit Card Withdrawals $6,896.00"
+    print(my_withdrawals.get_total_from_this_string(txt_test))
+    assert my_withdrawals.get_total_from_this_string(txt_test) == 6896.00
+
+
+def test_get_left_side_only():
+    string_test = "Total ATM & Debit Card Withdrawals $4,261.68 1010897020200000006234Pageof*start*atmanddebitcard" \
+                  "summary*end*atmanddebitcardsummary*start*otherwithdrawals*end*otherwithdrawals*start*feessection*" \
+                  "end*feessection*start*postfeesmessage*end*postfeesmessage*start*dailyendingbalance2*end*daily" \
+                  "endingbalance2*start*servicechargesummary3*end*servicechargesummary3May 30, 2020 through June 30, " \
+                  "2020Account Number: 000000253227190"
+    assert my_withdrawals.get_left_side_only(string_test) == "Total ATM & Debit Card Withdrawals $4,261.68"
