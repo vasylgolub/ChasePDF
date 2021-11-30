@@ -2,13 +2,13 @@ import re
 
 
 class Withdrawals:
-    def __init__(self, withdrawal_text_section=None):
-        if withdrawal_text_section is not None:
-            self.withdrawal_text_section = withdrawal_text_section
+    def __init__(self, whole_text=None):
+        if whole_text is not None:
+            self.whole_text = whole_text
             self.list = self.get_list_of_information_about_withdrawals_section()
             self.total_withdrawals_text = self.get_new_fixed_list()[-1]
             self.list_of_transactions = self.get_new_fixed_list()[1:-1]
-            self.total_withdrawals = 0 #self.get_integer_from_this_string(self.total_withdrawals_text)
+            self.total_withdrawals = self.get_total_from_this_string(self.total_withdrawals_text)
 
     # ---------------------------------work the $amount-----------------------------------------------------
     @staticmethod
@@ -19,7 +19,7 @@ class Withdrawals:
         return float(str_num)
 
     # ------------------------------------------------------------------------------------------------
-    def get_list_of_information_about_withdrawals(self):
+    def get_list_of_information_about_withdrawals_section(self):
         return self.get_cleaner_list()
 
     def get_cleaner_list(self):
@@ -27,11 +27,12 @@ class Withdrawals:
         return self.remove_unnecessary_info_from_some_elements(not_perfect_list)
 
     def get_list_of_each_transaction_and_total(self):
-        section_str = self.inline_based_on_key_words(self.withdrawal_text_section)
+        section_str = self.inline_based_on_key_words()
         return section_str.splitlines()
 
-    @staticmethod
-    def inline_based_on_key_words(section_str):
+    def inline_based_on_key_words(self, section_str=None):
+        if section_str is None:
+            section_str = self.whole_text
         section_str = section_str.replace("Recurring Card Purchase", "\nRecurring Card Purchase")
         section_str = section_str.replace("Card Purchase", "\nCard Purchase")
 
@@ -72,10 +73,6 @@ class Withdrawals:
         last_5_chars = string[-5:]
         return string[: end_position] + last_5_chars
 
-    # def get_unnecessary_text(self, string):
-    #     end_position = self.get_end_position_of_target(string)
-    #     return string[end_position: -5]
-
     @staticmethod
     def get_end_position_of_target(string):
         pattern = re.compile(r'\d\d\.\d\d')
@@ -84,7 +81,7 @@ class Withdrawals:
 
     def get_new_fixed_list(self):
         result_list = []
-        list_of_dates = self.get_list_of_last_position_dates()
+        list_of_dates = self.extract_dates()
         length = len(self.list)
         for position in range(0, length):
             string = self.list[position]
@@ -93,7 +90,7 @@ class Withdrawals:
         return result_list
 
 
-    def get_list_of_last_position_dates(self):
+    def extract_dates(self):
         result_list = [""]  # Because the first element in list is a description
         for each in self.list:
             result_list.append(self.extract_date_at_the_end(each))

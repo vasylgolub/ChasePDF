@@ -43,6 +43,9 @@ class Pdf:
                                   "SERVICE CHARGE SUMMARY"]
         self.remove_sections_not_in_the_text()
 
+        withdrawals_section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
+        self.withdrawals = Withdrawals(withdrawals_section)
+
     def get_date_of_this_statement(self, text=None):
         # The header has the information regarding the statement's date.
         if text is None:
@@ -132,11 +135,3 @@ class Pdf:
     @staticmethod
     def is_file_a_pdf(file_path):
         return file_path[-4: len(file_path)] == ".pdf"
-
-#-------------------------------------ATM & DEBIT CARD WITHDRAWALS--------------------------------------------------
-    def get_transactions_list(self):
-        section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
-        withdrawals = Withdrawals(section)
-        return withdrawals.list
-
-#------------------------------------------------------------------------------------------------------

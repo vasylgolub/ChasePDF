@@ -6,7 +6,8 @@ from src.withdrawals import Withdrawals
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
 file_path = list_of_files.with_full_path()[0]
 my_pdf = Pdf(file_path)
-my_withdrawals = Withdrawals("")
+my_withdrawals = Withdrawals()
+
 
 def test_is_path_correct():
     assert Pdf.is_file_a_pdf(file_path) is True
@@ -154,19 +155,19 @@ def test_extract_date_at_the_end_of_a_string2():
 def test_get_str_with_date_removed_at_the_end():
     txt_test = "Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.1502/27"
     expected_string = "Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.15"
-    my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
+    assert my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
 
 
-def test_get_str_with_date_removed_at_the_end2():
+def test_get_str_with_date_removed_at_the_end_that_doesnt_need_removal():
     txt_test = "Total ATM & Debit Card Withdrawals $5,375.22"
     expected_string = "Total ATM & Debit Card Withdrawals $5,375.22"
-    my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
+    assert my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
 
 
 def test_get_total_from_string():
     txt_test = " Total ATM & Debit Card Withdrawals $6,896.00"
-    print(my_withdrawals.get_integer_from_this_string(txt_test))
-    assert my_withdrawals.get_integer_from_this_string(txt_test) == 6896.00
+    print(my_withdrawals.get_total_from_this_string(txt_test))
+    assert my_withdrawals.get_total_from_this_string(txt_test) == 6896.00
 
 
 def test_get_left_side_only():
