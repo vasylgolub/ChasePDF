@@ -42,6 +42,16 @@ class Withdrawals:
                 a_list[position] = self.get_lef_side_and_date_at_the_end(a_list[position])
         return a_list
 
+    @staticmethod
+    def get_left_side_only(string):
+        period_pos = string.find(".")
+        return string[:period_pos+3]
+
+    # Delegate
+    @staticmethod
+    def does_have_unnecessary_long_text(string):
+        return len(string) > 100
+
     # Delegate
     def get_lef_side_and_date_at_the_end(self, string):
         end_position = self.get_end_position_of_target(string)

@@ -161,3 +161,12 @@ def test_get_str_with_date_removed_at_the_end2():
     txt_test = "Total ATM & Debit Card Withdrawals $5,375.22"
     expected_string = "Total ATM & Debit Card Withdrawals $5,375.22"
     my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
+
+
+def test_get_left_side_only():
+    string_test = "Total ATM & Debit Card Withdrawals $4,261.68 1010897020200000006234Pageof*start*atmanddebitcard" \
+                  "summary*end*atmanddebitcardsummary*start*otherwithdrawals*end*otherwithdrawals*start*feessection*" \
+                  "end*feessection*start*postfeesmessage*end*postfeesmessage*start*dailyendingbalance2*end*daily" \
+                  "endingbalance2*start*servicechargesummary3*end*servicechargesummary3May 30, 2020 through June 30, " \
+                  "2020Account Number: 000000253227190"
+    assert my_withdrawals.get_left_side_only(string_test) == "Total ATM & Debit Card Withdrawals $4,261.68"
