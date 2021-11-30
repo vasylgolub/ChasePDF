@@ -116,7 +116,7 @@ def test_function_et_date_of_this_statement():
 
 
 #-------------------------------------------Withdrawals class---------------------------------------------------------
-def test_get_cleaner_list():
+def test_get_lef_side_and_date_at_the_end():
     line1 = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.09 " \
                 "46Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawal*start*atmanddebitcardsummary*end*" \
                 "atmanddebitcardsummary*start*electronicwithdrawal*end*electronicwithdrawal*start*" \
@@ -130,16 +130,15 @@ def test_get_cleaner_list():
             "1015440030200000006336Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawalFebruary 01, " \
             "2020 through February 28, 2020Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS " \
             "(continued)DATEDESCRIPTIONAMOUNT 02/14"
-    list_of_text_to_clean = [line1, line2, line3]
 
     expected_line = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.0902/27"
     expected_line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.0302/03"
     expected_line3 = "Card Purchase 02/13 Paypal *Theau 402-935-7733 CA Card 642759.0002/14"
-    expected_list = [expected_line, expected_line2, expected_line3]
 
-    assert my_withdrawals.remove_unnecessary_info_from_some_elements(list_of_text_to_clean)[0] == expected_list[0]
-    assert my_withdrawals.remove_unnecessary_info_from_some_elements(list_of_text_to_clean)[1] == expected_list[1]
-    assert my_withdrawals.remove_unnecessary_info_from_some_elements(list_of_text_to_clean)[2] == expected_list[2]
+    assert my_withdrawals.get_lef_side_and_date_at_the_end(line1) == expected_line
+    assert my_withdrawals.get_lef_side_and_date_at_the_end(line2) == expected_line2
+    assert my_withdrawals.get_lef_side_and_date_at_the_end(line3) == expected_line3
+
 
 
 def test_extract_date_at_the_end_of_a_string():
