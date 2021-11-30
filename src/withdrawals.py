@@ -47,10 +47,13 @@ class Withdrawals:
     #------------------------------------------------------------------------------------------------
     def remove_unnecessary_info_from_some_elements(self, a_list):
         count_elements = len(a_list)
-        for position in range(0, count_elements):
-            it_has_unnecessary_long_text = len(a_list[position]) > 100
-            if it_has_unnecessary_long_text:
+        for position in range(0, count_elements - 1):  # Not till the last one
+            if self.does_have_unnecessary_long_text(a_list[position]):
                 a_list[position] = self.get_lef_side_and_date_at_the_end(a_list[position])
+
+        if self.does_have_unnecessary_long_text(a_list[-1]):  # If last element has unnecessary text
+            a_list[-1] = self.get_left_side_only(a_list[-1])
+
         return a_list
 
     @staticmethod
