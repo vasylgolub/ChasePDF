@@ -1,6 +1,7 @@
 from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
 from src.withdrawals import Withdrawals
+from src.extractor import Extractor
 
 # file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
@@ -177,3 +178,13 @@ def test_get_left_side_only():
                   "endingbalance2*start*servicechargesummary3*end*servicechargesummary3May 30, 2020 through June 30, " \
                   "2020Account Number: 000000253227190"
     assert my_withdrawals.get_left_side_only(string_test) == "Total ATM & Debit Card Withdrawals $4,261.68"
+
+
+#-------------------------------------------extractor class---------------------------------------------------------
+def test_get_amount():
+    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
+    expected_result = 239.24
+    test_text2 = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19"
+    expected_result2 = 35.19
+    assert Extractor.get_amount(test_text) == expected_result
+    assert Extractor.get_amount(test_text2) == expected_result2
