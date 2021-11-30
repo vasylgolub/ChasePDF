@@ -163,6 +163,12 @@ def test_get_str_with_date_removed_at_the_end2():
     my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
 
 
+def test_get_total_from_string():
+    txt_test = " Total ATM & Debit Card Withdrawals $6,896.00"
+    print(my_withdrawals.get_integer_from_this_string(txt_test))
+    assert my_withdrawals.get_integer_from_this_string(txt_test) == 6896.00
+
+
 def test_get_left_side_only():
     string_test = "Total ATM & Debit Card Withdrawals $4,261.68 1010897020200000006234Pageof*start*atmanddebitcard" \
                   "summary*end*atmanddebitcardsummary*start*otherwithdrawals*end*otherwithdrawals*start*feessection*" \

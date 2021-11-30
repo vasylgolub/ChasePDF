@@ -2,10 +2,21 @@ import re
 
 
 class Withdrawals:
-    def __init__(self, withdrawal_text_section):
-        self.withdrawal_text_section = withdrawal_text_section
-        self.list = self.get_list_of_information_about_withdrawals()
-        self.list = self.get_new_fixed_list()
+    def __init__(self, withdrawal_text_section=None):
+        if withdrawal_text_section is not None:
+            self.withdrawal_text_section = withdrawal_text_section
+            self.list = self.get_list_of_information_about_withdrawals_section()
+            self.total_withdrawals_text = self.get_new_fixed_list()[-1]
+            self.list_of_transactions = self.get_new_fixed_list()[1:-1]
+            self.total_withdrawals = 0 #self.get_integer_from_this_string(self.total_withdrawals_text)
+
+    # ---------------------------------work the $amount-----------------------------------------------------
+    @staticmethod
+    def get_total_from_this_string(string):
+        dollar_sign_pos = string.find("$")
+        str_num = string[dollar_sign_pos + 1:]
+        str_num = str_num.replace(",", "")
+        return float(str_num)
 
     # ------------------------------------------------------------------------------------------------
     def get_list_of_information_about_withdrawals(self):
