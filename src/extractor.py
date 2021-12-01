@@ -8,6 +8,7 @@ class Extractor:
         self.type = self.get_type_withdrawal(self.whole_text)
         self.date = self.get_date(self.whole_text)
         self.last_4_digits = self.get_last_4_digits(self.whole_text)
+        self.store = self.get_store(self.whole_text)
 
 
     @staticmethod
@@ -35,7 +36,15 @@ class Extractor:
 
     @staticmethod
     def get_last_4_digits(string):
-        last_space_pos = string.rfind(" ")
-        # ( 642735.19)
-        # ( ****     )
-        return string[last_space_pos + 1:last_space_pos + 5]
+        pattern = re.compile(r'\d\d\d\d+')
+        matches = pattern.finditer(string)
+        list_of_matches = []
+        for match in matches:
+            list_of_matches.append(match.group())
+        return list_of_matches[-1][:4]
+
+    def get_store(self, string):
+        pos_4_digits = string.rfind(self.last_4_digits)
+        pos_second_date = string.find(self.date[1])
+        return string[pos_second_date+5: pos_4_digits].strip()
+

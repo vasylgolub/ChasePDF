@@ -207,3 +207,31 @@ def test_get_date():
     assert Extractor.get_date(test_text) == expected_result
     assert Extractor.get_date(test_text2) == expected_result2
 
+
+def test_get_last_4_digits():
+    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
+    expected_result = "6427"
+    assert Extractor.get_last_4_digits(test_text) == expected_result
+
+    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card6427$239.24"
+    expected_result = "6427"
+    assert Extractor.get_last_4_digits(test_text) == expected_result
+
+    test_text = "Tech 877-645-534377 34324524CA Card64274334$239.24"
+    expected_result = "6427"
+    assert Extractor.get_last_4_digits(test_text) == expected_result
+
+
+def test_get_store():
+    my_extractor = Extractor("01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19")
+    expected_result = "Shell Service Statio San Francisco CA Card"
+    assert my_extractor.store == expected_result
+
+    my_extractor = Extractor("01/16 Card Purchase With Pin 01/13Shell Service Statio San Francisco CA Card 642735.19")
+    expected_result = "Shell Service Statio San Francisco CA Card"
+    assert my_extractor.store == expected_result
+
+    my_extractor = Extractor("01/16 Card Purchase With Pin 01/13Shell Service Statio San Francisco CA Card642735.19")
+    expected_result = "Shell Service Statio San Francisco CA Card"
+    assert my_extractor.store == expected_result
+
