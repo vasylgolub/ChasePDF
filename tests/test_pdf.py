@@ -184,10 +184,15 @@ def test_get_left_side_only():
 def test_get_amount():
     test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
     expected_result = 239.24
-    test_text2 = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19"
-    expected_result2 = 35.19
     assert Extractor.get_amount(test_text) == expected_result
-    assert Extractor.get_amount(test_text2) == expected_result2
+
+    test_text = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19"
+    expected_result = 35.19
+    assert Extractor.get_amount(test_text) == expected_result
+
+    test_text = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 64243,735.19"
+    expected_result = 3735.19
+    assert Extractor.get_amount(test_text) == expected_result
 
 
 def test_get_type_withdrawal():
