@@ -1,10 +1,12 @@
 import re
 
+
 class Extractor:
     def __init__(self, source_text):
         self.whole_text = source_text
         self.amount = self.get_amount(self.whole_text)
         self.type = self.get_type_withdrawal(self.whole_text)
+        self.date = self.get_date(self.whole_text)
 
 
     @staticmethod
@@ -17,7 +19,15 @@ class Extractor:
 
     @staticmethod
     def get_type_withdrawal(string):
-        pattern = re.compile(r'\d\d/\d\d\ ?(.*?)\ ?\d\d/\d\d')
+        pattern = re.compile(r'\d\d/\d\d ?(.*?) ?\d\d/\d\d')
         result = pattern.search(string)
         return result.groups()[0]
 
+    @staticmethod
+    def get_date(string):
+        pattern = re.compile(r'\d\d/\d\d')
+        matches = pattern.finditer(string)
+        result = []
+        for match in matches:
+            result.append(match.group())
+        return result

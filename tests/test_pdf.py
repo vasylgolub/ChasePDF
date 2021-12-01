@@ -198,3 +198,12 @@ def test_get_type_withdrawal():
     assert Extractor.get_type_withdrawal(test_text) == expected_result
     assert Extractor.get_type_withdrawal(test_text2) == expected_result2
 
+
+def test_get_date():
+    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
+    expected_result = ["01/16", "01/13"]
+    test_text2 = "03/19ATM Withdrawal03/18 5655 Geary Blvd San Francisco CA Card 642740.00"
+    expected_result2 = ["03/19", "03/18"]
+    assert Extractor.get_date(test_text) == expected_result
+    assert Extractor.get_date(test_text2) == expected_result2
+
