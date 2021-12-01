@@ -7,6 +7,7 @@ class Extractor:
         self.amount = self.get_amount(self.whole_text)
         self.type = self.get_type_withdrawal(self.whole_text)
         self.date = self.get_date(self.whole_text)
+        self.last_4_digits = self.get_last_4_digits(self.whole_text)
 
 
     @staticmethod
@@ -31,3 +32,10 @@ class Extractor:
         for match in matches:
             result.append(match.group())
         return result
+
+    @staticmethod
+    def get_last_4_digits(string):
+        last_space_pos = string.rfind(" ")
+        # ( 642735.19)
+        # ( ****     )
+        return string[last_space_pos + 1:last_space_pos + 5]
