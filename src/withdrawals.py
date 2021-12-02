@@ -45,7 +45,7 @@ class Withdrawals:
         section_str = section_str.replace("Non-Chase ATM Withdraw", "\nNon-Chase ATM Withdraw")
         return section_str
 
-    #------------------------------------------------------------------------------------------------
+    #----------------------------------------
     def remove_unnecessary_info_from_some_elements(self, a_list):
         count_elements = len(a_list)
         for position in range(0, count_elements - 1):  # Not till the last one
@@ -57,6 +57,12 @@ class Withdrawals:
 
         return a_list
 
+    # Delegate
+    @staticmethod
+    def it_has_cash_back(string):
+        return "Cash Back" in string
+
+    # Delegate
     @staticmethod
     def get_left_side_only(string):
         period_pos = string.find(".")
@@ -110,3 +116,18 @@ class Withdrawals:
     def has_date_at_the_end(string):
         last_5_chars = string[-5:]
         return last_5_chars.find("/") != -1
+
+    #------------------------------BugFix
+    @staticmethod
+    def extract_cash_back_info(string):
+        pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d\d\.\d\d')
+        result = pattern.search(string)
+        return result.group()
+
+    def get_cash_back_position_and_info_text_about(self, a_list):
+        count_elements = len(a_list)
+        result = []
+        for pos in range(0, count_elements - 1):
+            if self.it_has_cash_back(a_list[pos]):
+                result.append([pos, self.extract_cash_back_info(a_list[pos])])
+        return result
