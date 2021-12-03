@@ -45,9 +45,15 @@ class Withdrawals:
     #----------------------------------------
     def remove_unnecessary_info_from_some_elements(self, a_list):
         count_elements = len(a_list)
-        for position in range(0, count_elements - 1):  # Not till the last one
-            if self.does_have_unnecessary_long_text(a_list[position]):
-                a_list[position] = self.get_lef_side_and_date_at_the_end(a_list[position])
+        for pos in range(0, count_elements - 1):  # Not till the last one
+
+            if self.it_has_cash_back(a_list[pos]):
+                cash_back_section_text = self.extract_cash_back_info(a_list[pos])
+                a_list[pos] = a_list[pos].replace(cash_back_section_text, "")
+                a_list[pos] = self.get_string_without_last_space_removed(a_list[pos])
+
+            if self.does_have_unnecessary_long_text(a_list[pos]):
+                a_list[pos] = self.get_lef_side_and_date_at_the_end(a_list[pos])
 
         if self.does_have_unnecessary_long_text(a_list[-1]):  # If last element has unnecessary text
             a_list[-1] = self.get_left_side_only(a_list[-1])
