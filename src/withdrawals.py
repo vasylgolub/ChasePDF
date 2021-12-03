@@ -5,7 +5,7 @@ class Withdrawals:
     def __init__(self, whole_text=None):
         if whole_text is not None:
             self.whole_long_text = whole_text
-            self.list = self.get_list_of_information_about_withdrawals_section()
+            # self.list = self.get_list_of_information_about_withdrawals_section()
             self.total_withdrawals_text = self.get_fixed_list_with_dates_positioned_properly()[-1].strip()
             self.list_of_transactions = self.get_fixed_list_with_dates_positioned_properly()[1:-1]
             self.total_withdrawals = self.get_total_from_this_string(self.total_withdrawals_text)
@@ -59,14 +59,14 @@ class Withdrawals:
             a_list[-1] = self.get_left_side_only(a_list[-1])
 
         return a_list
-    #------------------------------------------------------------------------------------------------
+    #-----------------------------------------Fix Dates-------------------------------------------------------
 
     def get_fixed_list_with_dates_positioned_properly(self):
         result_list = []
         list_of_dates = self.extract_dates()
-        length = len(self.list)
+        length = len(self.get_list_of_information_about_withdrawals_section())
         for position in range(0, length):
-            string = self.list[position]
+            string = self.get_list_of_information_about_withdrawals_section()[position]
             new_string = list_of_dates[position] + " " + self.get_str_with_date_removed_at_the_end(string)
             result_list.append(new_string)
         return result_list
@@ -74,11 +74,11 @@ class Withdrawals:
 
     def extract_dates(self):
         result_list = [""]  # Because the first element in list is a description
-        for each in self.list:
+        for each in self.get_list_of_information_about_withdrawals_section():
             result_list.append(self.extract_date_at_the_end(each))
         return result_list
 
-    #------------------------------------------------------------------------------------------------
+    #-----------------------------------Cash Back-------------------------------------------------------------
     @staticmethod
     def extract_cash_back_info(string):
         pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d\d\.\d\d')
