@@ -4,7 +4,8 @@ import re
 class Withdrawals:
     def __init__(self, whole_text=None):
         if whole_text is not None:
-            self.whole_long_text = whole_text
+            self.whole_text = whole_text
+            self.list_format_of_whole_text = self.make_whole_text_a_list_with_unnecessary_info_removed()
             self.list_of_transactions = self.get_fixed_list_with_dates_positioned_properly()[1:-1]
             self.total_withdrawals_text = self.get_fixed_list_with_dates_positioned_properly()[-1].strip()
             self.total_withdrawals = self.get_total_from_this_string(self.total_withdrawals_text)
@@ -18,13 +19,16 @@ class Withdrawals:
         return float(str_num)
 
     # ------------------------------------------------------------------------------------------------
+    def make_whole_text_a_list_with_unnecessary_info_removed(self):
+        return self.get_fixed_list_with_dates_positioned_properly()
+
     def a_list_with_some_text_removed_but_not_with_dates_in_the_right_place(self):
         not_perfect_list = self.inline_based_on_key_words().splitlines()
         return self.remove_unnecessary_info_from_some_elements(not_perfect_list)
 
     def inline_based_on_key_words(self, section_str=None):
         if section_str is None:
-            section_str = self.whole_long_text
+            section_str = self.whole_text
         section_str = section_str.replace("Recurring Card Purchase", "\nRecurring Card Purchase")
         section_str = section_str.replace("Card Purchase", "\nCard Purchase")
 
