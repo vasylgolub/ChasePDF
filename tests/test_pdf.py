@@ -1,6 +1,7 @@
 from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
 from src.withdrawals import Withdrawals
+from src.extractor import Extractor
 
 # file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
@@ -177,3 +178,80 @@ def test_get_left_side_only():
                   "endingbalance2*start*servicechargesummary3*end*servicechargesummary3May 30, 2020 through June 30, " \
                   "2020Account Number: 000000253227190"
     assert my_withdrawals.get_left_side_only(string_test) == "Total ATM & Debit Card Withdrawals $4,261.68"
+
+
+# Bug fix
+def test_extract_cash_back():
+    test_text = "Card Purchase W/Cash 06/26 Lowe's #3095 San Francisco CA Card 6427 " \
+                "Purchase $107.42 Cash Back $40.00" \
+                "147.4206/26"
+    result = "Purchase $107.42 Cash Back $40.00"
+    assert my_withdrawals.extract_cash_back_info(test_text) == result
+
+    test_text = "Card Purchase W/Cash 09/29 Target T-2768 2675 G San Francisco CA Card 6427 " \
+                "Purchase $74.28 Cash Back $40.00" \
+                "114.2810/01"
+    result = "Purchase $74.28 Cash Back $40.00"
+    assert my_withdrawals.extract_cash_back_info(test_text) == result
+
+
+#-------------------------------------------extractor class---------------------------------------------------------
+def test_get_amount():
+    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
+    expected_result = 239.24
+    assert Extractor.get_amount(test_text) == expected_result
+
+    test_text = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19"
+    expected_result = 35.19
+    assert Extractor.get_amount(test_text) == expected_result
+
+    test_text = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 64243,735.19"
+    expected_result = 3735.19
+    assert Extractor.get_amount(test_text) == expected_result
+
+
+def test_get_type_withdrawal():
+    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
+    expected_result = "Card Purchase"
+    test_text2 = "03/19ATM Withdrawal03/18 5655 Geary Blvd San Francisco CA Card 642740.00"
+    expected_result2 = "ATM Withdrawal"
+    assert Extractor.get_type_withdrawal(test_text) == expected_result
+    assert Extractor.get_type_withdrawal(test_text2) == expected_result2
+
+
+def test_get_date():
+    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
+    expected_result = ["01/16", "01/13"]
+    test_text2 = "03/19ATM Withdrawal03/18 5655 Geary Blvd San Francisco CA Card 642740.00"
+    expected_result2 = ["03/19", "03/18"]
+    assert Extractor.get_date(test_text) == expected_result
+    assert Extractor.get_date(test_text2) == expected_result2
+
+
+def test_get_last_4_digits():
+    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
+    expected_result = "6427"
+    assert Extractor.get_last_4_digits(test_text) == expected_result
+
+    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card6427$239.24"
+    expected_result = "6427"
+    assert Extractor.get_last_4_digits(test_text) == expected_result
+
+    test_text = "Tech 877-645-534377 34324524CA Card64274334$239.24"
+    expected_result = "6427"
+    assert Extractor.get_last_4_digits(test_text) == expected_result
+
+
+def test_get_store():
+    my_extractor = Extractor("01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19")
+    expected_result = "Shell Service Statio San Francisco CA Card"
+    assert my_extractor.store == expected_result
+
+    my_extractor = Extractor("01/16 Card Purchase With Pin 01/13Shell Service Statio San Francisco CA Card 642735.19")
+    expected_result = "Shell Service Statio San Francisco CA Card"
+    assert my_extractor.store == expected_result
+
+    my_extractor = Extractor("01/16 Card Purchase With Pin 01/13Shell Service Statio San Francisco CA Card642735.19")
+    expected_result = "Shell Service Statio San Francisco CA Card"
+    assert my_extractor.store == expected_result
+
