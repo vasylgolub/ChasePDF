@@ -6,8 +6,8 @@ class Withdrawals:
         if whole_text is not None:
             self.whole_text = whole_text
             self.list_format_of_whole_text = self.make_whole_text_a_list_with_unnecessary_info_removed()
-            self.list_of_transactions = self.get_fixed_list_with_dates_positioned_properly()[1:-1]
-            self.total_withdrawals_text = self.get_fixed_list_with_dates_positioned_properly()[-1].strip()
+            self.list_of_transactions = self.list_format_of_whole_text[1:-1]
+            self.total_withdrawals_text = self.list_format_of_whole_text[-1]
             self.total_withdrawals = self.get_total_from_this_string(self.total_withdrawals_text)
 
     # ---------------------------------work the $amount-----------------------------------------------------
@@ -20,7 +20,10 @@ class Withdrawals:
 
     # ------------------------------------------------------------------------------------------------
     def make_whole_text_a_list_with_unnecessary_info_removed(self):
-        return self.get_fixed_list_with_dates_positioned_properly()
+        result = self.get_fixed_list_with_dates_positioned_properly()
+        result[0] = "ATM & DEBIT CARD WITHDRAWALS"
+        result[-1] = result[-1].strip()
+        return result
 
     def a_list_with_some_text_removed_but_not_with_dates_in_the_right_place(self):
         not_perfect_list = self.inline_based_on_key_words().splitlines()
