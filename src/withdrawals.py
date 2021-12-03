@@ -6,8 +6,8 @@ class Withdrawals:
         if whole_text is not None:
             self.whole_long_text = whole_text
             self.list = self.get_list_of_information_about_withdrawals_section()
-            self.total_withdrawals_text = self.get_new_fixed_list()[-1]
-            self.list_of_transactions = self.get_new_fixed_list()[1:-1]
+            self.total_withdrawals_text = self.get_fixed_list_with_dates_positioned_properly()[-1].strip()
+            self.list_of_transactions = self.get_fixed_list_with_dates_positioned_properly()[1:-1]
             self.total_withdrawals = self.get_total_from_this_string(self.total_withdrawals_text)
 
     # ---------------------------------work the $amount-----------------------------------------------------
@@ -50,7 +50,7 @@ class Withdrawals:
             if self.it_has_cash_back(a_list[pos]):
                 cash_back_section_text = self.extract_cash_back_info(a_list[pos])
                 a_list[pos] = a_list[pos].replace(cash_back_section_text, "")
-                a_list[pos] = self.get_string_without_last_space_removed(a_list[pos])
+                a_list[pos] = self.get_string_with_last_space_removed(a_list[pos])
 
             if self.does_have_unnecessary_long_text(a_list[pos]):
                 a_list[pos] = self.get_lef_side_and_date_at_the_end(a_list[pos])
@@ -88,7 +88,7 @@ class Withdrawals:
         return pattern.search(string).end()
     #------------------------------------------------------------------------------------------------
 
-    def get_new_fixed_list(self):
+    def get_fixed_list_with_dates_positioned_properly(self):
         result_list = []
         list_of_dates = self.extract_dates()
         length = len(self.list)
@@ -137,7 +137,7 @@ class Withdrawals:
 
 #-------------------------------------------------DELEGATES---------------------------------------------------------#
     @staticmethod
-    def get_string_without_last_space_removed(string):
+    def get_string_with_last_space_removed(string):
         last_space_pos = string.rfind(" ")
         result = string[:last_space_pos] + string[last_space_pos+1:]
         return result
