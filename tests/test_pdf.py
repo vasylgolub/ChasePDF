@@ -1,13 +1,15 @@
 from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
-from src.withdrawals import Withdrawals
+from src.withdrawals_text_cleaner import WithdrawalsTextCleaner
 from src.extractor import Extractor
+from src.withdrawals_helper import WithdrawalsHelper
 
 # file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
 file_path = list_of_files.with_full_path()[0]
 my_pdf = Pdf(file_path)
-my_withdrawals = Withdrawals()
+my_withdrawals = WithdrawalsTextCleaner()
+my_withdrawals_helper = WithdrawalsHelper
 
 
 def test_is_path_correct():
@@ -167,8 +169,8 @@ def test_get_str_with_date_removed_at_the_end_that_doesnt_need_removal():
 
 def test_get_total_from_string():
     txt_test = " Total ATM & Debit Card Withdrawals $6,896.00"
-    print(my_withdrawals.get_total_from_this_string(txt_test))
-    assert my_withdrawals.get_total_from_this_string(txt_test) == 6896.00
+    print(my_withdrawals_helper.get_total_from_this_string(txt_test))
+    assert my_withdrawals_helper.get_total_from_this_string(txt_test) == 6896.00
 
 
 def test_get_left_side_only():
@@ -193,6 +195,14 @@ def test_extract_cash_back():
                 "114.2810/01"
     result = "Purchase $74.28 Cash Back $40.00"
     assert my_withdrawals.extract_cash_back_info(test_text) == result
+
+    test_text = "Card Purchase W/Cash 12/31 Usps PO 05199001 1100 Daly City CA Card 6427 " \
+                "Purchase $36.25 Cash Back $110.00" \
+                "146.2512/31"
+
+    result = "Purchase $36.25 Cash Back $110.00"
+    assert my_withdrawals.extract_cash_back_info(test_text) == result
+
 
 
 #-------------------------------------------extractor class---------------------------------------------------------
@@ -222,10 +232,15 @@ def test_get_type_withdrawal():
 def test_get_date():
     test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
     expected_result = ["01/16", "01/13"]
-    test_text2 = "03/19ATM Withdrawal03/18 5655 Geary Blvd San Francisco CA Card 642740.00"
-    expected_result2 = ["03/19", "03/18"]
     assert Extractor.get_date(test_text) == expected_result
-    assert Extractor.get_date(test_text2) == expected_result2
+
+    test_text = "03/19ATM Withdrawal03/18 5655 Geary Blvd San Francisco CA Card 642740.00"
+    expected_result = ["03/19", "03/18"]
+    assert Extractor.get_date(test_text) == expected_result
+
+    test_text = "01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card 642735.15"
+    expected_result = ["01/02", "01/02"]
+    assert Extractor.get_date(test_text) == expected_result
 
 
 def test_get_last_4_digits():
@@ -241,17 +256,26 @@ def test_get_last_4_digits():
     expected_result = "6427"
     assert Extractor.get_last_4_digits(test_text) == expected_result
 
+    test_text = "01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card 642735.15"
+    expected_result = "6427"
+    assert Extractor.get_last_4_digits(test_text) == expected_result
+
+
 
 def test_get_store():
     my_extractor = Extractor("01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19")
-    expected_result = "Shell Service Statio San Francisco CA Card"
+    expected_result = "Shell Service Statio San Francisco CA"
     assert my_extractor.store == expected_result
 
     my_extractor = Extractor("01/16 Card Purchase With Pin 01/13Shell Service Statio San Francisco CA Card 642735.19")
-    expected_result = "Shell Service Statio San Francisco CA Card"
+    expected_result = "Shell Service Statio San Francisco CA"
     assert my_extractor.store == expected_result
 
     my_extractor = Extractor("01/16 Card Purchase With Pin 01/13Shell Service Statio San Francisco CA Card642735.19")
-    expected_result = "Shell Service Statio San Francisco CA Card"
+    expected_result = "Shell Service Statio San Francisco CA"
+    assert my_extractor.store == expected_result
+
+    my_extractor = Extractor("01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card642735.15")
+    expected_result = "Safeway Store 0785 San Francisco CA"
     assert my_extractor.store == expected_result
 
