@@ -5,9 +5,8 @@ class Withdrawals:
     def __init__(self, whole_text=None):
         if whole_text is not None:
             self.whole_long_text = whole_text
-            # self.list = self.get_list_of_information_about_withdrawals_section()
-            self.total_withdrawals_text = self.get_fixed_list_with_dates_positioned_properly()[-1].strip()
             self.list_of_transactions = self.get_fixed_list_with_dates_positioned_properly()[1:-1]
+            self.total_withdrawals_text = self.get_fixed_list_with_dates_positioned_properly()[-1].strip()
             self.total_withdrawals = self.get_total_from_this_string(self.total_withdrawals_text)
 
     # ---------------------------------work the $amount-----------------------------------------------------
@@ -20,12 +19,12 @@ class Withdrawals:
 
     # ------------------------------------------------------------------------------------------------
     def get_list_of_information_about_withdrawals_section(self):
-        not_perfect_list = self.get_list_of_each_transaction_and_total()
+        not_perfect_list = self.inline_based_on_key_words().splitlines()
         return self.remove_unnecessary_info_from_some_elements(not_perfect_list)
 
-    def get_list_of_each_transaction_and_total(self):
-        section_str = self.inline_based_on_key_words()
-        return section_str.splitlines()
+    # def make_it_a_list(self):
+    #     wrapped_text = self.inline_based_on_key_words()
+    #     return wrapped_text.splitlines()
 
     def inline_based_on_key_words(self, section_str=None):
         if section_str is None:
