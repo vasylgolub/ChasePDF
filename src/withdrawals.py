@@ -131,3 +131,48 @@ class Withdrawals:
             if self.it_has_cash_back(a_list[pos]):
                 result.append([pos, self.extract_cash_back_info(a_list[pos])])
         return result
+
+#-------------------------------------------------DELEGATES---------------------------------------------------------#
+    @staticmethod
+    def get_string_without_last_space_removed(string):
+        last_space_pos = string.rfind(" ")
+        result = string[:last_space_pos] + string[last_space_pos+1:]
+        return result
+
+    @staticmethod
+    def it_has_cash_back(string):
+        return "Cash Back" in string
+
+    @staticmethod
+    def get_left_side_only(string):
+        period_pos = string.find(".")
+        return string[:period_pos+3]
+
+    @staticmethod
+    def does_have_unnecessary_long_text(string):
+        return len(string) > 100
+
+    def get_lef_side_and_date_at_the_end(self, string):
+        end_position = self.get_end_position_of_target(string)
+        last_5_chars = string[-5:]
+        return string[: end_position] + last_5_chars
+
+    @staticmethod
+    def get_end_position_of_target(string):
+        pattern = re.compile(r'\d\d\.\d\d')
+        return pattern.search(string).end()
+
+    def get_str_with_date_removed_at_the_end(self, string):
+        if self.has_date_at_the_end(string):
+            return string[:-5]
+        return string
+
+    def extract_date_at_the_end(self, string):
+        if self.has_date_at_the_end(string):
+            return string[-5:]
+        return ""
+
+    @staticmethod
+    def has_date_at_the_end(string):
+        last_5_chars = string[-5:]
+        return last_5_chars.find("/") != -1
