@@ -7,8 +7,10 @@ class Withdrawals:
             self.whole_text = whole_text
             self.list_format_of_whole_text = self.make_whole_text_a_list_with_unnecessary_info_removed()
             self.list_of_transactions = self.list_format_of_whole_text[1:-1]
-            self.total_withdrawals_text = self.list_format_of_whole_text[-1]
-            self.total_withdrawals = self.get_total_from_this_string(self.total_withdrawals_text)
+
+            total_withdrawals_text = self.list_format_of_whole_text[-1]
+            self.total_withdrawals = {"text": total_withdrawals_text,
+                                      "amount": self.get_total_from_this_string(total_withdrawals_text)}
 
     # ---------------------------------work the $amount-----------------------------------------------------
     @staticmethod
