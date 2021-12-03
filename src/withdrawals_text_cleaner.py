@@ -6,22 +6,10 @@ class WithdrawalsTextCleaner:
         if whole_text is not None:
             self.whole_text = whole_text
             self.list_format_of_whole_text = self.make_whole_text_a_list_with_unnecessary_info_removed()
-            self.list_of_transactions = self.list_format_of_whole_text[1:-1]
 
-            total_withdrawals_text = self.list_format_of_whole_text[-1]
-            self.total_withdrawals = {"text": total_withdrawals_text,
-                                      "amount": self.get_total_from_this_string(total_withdrawals_text)}
 
     def get_wrapped_text(self):
         return "\n".join(self.list_format_of_whole_text)
-
-    # ---------------------------------work the $amount-----------------------------------------------------
-    @staticmethod
-    def get_total_from_this_string(string):
-        dollar_sign_pos = string.find("$")
-        str_num = string[dollar_sign_pos + 1:]
-        str_num = str_num.replace(",", "")
-        return float(str_num)
 
     # ------------------------------------------------------------------------------------------------
     def make_whole_text_a_list_with_unnecessary_info_removed(self):
