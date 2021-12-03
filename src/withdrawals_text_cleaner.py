@@ -7,7 +7,6 @@ class WithdrawalsTextCleaner:
             self.whole_text = whole_text
             self.list = self.make_whole_text_a_list_with_unnecessary_info_removed()
 
-
     def get_wrapped_text(self):
         return "\n".join(self.list)
 
@@ -54,6 +53,21 @@ class WithdrawalsTextCleaner:
             a_list[-1] = self.get_left_side_only(a_list[-1])
 
         return a_list
+
+    #-----------------------------------Cash Back-------------------------------------------------------------
+    @staticmethod
+    def extract_cash_back_info(string):
+        pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d\d\.\d\d')
+        result = pattern.search(string)
+        return result.group()
+
+    def get_cash_back_position_and_info_text_about(self, a_list):
+        count_elements = len(a_list)
+        result = []
+        for pos in range(0, count_elements - 1):
+            if self.it_has_cash_back(a_list[pos]):
+                result.append([pos, self.extract_cash_back_info(a_list[pos])])
+        return result
     #-----------------------------------------Fix Dates-------------------------------------------------------
 
     def get_fixed_list_with_dates_positioned_properly(self):
@@ -72,21 +86,6 @@ class WithdrawalsTextCleaner:
         for each in self.a_list_with_some_text_removed_but_not_with_dates_in_the_right_place():
             result_list.append(self.extract_date_at_the_end(each))
         return result_list
-
-    #-----------------------------------Cash Back-------------------------------------------------------------
-    @staticmethod
-    def extract_cash_back_info(string):
-        pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d\d\.\d\d')
-        result = pattern.search(string)
-        return result.group()
-
-    def get_cash_back_position_and_info_text_about(self, a_list):
-        count_elements = len(a_list)
-        result = []
-        for pos in range(0, count_elements - 1):
-            if self.it_has_cash_back(a_list[pos]):
-                result.append([pos, self.extract_cash_back_info(a_list[pos])])
-        return result
 
 #-------------------------------------------------DELEGATES---------------------------------------------------------#
     @staticmethod
