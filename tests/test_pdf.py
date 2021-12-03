@@ -180,14 +180,34 @@ def test_get_left_side_only():
     assert my_withdrawals.get_left_side_only(string_test) == "Total ATM & Debit Card Withdrawals $4,261.68"
 
 
+# Bug fix
+def test_extract_cash_back():
+    test_text = "Card Purchase W/Cash 06/26 Lowe's #3095 San Francisco CA Card 6427 " \
+                "Purchase $107.42 Cash Back $40.00" \
+                "147.4206/26"
+    result = "Purchase $107.42 Cash Back $40.00"
+    assert my_withdrawals.extract_cash_back_info(test_text) == result
+
+    test_text = "Card Purchase W/Cash 09/29 Target T-2768 2675 G San Francisco CA Card 6427 " \
+                "Purchase $74.28 Cash Back $40.00" \
+                "114.2810/01"
+    result = "Purchase $74.28 Cash Back $40.00"
+    assert my_withdrawals.extract_cash_back_info(test_text) == result
+
+
 #-------------------------------------------extractor class---------------------------------------------------------
 def test_get_amount():
     test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
     expected_result = 239.24
-    test_text2 = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19"
-    expected_result2 = 35.19
     assert Extractor.get_amount(test_text) == expected_result
-    assert Extractor.get_amount(test_text2) == expected_result2
+
+    test_text = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19"
+    expected_result = 35.19
+    assert Extractor.get_amount(test_text) == expected_result
+
+    test_text = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 64243,735.19"
+    expected_result = 3735.19
+    assert Extractor.get_amount(test_text) == expected_result
 
 
 def test_get_type_withdrawal():
