@@ -224,10 +224,15 @@ def test_get_type_withdrawal():
 def test_get_date():
     test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
     expected_result = ["01/16", "01/13"]
-    test_text2 = "03/19ATM Withdrawal03/18 5655 Geary Blvd San Francisco CA Card 642740.00"
-    expected_result2 = ["03/19", "03/18"]
     assert Extractor.get_date(test_text) == expected_result
-    assert Extractor.get_date(test_text2) == expected_result2
+
+    test_text = "03/19ATM Withdrawal03/18 5655 Geary Blvd San Francisco CA Card 642740.00"
+    expected_result = ["03/19", "03/18"]
+    assert Extractor.get_date(test_text) == expected_result
+
+    test_text = "01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card 642735.15"
+    expected_result = ["01/02", "01/02"]
+    assert Extractor.get_date(test_text) == expected_result
 
 
 def test_get_last_4_digits():
@@ -243,6 +248,11 @@ def test_get_last_4_digits():
     expected_result = "6427"
     assert Extractor.get_last_4_digits(test_text) == expected_result
 
+    test_text = "01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card 642735.15"
+    expected_result = "6427"
+    assert Extractor.get_last_4_digits(test_text) == expected_result
+
+
 
 def test_get_store():
     my_extractor = Extractor("01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19")
@@ -255,5 +265,9 @@ def test_get_store():
 
     my_extractor = Extractor("01/16 Card Purchase With Pin 01/13Shell Service Statio San Francisco CA Card642735.19")
     expected_result = "Shell Service Statio San Francisco CA Card"
+    assert my_extractor.store == expected_result
+
+    my_extractor = Extractor("01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card642735.15")
+    expected_result = "Safeway Store 0785 San Francisco CA Card"
     assert my_extractor.store == expected_result
 
