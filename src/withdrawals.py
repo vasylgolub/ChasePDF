@@ -20,9 +20,6 @@ class Withdrawals:
 
     # ------------------------------------------------------------------------------------------------
     def get_list_of_information_about_withdrawals_section(self):
-        return self.get_cleaner_list()
-
-    def get_cleaner_list(self):
         not_perfect_list = self.get_list_of_each_transaction_and_total()
         return self.remove_unnecessary_info_from_some_elements(not_perfect_list)
 
