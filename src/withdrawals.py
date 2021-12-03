@@ -4,7 +4,7 @@ import re
 class Withdrawals:
     def __init__(self, whole_text=None):
         if whole_text is not None:
-            self.whole_text = whole_text
+            self.whole_long_text = whole_text
             self.list = self.get_list_of_information_about_withdrawals_section()
             self.total_withdrawals_text = self.get_new_fixed_list()[-1]
             self.list_of_transactions = self.get_new_fixed_list()[1:-1]
@@ -29,7 +29,7 @@ class Withdrawals:
 
     def inline_based_on_key_words(self, section_str=None):
         if section_str is None:
-            section_str = self.whole_text
+            section_str = self.whole_long_text
         section_str = section_str.replace("Recurring Card Purchase", "\nRecurring Card Purchase")
         section_str = section_str.replace("Card Purchase", "\nCard Purchase")
 
