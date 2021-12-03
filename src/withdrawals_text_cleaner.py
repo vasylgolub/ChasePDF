@@ -5,11 +5,11 @@ class WithdrawalsTextCleaner:
     def __init__(self, whole_text=None):
         if whole_text is not None:
             self.whole_text = whole_text
-            self.list_format_of_whole_text = self.make_whole_text_a_list_with_unnecessary_info_removed()
+            self.list = self.make_whole_text_a_list_with_unnecessary_info_removed()
 
 
     def get_wrapped_text(self):
-        return "\n".join(self.list_format_of_whole_text)
+        return "\n".join(self.list)
 
     # ------------------------------------------------------------------------------------------------
     def make_whole_text_a_list_with_unnecessary_info_removed(self):
