@@ -18,13 +18,9 @@ class Withdrawals:
         return float(str_num)
 
     # ------------------------------------------------------------------------------------------------
-    def get_list_of_information_about_withdrawals_section(self):
+    def a_list_with_some_text_removed_but_not_with_dates_in_the_right_place(self):
         not_perfect_list = self.inline_based_on_key_words().splitlines()
         return self.remove_unnecessary_info_from_some_elements(not_perfect_list)
-
-    # def make_it_a_list(self):
-    #     wrapped_text = self.inline_based_on_key_words()
-    #     return wrapped_text.splitlines()
 
     def inline_based_on_key_words(self, section_str=None):
         if section_str is None:
@@ -63,9 +59,9 @@ class Withdrawals:
     def get_fixed_list_with_dates_positioned_properly(self):
         result_list = []
         list_of_dates = self.extract_dates()
-        length = len(self.get_list_of_information_about_withdrawals_section())
+        length = len(self.a_list_with_some_text_removed_but_not_with_dates_in_the_right_place())
         for position in range(0, length):
-            string = self.get_list_of_information_about_withdrawals_section()[position]
+            string = self.a_list_with_some_text_removed_but_not_with_dates_in_the_right_place()[position]
             new_string = list_of_dates[position] + " " + self.get_str_with_date_removed_at_the_end(string)
             result_list.append(new_string)
         return result_list
@@ -73,7 +69,7 @@ class Withdrawals:
 
     def extract_dates(self):
         result_list = [""]  # Because the first element in list is a description
-        for each in self.get_list_of_information_about_withdrawals_section():
+        for each in self.a_list_with_some_text_removed_but_not_with_dates_in_the_right_place():
             result_list.append(self.extract_date_at_the_end(each))
         return result_list
 
