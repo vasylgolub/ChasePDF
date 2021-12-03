@@ -1,13 +1,13 @@
 from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
-from src.withdrawals import Withdrawals
+from src.withdrawals_text_cleaner import WithdrawalsTextCleaner
 from src.extractor import Extractor
 
 # file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
 file_path = list_of_files.with_full_path()[0]
 my_pdf = Pdf(file_path)
-my_withdrawals = Withdrawals()
+my_withdrawals = WithdrawalsTextCleaner()
 
 
 def test_is_path_correct():
