@@ -51,5 +51,10 @@ class Extractor:
     def get_store(self, string):
         pos_4_digits = string.rfind(self.last_4_digits)
         pos_second_date = string.rfind(self.date[1])
-        return string[pos_second_date+5: pos_4_digits].strip()
+        end = pos_4_digits
+        if "Card" in string:
+            end = end - 5
+        return string[pos_second_date+5: end].strip()
+
+
 
