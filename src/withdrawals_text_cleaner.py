@@ -57,7 +57,7 @@ class WithdrawalsTextCleaner:
     #-----------------------------------Cash Back-------------------------------------------------------------
     @staticmethod
     def extract_cash_back_info(string):
-        pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d\d\.\d\d')
+        pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d')
         result = pattern.search(string)
         return result.group()
 

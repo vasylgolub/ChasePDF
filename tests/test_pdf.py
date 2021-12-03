@@ -196,6 +196,14 @@ def test_extract_cash_back():
     result = "Purchase $74.28 Cash Back $40.00"
     assert my_withdrawals.extract_cash_back_info(test_text) == result
 
+    test_text = "Card Purchase W/Cash 12/31 Usps PO 05199001 1100 Daly City CA Card 6427 " \
+                "Purchase $36.25 Cash Back $110.00" \
+                "146.2512/31"
+
+    result = "Purchase $36.25 Cash Back $110.00"
+    assert my_withdrawals.extract_cash_back_info(test_text) == result
+
+
 
 #-------------------------------------------extractor class---------------------------------------------------------
 def test_get_amount():
@@ -256,18 +264,18 @@ def test_get_last_4_digits():
 
 def test_get_store():
     my_extractor = Extractor("01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19")
-    expected_result = "Shell Service Statio San Francisco CA Card"
+    expected_result = "Shell Service Statio San Francisco CA"
     assert my_extractor.store == expected_result
 
     my_extractor = Extractor("01/16 Card Purchase With Pin 01/13Shell Service Statio San Francisco CA Card 642735.19")
-    expected_result = "Shell Service Statio San Francisco CA Card"
+    expected_result = "Shell Service Statio San Francisco CA"
     assert my_extractor.store == expected_result
 
     my_extractor = Extractor("01/16 Card Purchase With Pin 01/13Shell Service Statio San Francisco CA Card642735.19")
-    expected_result = "Shell Service Statio San Francisco CA Card"
+    expected_result = "Shell Service Statio San Francisco CA"
     assert my_extractor.store == expected_result
 
     my_extractor = Extractor("01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card642735.15")
-    expected_result = "Safeway Store 0785 San Francisco CA Card"
+    expected_result = "Safeway Store 0785 San Francisco CA"
     assert my_extractor.store == expected_result
 
