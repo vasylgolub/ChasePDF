@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+
 class ListOfFilesFromDirectory:
     def __init__(self, path_to_folder):
         self.months = ['January', 'February', 'March', 'April', 'May',
