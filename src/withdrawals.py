@@ -7,6 +7,7 @@ class Withdrawals:
         if whole_text is not None:
             helper = WithdrawalsHelper
             cleaned_withdrawals_text = WithdrawalsTextCleaner(whole_text)
+            self.cleaner = WithdrawalsTextCleaner(whole_text)
             self.whole_text = whole_text
             self.whole_text_wrapped = cleaned_withdrawals_text.get_wrapped_text()
             self.title = self.whole_text_wrapped[:self.whole_text_wrapped.find("\n")]  # The title is on top
