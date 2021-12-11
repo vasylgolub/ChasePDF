@@ -21,9 +21,9 @@ class Pdf:
 
         self.text = ''
         # go through each page and extract text
-        for i in range(0, read_pdf_file.numPages):
+        for n in range(0, read_pdf_file.numPages):
             # creating a page object
-            page = read_pdf_file.getPage(i)
+            page = read_pdf_file.getPage(n)
             # extracting text from page
             self.text = self.text + " " + page.extractText()
         self.text_length = len(self.text)
@@ -41,10 +41,12 @@ class Pdf:
                                   "FEES",
                                   "DAILY ENDING BALANCE",
                                   "SERVICE CHARGE SUMMARY"]
-        self.remove_sections_not_in_the_text()
+        self.remove_sections_not_in_the_text()  # from document_sections
 
+    # Gate to Withdrawals class methods. This functions is related to only withdrawals info.
+    def get_withdrawals(self):
         withdrawals_section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
-        self.withdrawals = Withdrawals(withdrawals_section)
+        return Withdrawals(withdrawals_section)
 
     def get_date_of_this_statement(self, text=None):
         # The header has the information regarding the statement's date.
