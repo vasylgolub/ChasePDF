@@ -17,7 +17,7 @@ class FileToRename:
     # Let's make this method also return a message besides renaming the file
     def rename_file(self):
         new_name_for_file = self.file_date
-        if self.file_was_already_renamed_to_desired_name(new_name_for_file + ".pdf", self.current_file_name):
+        if self.was_file_already_renamed_to_desired_name(new_name_for_file + ".pdf", self.current_file_name):
             return "File was already renamed to desired name"
 
         extension = "pdf"
@@ -30,7 +30,7 @@ class FileToRename:
 
 
     @staticmethod
-    def file_was_already_renamed_to_desired_name(new, current):
+    def was_file_already_renamed_to_desired_name(new, current):
         return new == current
 
     def get_dir_path_of_where_the_file_is_stored(self):
