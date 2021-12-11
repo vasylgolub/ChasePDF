@@ -105,7 +105,7 @@ class WithdrawalsTextCleaner:
 
     @staticmethod
     def does_have_unnecessary_long_text(string):
-        return len(string) > 100
+        return len(string) > 200
 
     def get_lef_side_and_date_at_the_end(self, string):
         end_position = self.get_end_position_of_target(string)
