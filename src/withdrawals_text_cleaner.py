@@ -44,7 +44,7 @@ class WithdrawalsTextCleaner:
             if self.it_has_cash_back(a_list[pos]):
                 cash_back_section_text = self.extract_cash_back_info(a_list[pos])
                 a_list[pos] = a_list[pos].replace(cash_back_section_text, "")
-                a_list[pos] = self.remove_last_position_space_char(a_list[pos])  # Documentation: 1.0
+                a_list[pos] = self.get_string_with_last_space_char_removed(a_list[pos])  # Documentation: 1.0
 
             if self.does_have_unnecessary_long_text(a_list[pos]):
                 a_list[pos] = self.get_lef_side_and_date_at_the_end(a_list[pos])
@@ -55,6 +55,11 @@ class WithdrawalsTextCleaner:
         return a_list
 
     #-------------------------------International transactions-------------------------------------------------
+    def get_string_without_Exchg_Rte_text(self, string):
+        exchange_rate_sub_text = self.extract_exchange_rate_info(string)
+        result = string.replace(exchange_rate_sub_text, "")
+        return self.get_string_with_last_space_char_removed(result)
+
     @staticmethod
     def extract_exchange_rate_info(string):
         pattern = re.compile(r'\d{4} .+\)')  # 4 digits used as reference point
@@ -68,6 +73,7 @@ class WithdrawalsTextCleaner:
         result = pattern.search(string)
         return result.group()
 
+    # I think this one is not used anywhere ---!
     def get_cash_back_position_and_info_text_about(self, a_list):
         count_elements = len(a_list)
         result = []
@@ -104,6 +110,10 @@ class WithdrawalsTextCleaner:
     @staticmethod
     def it_has_cash_back(string):
         return "Cash Back" in string
+
+    @staticmethod
+    def it_has_Exchg_Rte(string):
+        return "Exchg Rte" in string
 
     @staticmethod
     def get_left_side_only(string):
