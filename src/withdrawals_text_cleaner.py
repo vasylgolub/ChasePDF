@@ -44,7 +44,7 @@ class WithdrawalsTextCleaner:
             if self.it_has_cash_back(a_list[pos]):
                 cash_back_section_text = self.extract_cash_back_info(a_list[pos])
                 a_list[pos] = a_list[pos].replace(cash_back_section_text, "")
-                a_list[pos] = self.get_string_with_last_space_removed(a_list[pos])
+                a_list[pos] = self.remove_last_position_space_char(a_list[pos])
 
             if self.does_have_unnecessary_long_text(a_list[pos]):
                 a_list[pos] = self.get_lef_side_and_date_at_the_end(a_list[pos])
@@ -87,9 +87,9 @@ class WithdrawalsTextCleaner:
             result_list.append(self.extract_date_at_the_end(each))
         return result_list
 
-#-------------------------------------------------DELEGATES---------------------------------------------------------#
+#-----------------------------------------------Delegating functions-----------------------------------------------#
     @staticmethod
-    def get_string_with_last_space_removed(string):
+    def remove_last_position_space_char(string):
         last_space_pos = string.rfind(" ")
         result = string[:last_space_pos] + string[last_space_pos+1:]
         return result

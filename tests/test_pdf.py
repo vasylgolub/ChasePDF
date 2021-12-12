@@ -204,7 +204,6 @@ def test_extract_cash_back():
     assert my_withdrawals.extract_cash_back_info(test_text) == result
 
 
-
 #-------------------------------------------extractor class---------------------------------------------------------
 def test_get_amount():
     test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
