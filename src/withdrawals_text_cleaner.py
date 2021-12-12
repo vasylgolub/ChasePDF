@@ -46,6 +46,9 @@ class WithdrawalsTextCleaner:
                 a_list[pos] = a_list[pos].replace(cash_back_section_text, "")
                 a_list[pos] = self.get_string_with_last_space_char_removed(a_list[pos])  # Documentation: 1.0
 
+            if self.it_has_Exchg_Rte(a_list[pos]):
+                a_list[pos] = self.get_string_without_Exchg_Rte_text(a_list[pos])
+
             if self.does_have_unnecessary_long_text(a_list[pos]):
                 a_list[pos] = self.get_lef_side_and_date_at_the_end(a_list[pos])
 
@@ -62,7 +65,7 @@ class WithdrawalsTextCleaner:
 
     @staticmethod
     def extract_exchange_rate_info(string):
-        pattern = re.compile(r'\d{4} .+\)')  # 4 digits used as reference point
+        pattern = re.compile(r'\d{4} .+?\)')  # 4 digits used as reference point. Match till first occurrence of )
         result = pattern.search(string)
         return result.group()[5:]  # 4 digits then removed from string
 
