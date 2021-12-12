@@ -96,9 +96,9 @@ class WithdrawalsTextCleaner:
 
 #-----------------------------------------------Delegating functions-----------------------------------------------#
     @staticmethod
-    def remove_last_position_space_char(string):
+    def get_string_with_last_space_char_removed(string):
         last_space_pos = string.rfind(" ")
-        result = string[:last_space_pos] + string[last_space_pos+1:]
+        result = string[:last_space_pos] + string[last_space_pos + 1:]
         return result
 
     @staticmethod
