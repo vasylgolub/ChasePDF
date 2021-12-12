@@ -278,3 +278,10 @@ def test_get_store():
     expected_result = "Safeway Store 0785 San Francisco CA"
     assert my_extractor.store == expected_result
 
+
+def test_extract_exchange_rate_info():
+    test_text = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398 Euro " \
+                "250.00 X 1.175000 (Exchg Rte)293.7509/27"
+    expected_result = "Euro 250.00 X 1.175000 (Exchg Rte)"
+    assert my_withdrawals.extract_exchange_rate_info(test_text) == expected_result
+

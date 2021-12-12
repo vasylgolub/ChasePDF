@@ -54,6 +54,13 @@ class WithdrawalsTextCleaner:
 
         return a_list
 
+    #-------------------------------International transactions-------------------------------------------------
+    @staticmethod
+    def extract_exchange_rate_info(string):
+        pattern = re.compile(r'\d{4} .+\)')  # 4 digits used as reference point
+        result = pattern.search(string)
+        return result.group()[5:]  # 4 digits then removed from string
+
     #-----------------------------------Cash Back-------------------------------------------------------------
     @staticmethod
     def extract_cash_back_info(string):
