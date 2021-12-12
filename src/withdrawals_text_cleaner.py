@@ -44,7 +44,7 @@ class WithdrawalsTextCleaner:
             if self.it_has_cash_back(a_list[pos]):
                 cash_back_section_text = self.extract_cash_back_info(a_list[pos])
                 a_list[pos] = a_list[pos].replace(cash_back_section_text, "")
-                a_list[pos] = self.remove_last_position_space_char(a_list[pos])
+                a_list[pos] = self.remove_last_position_space_char(a_list[pos])  # Documentation: 1.0
 
             if self.does_have_unnecessary_long_text(a_list[pos]):
                 a_list[pos] = self.get_lef_side_and_date_at_the_end(a_list[pos])
