@@ -27,7 +27,7 @@ class WithdrawalsTextCleaner:
         section_str = section_str.replace("Recurring Card Purchase", "\nRecurring Card Purchase")
         section_str = section_str.replace("Card Purchase", "\nCard Purchase")
 
-        # little fix because both previous operations have "Purchase" word
+        # little fix since both previous operations have "Purchase" word
         section_str = section_str.replace("Recurring \n", "Recurring ")
 
         section_str = section_str.replace("Total ATM & Debit Card Withdrawals", "\nTotal ATM & Debit Card Withdrawals")
@@ -42,15 +42,13 @@ class WithdrawalsTextCleaner:
         for pos in range(0, count_elements - 1):  # Not till the last one
 
             if self.it_has_cash_back(a_list[pos]):
-                cash_back_section_text = self.extract_cash_back_info(a_list[pos])
-                a_list[pos] = a_list[pos].replace(cash_back_section_text, "")
-                a_list[pos] = self.get_string_with_last_space_char_removed(a_list[pos])  # Documentation: 1.0
+                a_list[pos] = self.get_string_without_cash_back_text(a_list[pos])
 
             if self.it_has_Exchg_Rte(a_list[pos]):
                 a_list[pos] = self.get_string_without_Exchg_Rte_text(a_list[pos])
 
             if self.does_have_unnecessary_long_text(a_list[pos]):
-                a_list[pos] = self.get_lef_side_and_date_at_the_end(a_list[pos])
+                a_list[pos] = self.get_text_without_unnecessary_long_sub_text(a_list[pos])
 
         if self.does_have_unnecessary_long_text(a_list[-1]):  # If last element has unnecessary text
             a_list[-1] = self.get_left_side_only(a_list[-1])
@@ -70,6 +68,11 @@ class WithdrawalsTextCleaner:
         return result.group()[5:]  # 4 digits then removed from string
 
     #-----------------------------------Cash Back-------------------------------------------------------------
+    def get_string_without_cash_back_text(self, string):
+        cash_back_section_text = self.extract_cash_back_info(string)
+        result = string.replace(cash_back_section_text, "")
+        return self.get_string_with_last_space_char_removed(result)  # Documentation: 1.0
+
     @staticmethod
     def extract_cash_back_info(string):
         pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d')
@@ -127,7 +130,7 @@ class WithdrawalsTextCleaner:
     def does_have_unnecessary_long_text(string):
         return len(string) > 200
 
-    def get_lef_side_and_date_at_the_end(self, string):
+    def get_text_without_unnecessary_long_sub_text(self, string):
         end_position = self.get_end_position_of_target(string)
         last_5_chars = string[-5:]
         return string[: end_position] + last_5_chars
