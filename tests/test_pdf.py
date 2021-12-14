@@ -211,17 +211,23 @@ def test_extract_cash_back():
 
 #-------------------------------------------extractor class---------------------------------------------------------
 def test_get_amount():
-    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
+    my_extractor = Extractor("01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24")
     expected_result = 239.24
-    assert Extractor.get_amount(test_text) == expected_result
+    assert my_extractor.get_amount() == expected_result
 
-    test_text = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19"
+    my_extractor = Extractor("01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 642735.19")
     expected_result = 35.19
-    assert Extractor.get_amount(test_text) == expected_result
+    assert my_extractor.get_amount() == expected_result
 
-    test_text = "01/16 Card Purchase With Pin 01/13 Shell Service Statio San Francisco CA Card 64243,735.19"
+    my_extractor = Extractor("01/16 Card Purchase With Pin 01/13 Shell Service Statio "
+                             "San Francisco CA Card 64243,735.19")
     expected_result = 3735.19
-    assert Extractor.get_amount(test_text) == expected_result
+    assert my_extractor.get_amount() == expected_result
+
+    my_extractor = Extractor("08/24 Card Purchase 08/21 Patio Latino Bosa Card 6398 127.61")
+    expected_result = 127.61
+    assert my_extractor.get_amount() == expected_result
+
 
 
 def test_get_type_withdrawal():
