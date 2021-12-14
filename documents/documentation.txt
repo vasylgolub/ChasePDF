@@ -1,0 +1,2 @@
+1.0
+- We remove the space between dddd and d+.dd . because all text elements should have this form. The subsequent functions applied to the text will be able to then extract the 4 digits: dddd and then the amount: d+.dd. With the space in between these two I didn't find another way around for extracting these two information separatly yet.

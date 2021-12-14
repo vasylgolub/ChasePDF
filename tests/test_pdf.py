@@ -120,7 +120,7 @@ def test_function_et_date_of_this_statement():
 
 
 #-------------------------------------------Withdrawals class---------------------------------------------------------
-def test_get_lef_side_and_date_at_the_end():
+def test_get_text_without_unnecessary_long_sub_text():
     line1 = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.09 " \
                 "46Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawal*start*atmanddebitcardsummary*end*" \
                 "atmanddebitcardsummary*start*electronicwithdrawal*end*electronicwithdrawal*start*" \
@@ -134,15 +134,20 @@ def test_get_lef_side_and_date_at_the_end():
             "1015440030200000006336Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawalFebruary 01, " \
             "2020 through February 28, 2020Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS " \
             "(continued)DATEDESCRIPTIONAMOUNT 02/14"
+    # line4 = "Card Purchase 08/21 Patio Latino Bosa Card 6398 Euro 109.00 X 1.170734 (Exchg Rte)127.61 " \
+    #         "48Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawal*start*atmanddebitcardsummary*end*atmanddebitcard" \
+    #         "summaryJuly 31, 2021 through August 31, 2021Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS " \
+    #         "(continued)DATEDESCRIPTIONAMOUNT08/24"
 
     expected_line = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.0902/27"
     expected_line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.0302/03"
     expected_line3 = "Card Purchase 02/13 Paypal *Theau 402-935-7733 CA Card 642759.0002/14"
+    # expected_line4 = "Card Purchase 08/21 Patio Latino Bosa Card 6398 Euro 109.00 X 1.170734 (Exchg Rte)127.6108/24"
 
-    assert my_withdrawals.get_lef_side_and_date_at_the_end(line1) == expected_line
-    assert my_withdrawals.get_lef_side_and_date_at_the_end(line2) == expected_line2
-    assert my_withdrawals.get_lef_side_and_date_at_the_end(line3) == expected_line3
-
+    assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line1) == expected_line
+    assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line2) == expected_line2
+    assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line3) == expected_line3
+    # assert my_withdrawals.get_lef_side_and_date_at_the_end(line4) == expected_line4
 
 
 def test_extract_date_at_the_end_of_a_string():
@@ -204,7 +209,6 @@ def test_extract_cash_back():
     assert my_withdrawals.extract_cash_back_info(test_text) == result
 
 
-
 #-------------------------------------------extractor class---------------------------------------------------------
 def test_get_amount():
     test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
@@ -244,22 +248,27 @@ def test_get_date():
 
 
 def test_get_last_4_digits():
-    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
-    expected_result = "6427"
-    assert Extractor.get_last_4_digits(test_text) == expected_result
+    test_text = ["01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24",
+                 "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card6427$239.24",
+                 "Tech 877-645-534377 34324524CA Card64274334$239.24",
+                 "01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card 642735.15",
+                 "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427 $239.24",
+                 "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card6427 $239.24",
+                 "Tech 877-645-534377 34324524CA Card6427 4334$239.24",
+                 "01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card 6427 35.15"]
 
-    test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card6427$239.24"
     expected_result = "6427"
-    assert Extractor.get_last_4_digits(test_text) == expected_result
+    assert Extractor.get_card_last_4_digits(test_text[0]) == expected_result
+    assert Extractor.get_card_last_4_digits(test_text[1]) == expected_result
+    assert Extractor.get_card_last_4_digits(test_text[2]) == expected_result
+    assert Extractor.get_card_last_4_digits(test_text[3]) == expected_result
+    assert Extractor.get_card_last_4_digits(test_text[4]) == expected_result
+    assert Extractor.get_card_last_4_digits(test_text[5]) == expected_result
+    assert Extractor.get_card_last_4_digits(test_text[6]) == expected_result
 
-    test_text = "Tech 877-645-534377 34324524CA Card64274334$239.24"
+    test_text = "01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card 6427 35.15"
     expected_result = "6427"
-    assert Extractor.get_last_4_digits(test_text) == expected_result
-
-    test_text = "01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card 642735.15"
-    expected_result = "6427"
-    assert Extractor.get_last_4_digits(test_text) == expected_result
-
+    assert Extractor.get_card_last_4_digits(test_text) == expected_result
 
 
 def test_get_store():
@@ -279,3 +288,35 @@ def test_get_store():
     expected_result = "Safeway Store 0785 San Francisco CA"
     assert my_extractor.store == expected_result
 
+    # This assert was added when working on bug #3
+    my_extractor = Extractor("08/24 Card Purchase 08/21 Patio Latino Bosa Card 6398 127.61")
+    expected_result = "Patio Latino Bosa"
+    assert my_extractor.store == expected_result
+
+
+#
+
+#-------------------------------------------other---------------------------------------------------------
+
+def test_extract_exchange_rate_info():
+    test_text = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398 Euro " \
+                "250.00 X 1.175000 (Exchg Rte)293.7509/27"
+    expected_result = "Euro 250.00 X 1.175000 (Exchg Rte)"
+    assert my_withdrawals.extract_exchange_rate_info(test_text) == expected_result
+
+    test_text = "Card Purchase 08/28 Autogrill 0038 Caponago Card 6398 Euro 8.19 X 1.180708 (Exchg Rte)9.6708/30"
+    expected_result = "Euro 8.19 X 1.180708 (Exchg Rte)"
+    assert my_withdrawals.extract_exchange_rate_info(test_text) == expected_result
+
+
+def test_remove_Exchg_Rte_text():
+    test_text = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398 Euro " \
+                "250.00 X 1.175000 (Exchg Rte)293.7509/27"
+    expected_result = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398293.7509/27"
+    assert my_withdrawals.get_string_without_Exchg_Rte_text(test_text) == expected_result
+
+
+# def test_remove_Exchg_Rte_text_when_the_text_has_long_unnecessary_info():
+#     test_text = "Card Purchase 08/21 Patio Latino Bosa Card 6398 Euro 109.00 X 1.170734 (Exchg Rte)127.61 48Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawal*start*atmanddebitcardsummary*end*atmanddebitcardsummaryJuly 31, 2021 through August 31, 2021Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS (continued)DATEDESCRIPTIONAMOUNT08/24"
+#     expected_result = "Card Purchase 08/21 Patio Latino Bosa Card 6398 127.61 48Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawal*start*atmanddebitcardsummary*end*atmanddebitcardsummaryJuly 31, 2021 through August 31, 2021Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS (continued)DATEDESCRIPTIONAMOUNT08/24"
+#     assert my_withdrawals.get_string_without_Exchg_Rte_text(test_text) == expected_result

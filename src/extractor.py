@@ -7,7 +7,7 @@ class Extractor:
         self.amount = self.get_amount(self.whole_text)
         self.type = self.get_type_withdrawal(self.whole_text)
         self.date = self.get_date(self.whole_text)
-        self.last_4_digits = self.get_last_4_digits(self.whole_text)
+        self.last_4_digits = self.get_card_last_4_digits(self.whole_text)
         self.store = self.get_store(self.whole_text)
 
 
@@ -40,13 +40,10 @@ class Extractor:
         return result
 
     @staticmethod
-    def get_last_4_digits(string):
-        pattern = re.compile(r'\d\d\d\d+')
-        matches = pattern.finditer(string)
-        list_of_matches = []
-        for match in matches:
-            list_of_matches.append(match.group())
-        return list_of_matches[-1][:4]
+    def get_card_last_4_digits(string):
+        pattern = re.compile(r'Card\ ?\d\d\d\d')
+        matches = pattern.search(string)
+        return matches.group()[-4:]
 
     def get_store(self, string):
         pos_4_digits = string.rfind(self.last_4_digits)

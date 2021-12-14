@@ -24,11 +24,12 @@ class ListOfFilesFromDirectory:
 
     # ------------------------------------------------------------------------------------------------
     def sorted(self, list_to_sort=None):
+        n_files_in_folder = len(self.files)  # In case we want to sort files that are less then 12
         if list_to_sort is None:
             list_to_sort = self.files
         hint = self.get_hint_on_how_to_sort_this_list_of_months(list_to_sort)
-        ordered_list = [None] * 12
-        for i in range(0, 12):
+        ordered_list = [None] * n_files_in_folder
+        for i in range(0, n_files_in_folder):
             ordered_list[hint[i]] = list_to_sort[i]
         return ordered_list
 

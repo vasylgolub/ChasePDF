@@ -27,7 +27,7 @@ class WithdrawalsTextCleaner:
         section_str = section_str.replace("Recurring Card Purchase", "\nRecurring Card Purchase")
         section_str = section_str.replace("Card Purchase", "\nCard Purchase")
 
-        # little fix because both previous operations have "Purchase" word
+        # little fix since both previous operations have "Purchase" word
         section_str = section_str.replace("Recurring \n", "Recurring ")
 
         section_str = section_str.replace("Total ATM & Debit Card Withdrawals", "\nTotal ATM & Debit Card Withdrawals")
@@ -42,25 +42,44 @@ class WithdrawalsTextCleaner:
         for pos in range(0, count_elements - 1):  # Not till the last one
 
             if self.it_has_cash_back(a_list[pos]):
-                cash_back_section_text = self.extract_cash_back_info(a_list[pos])
-                a_list[pos] = a_list[pos].replace(cash_back_section_text, "")
-                a_list[pos] = self.get_string_with_last_space_removed(a_list[pos])
+                a_list[pos] = self.get_string_without_cash_back_text(a_list[pos])
+
+            if self.it_has_Exchg_Rte(a_list[pos]):
+                a_list[pos] = self.get_string_without_Exchg_Rte_text(a_list[pos])
 
             if self.does_have_unnecessary_long_text(a_list[pos]):
-                a_list[pos] = self.get_lef_side_and_date_at_the_end(a_list[pos])
+                a_list[pos] = self.get_text_without_unnecessary_long_sub_text(a_list[pos])
 
         if self.does_have_unnecessary_long_text(a_list[-1]):  # If last element has unnecessary text
             a_list[-1] = self.get_left_side_only(a_list[-1])
 
         return a_list
 
+    #-------------------------------International transactions-------------------------------------------------
+    def get_string_without_Exchg_Rte_text(self, string):
+        exchange_rate_sub_text = self.extract_exchange_rate_info(string)
+        result = string.replace(exchange_rate_sub_text, "")  # Remove that subtext from string
+        return self.get_string_with_last_space_char_removed(result)
+
+    @staticmethod
+    def extract_exchange_rate_info(string):
+        pattern = re.compile(r'Card \d{4} .+?\)')  # 4 digits used as reference point. Match till first occurrence of )
+        result = pattern.search(string)
+        return result.group()[10:]  # Card and 4 digits are then removed from string
+
     #-----------------------------------Cash Back-------------------------------------------------------------
+    def get_string_without_cash_back_text(self, string):
+        cash_back_section_text = self.extract_cash_back_info(string)
+        result = string.replace(cash_back_section_text, "")
+        return self.get_string_with_last_space_char_removed(result)  # Documentation: 1.0
+
     @staticmethod
     def extract_cash_back_info(string):
         pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d')
         result = pattern.search(string)
         return result.group()
 
+    # I think this one is not used anywhere ---!
     def get_cash_back_position_and_info_text_about(self, a_list):
         count_elements = len(a_list)
         result = []
@@ -87,16 +106,20 @@ class WithdrawalsTextCleaner:
             result_list.append(self.extract_date_at_the_end(each))
         return result_list
 
-#-------------------------------------------------DELEGATES---------------------------------------------------------#
+#-----------------------------------------------Delegating functions-----------------------------------------------#
     @staticmethod
-    def get_string_with_last_space_removed(string):
+    def get_string_with_last_space_char_removed(string):
         last_space_pos = string.rfind(" ")
-        result = string[:last_space_pos] + string[last_space_pos+1:]
+        result = string[:last_space_pos] + string[last_space_pos + 1:]
         return result
 
     @staticmethod
     def it_has_cash_back(string):
         return "Cash Back" in string
+
+    @staticmethod
+    def it_has_Exchg_Rte(string):
+        return "Exchg Rte" in string
 
     @staticmethod
     def get_left_side_only(string):
@@ -107,7 +130,7 @@ class WithdrawalsTextCleaner:
     def does_have_unnecessary_long_text(string):
         return len(string) > 200
 
-    def get_lef_side_and_date_at_the_end(self, string):
+    def get_text_without_unnecessary_long_sub_text(self, string):
         end_position = self.get_end_position_of_target(string)
         last_5_chars = string[-5:]
         return string[: end_position] + last_5_chars
