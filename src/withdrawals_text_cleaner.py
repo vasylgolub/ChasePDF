@@ -58,7 +58,7 @@ class WithdrawalsTextCleaner:
     #-------------------------------International transactions-------------------------------------------------
     def get_string_without_Exchg_Rte_text(self, string):
         exchange_rate_sub_text = self.extract_exchange_rate_info(string)
-        result = string.replace(exchange_rate_sub_text, "")
+        result = string.replace(exchange_rate_sub_text, "")  # Remove that subtext from string
         return self.get_string_with_last_space_char_removed(result)
 
     @staticmethod
