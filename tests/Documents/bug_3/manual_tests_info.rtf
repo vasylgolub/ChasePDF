@@ -8,6 +8,8 @@
 \f0\fs24 \cf0 bug1 (high Priority) \
 - When reading a pdf file where there were some international transactions, some additional info is present in transaction description regarding the rate exchange. So when functions that remove unnecessary info return a wrong result when operating on these type of text that has rate exchange info. Some other function return wrong result also.\
 \
+- Actually this is another bug where a text has 4 digits in description. Usually a 4 digit number is related to the last 4 digit card, but sometimes there could be another 4 digit that can be something else. Probably it confuses the function extract when applied.\
+\
 What needs to be done?\
 - Create a function that takes care of extracting that particular field: rate exchange. And then create maybe some additional tests to verify the correctness of the new functions and the ones that already exist (maybe adding some additional asserts)\
 ____________ ____________ ____________ ____________ ____________ ____________ ____________}
