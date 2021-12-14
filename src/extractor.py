@@ -10,11 +10,12 @@ class Extractor:
         self.last_4_digits = self.get_card_last_4_digits(self.whole_text)
         self.store = self.get_store(self.whole_text)
 
+    def get_amount(self, string=None):
+        if string is None:
+            string = self.whole_text
 
-    @staticmethod
-    def get_amount(string):
-        last_space_pos = string.rfind(" ")
-        right_side_string = string[last_space_pos+1:][4:]  # get right side + remove the first 4 digits
+        last_4_digits = self.get_card_last_4_digits(string)
+        right_side_string = string[string.find(last_4_digits)+4:]
 
         if '$' in right_side_string:
             right_side_string = right_side_string.replace('$', "")
@@ -41,7 +42,7 @@ class Extractor:
 
     @staticmethod
     def get_card_last_4_digits(string):
-        pattern = re.compile(r'Card\ ?\d\d\d\d')
+        pattern = re.compile(r'Card ?\d\d\d\d')
         matches = pattern.search(string)
         return matches.group()[-4:]
 
@@ -52,6 +53,3 @@ class Extractor:
         if "Card" in string:
             end = end - 5
         return string[pos_second_date+5: end].strip()
-
-
-
