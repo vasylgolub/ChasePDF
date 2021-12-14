@@ -304,6 +304,10 @@ def test_extract_exchange_rate_info():
     expected_result = "Euro 250.00 X 1.175000 (Exchg Rte)"
     assert my_withdrawals.extract_exchange_rate_info(test_text) == expected_result
 
+    test_text = "Card Purchase 08/28 Autogrill 0038 Caponago Card 6398 Euro 8.19 X 1.180708 (Exchg Rte)9.6708/30"
+    expected_result = "Euro 8.19 X 1.180708 (Exchg Rte)"
+    assert my_withdrawals.extract_exchange_rate_info(test_text) == expected_result
+
 
 def test_remove_Exchg_Rte_text():
     test_text = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398 Euro " \
