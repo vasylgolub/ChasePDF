@@ -1,5 +1,5 @@
-from src.withdrawals_text_cleaner import WithdrawalsTextCleaner
-from src.withdrawals_helper import WithdrawalsHelper
+from src.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
+from src.withdrawals.withdrawals_helper import WithdrawalsHelper
 
 
 class Withdrawals:

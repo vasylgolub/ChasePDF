@@ -1,8 +1,8 @@
 from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
-from src.withdrawals_text_cleaner import WithdrawalsTextCleaner
-from src.extractor import Extractor
-from src.withdrawals_helper import WithdrawalsHelper
+from src.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
+from src.withdrawals.extractor import Extractor
+from src.withdrawals.withdrawals_helper import WithdrawalsHelper
 
 # file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")

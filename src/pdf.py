@@ -2,7 +2,7 @@ from PyPDF2 import PdfFileReader
 from colorama import Fore
 import textwrap
 import os
-from src.withdrawals import Withdrawals
+from src.withdrawals.withdrawals import Withdrawals
 
 # This class is supposed to work on a Chase Bank statement in pdf format.
 # A bank statement is a list of all transactions for a bank account over a set period, usually monthly.
