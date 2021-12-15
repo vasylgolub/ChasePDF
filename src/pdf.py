@@ -53,6 +53,10 @@ class Pdf:
         withdrawals_section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
         return Withdrawals(withdrawals_section)
 
+    def get_transaction_detail(self):
+        withdrawals_section = self.get_desired_section("TRANSACTION DETAIL")
+        return Withdrawals(withdrawals_section)
+
     def get_date_of_this_statement(self, text=None):
         # The header has the information regarding the statement's date.
         if text is None:
