@@ -9,7 +9,7 @@ from src.withdrawals.withdrawals import Withdrawals
 
 
 class Pdf:
-    def __init__(self, pdf_file_path):
+    def __init__(self, pdf_file_path, is_personal_account=False):
         # let's save the path just in case
         self.file_full_path = pdf_file_path
         self.file_name = os.path.basename(self.file_full_path)
@@ -41,6 +41,11 @@ class Pdf:
                                   "FEES",
                                   "DAILY ENDING BALANCE",
                                   "SERVICE CHARGE SUMMARY"]
+        if is_personal_account:
+            self.document_sections = ["CHECKING SUMMARY",
+                                      "TRANSACTION DETAIL",
+                                      "OVERDRAFT AND RETURNED ITEM FEE SUMMARY"]
+
         self.remove_sections_not_in_the_text()  # from document_sections
 
     # Gate to Withdrawals class methods. This functions is related to only withdrawals info.
@@ -118,7 +123,8 @@ class Pdf:
     def get_desired_section(self, name_of_the_section):
         start = self.text.find(name_of_the_section)
 
-        # If we want to get the "SERVICE CHARGE SUMMARY" section, then get text from that point till end of whole text
+        # If we want to get the "SERVICE CHARGE SUMMARY" (business bank account only) section,
+        # then get text from that point till end of whole text
         if name_of_the_section == self.document_sections[-1]:
             return self.text[start: self.text_length]
         index_of_next_section = self.document_sections.index(name_of_the_section) + 1
