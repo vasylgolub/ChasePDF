@@ -1,4 +1,5 @@
 #  The file should contain a list of all transactions.store made during a year or more.
+#  Operate on a file that contains a list of transaction detail
 
 
 class FileStoresList:

@@ -1,11 +1,11 @@
 from src.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
-from src.withdrawals.withdrawals_helper import WithdrawalsHelper
+from src.withdrawals.helper import Helper
 
 
 class Withdrawals:
     def __init__(self, whole_text=None):
         if whole_text is not None:
-            helper = WithdrawalsHelper
+            helper = Helper
             cleaned_withdrawals_text = WithdrawalsTextCleaner(whole_text)
             self.cleaner = WithdrawalsTextCleaner(whole_text)
             self.whole_text = whole_text
