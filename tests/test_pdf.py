@@ -2,14 +2,15 @@ from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
 from src.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
 from src.withdrawals.extractor import Extractor
-from src.withdrawals.withdrawals_helper import WithdrawalsHelper
+from src.withdrawals.helper import Helper
+from src.withdrawals.tansaction_detail_cleaner import TransactionCleaner
 
-# file_path = "/Users/vasylgolub/Desktop/pdfs/2020/20200131-statements-7190-.pdf"
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
 file_path = list_of_files.with_full_path()[0]
 my_pdf = Pdf(file_path)
 my_withdrawals = WithdrawalsTextCleaner()
-my_withdrawals_helper = WithdrawalsHelper
+my_withdrawals_helper = Helper
+# my_transaction_detail =
 
 
 def test_is_path_correct():
@@ -134,20 +135,14 @@ def test_get_text_without_unnecessary_long_sub_text():
             "1015440030200000006336Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawalFebruary 01, " \
             "2020 through February 28, 2020Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS " \
             "(continued)DATEDESCRIPTIONAMOUNT 02/14"
-    # line4 = "Card Purchase 08/21 Patio Latino Bosa Card 6398 Euro 109.00 X 1.170734 (Exchg Rte)127.61 " \
-    #         "48Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawal*start*atmanddebitcardsummary*end*atmanddebitcard" \
-    #         "summaryJuly 31, 2021 through August 31, 2021Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS " \
-    #         "(continued)DATEDESCRIPTIONAMOUNT08/24"
 
     expected_line = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.0902/27"
     expected_line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.0302/03"
     expected_line3 = "Card Purchase 02/13 Paypal *Theau 402-935-7733 CA Card 642759.0002/14"
-    # expected_line4 = "Card Purchase 08/21 Patio Latino Bosa Card 6398 Euro 109.00 X 1.170734 (Exchg Rte)127.6108/24"
 
     assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line1) == expected_line
     assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line2) == expected_line2
     assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line3) == expected_line3
-    # assert my_withdrawals.get_lef_side_and_date_at_the_end(line4) == expected_line4
 
 
 def test_extract_date_at_the_end_of_a_string():
@@ -300,8 +295,6 @@ def test_get_store():
     assert my_extractor.store == expected_result
 
 
-#
-
 #-------------------------------------------other---------------------------------------------------------
 
 def test_extract_exchange_rate_info():
@@ -315,14 +308,24 @@ def test_extract_exchange_rate_info():
     assert my_withdrawals.extract_exchange_rate_info(test_text) == expected_result
 
 
-def test_remove_Exchg_Rte_text():
-    test_text = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398 Euro " \
-                "250.00 X 1.175000 (Exchg Rte)293.7509/27"
-    expected_result = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398293.7509/27"
-    assert my_withdrawals.get_string_without_Exchg_Rte_text(test_text) == expected_result
+#-------------------------------------------transaction_detail---------------------------------------------------------
+def test_remove_long_unnecessary_text():
+    test_text = " 5 Southgate Ave Daly City CA Card 8653-655.001,653.36 " \
+                "1459296030200000006336Pageof*start*transactiondetail*end*transactiondetail*start*" \
+                "posttransactiondetailmessage*end*posttransactiondetailmessage*start*overdraftandreturneditem*end*" \
+                "overdraftandreturneditemApril 16, 2020 through May 15, 2020Account Number: 000000932651222TRANSACTION" \
+                " DETAIL (continued)DATEDESCRIPTIONAMOUNTBALANCE"
+    expected_res = " 5 Southgate Ave Daly City CA Card 8653-655.001,653.36"
+    assert TransactionCleaner.remove_long_unnecessary_text(test_text) == expected_res
+
+    test_text = " 5 Southgate Ave Daly City CA Card 8653-655.001,653.3614592960302000"
+    expected_res = " 5 Southgate Ave Daly City CA Card 8653-655.001,653.36"
+    assert TransactionCleaner.remove_long_unnecessary_text(test_text) == expected_res
 
 
-# def test_remove_Exchg_Rte_text_when_the_text_has_long_unnecessary_info():
-#     test_text = "Card Purchase 08/21 Patio Latino Bosa Card 6398 Euro 109.00 X 1.170734 (Exchg Rte)127.61 48Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawal*start*atmanddebitcardsummary*end*atmanddebitcardsummaryJuly 31, 2021 through August 31, 2021Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS (continued)DATEDESCRIPTIONAMOUNT08/24"
-#     expected_result = "Card Purchase 08/21 Patio Latino Bosa Card 6398 127.61 48Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawal*start*atmanddebitcardsummary*end*atmanddebitcardsummaryJuly 31, 2021 through August 31, 2021Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS (continued)DATEDESCRIPTIONAMOUNT08/24"
-#     assert my_withdrawals.get_string_without_Exchg_Rte_text(test_text) == expected_result
+def test_put_together_type_info_with_related_store_info():
+    my_transaction_detail = TransactionCleaner()
+    test_list = ["04/17Card Purchase With Pin",
+                "04/17Walgreens Store 216 We Daly City CA Card 8653-10.141,333.92"]
+    expected_res = "04/17Card Purchase With Pin 04/17Walgreens Store 216 We Daly City CA Card 8653-10.141,333.92\n"
+    assert my_transaction_detail.put_together_type_info_with_related_store_info(test_list) == expected_res
