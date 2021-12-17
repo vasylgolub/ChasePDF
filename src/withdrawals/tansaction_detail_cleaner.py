@@ -19,7 +19,9 @@ class TransactionCleaner:
         res_list = self.strip_each_element(res_list)
         res_list = self.insert_each_date_in_front_of_each_element(list_dates, res_list)
         whole_text = self.put_together_type_info_with_related_store_info(res_list)
-        return self.remove_single_dates(whole_text)
+
+        whole_text = self.clean_top(top) + "\n" + whole_text + self.clean_bottom(bottom)
+        return self.remove_single_dates_and_get_list(whole_text)
 
     def put_together_type_info_with_related_store_info(self, a_list):
         list_of_types = ["Recurring Card Purchase", "Card Purchase", "Beginning Balance",
@@ -35,7 +37,17 @@ class TransactionCleaner:
     # ------------------------------------------------------------------------------------------------------------
 
     @staticmethod
-    def remove_single_dates(text):  # This function removes some dates.
+    def clean_bottom(string):
+        period_pos = string.find(".")
+        return string[:period_pos+3].replace("$", " ")
+
+    @staticmethod
+    def clean_top(string):
+        pos_of = string.find("Beginning Balance")
+        return string[pos_of:].replace("$", " ")
+
+    @staticmethod
+    def remove_single_dates_and_get_list(text):  # This function removes some dates.
         res = []
         for each in text.split("\n"):
             if len(each) < 6:  # if it is just a date

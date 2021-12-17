@@ -326,6 +326,6 @@ def test_remove_long_unnecessary_text():
 def test_put_together_type_info_with_related_store_info():
     my_transaction_detail = TransactionCleaner()
     test_list = ["04/17Card Purchase With Pin",
-                "04/17Walgreens Store 216 We Daly City CA Card 8653-10.141,333.92"]
+                 "04/17Walgreens Store 216 We Daly City CA Card 8653-10.141,333.92"]
     expected_res = "04/17Card Purchase With Pin 04/17Walgreens Store 216 We Daly City CA Card 8653-10.141,333.92\n"
     assert my_transaction_detail.put_together_type_info_with_related_store_info(test_list) == expected_res
