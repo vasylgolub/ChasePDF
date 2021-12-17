@@ -329,3 +329,9 @@ def test_put_together_type_info_with_related_store_info():
                  "04/17Walgreens Store 216 We Daly City CA Card 8653-10.141,333.92"]
     expected_res = "04/17Card Purchase With Pin 04/17Walgreens Store 216 We Daly City CA Card 8653-10.141,333.92\n"
     assert my_transaction_detail.put_together_type_info_with_related_store_info(test_list) == expected_res
+
+
+def test_remove_balance_amount_from_transaction():
+    test_list = "12/17Doordash, Inc. Doordash, St-U3X5B7R1F5V6 CCD ID: 18009485981,156.651,301.80"
+    expected_res = "12/17Doordash, Inc. Doordash, St-U3X5B7R1F5V6 CCD ID: 18009485981,156.65"
+    assert TransactionCleaner.remove_balance_amount_from_transaction(test_list) == expected_res

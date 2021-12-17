@@ -21,7 +21,9 @@ class TransactionCleaner:
         whole_text = self.put_together_type_info_with_related_store_info(res_list)
 
         whole_text = self.clean_top(top) + "\n" + whole_text + self.clean_bottom(bottom)
-        return self.remove_single_dates_and_get_list(whole_text)
+        list_res = self.remove_single_dates_and_get_list(whole_text)
+
+        return list_res
 
     def put_together_type_info_with_related_store_info(self, a_list):
         list_of_types = ["Recurring Card Purchase", "Card Purchase", "Beginning Balance",
@@ -35,6 +37,14 @@ class TransactionCleaner:
             res += each_string + "\n"
         return res
     # ------------------------------------------------------------------------------------------------------------
+
+    @staticmethod
+    def remove_balance_amount_from_transaction(string):
+        pos_last_dot = string.rfind(".")
+        res = string[:pos_last_dot]
+        pos_last_dot = res.rfind(".")
+        res = res[:pos_last_dot+3]
+        return res
 
     @staticmethod
     def clean_bottom(string):
