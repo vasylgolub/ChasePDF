@@ -19,10 +19,10 @@ class TransactionCleaner:
         res_list = self.strip_each_element(res_list)
         res_list = self.insert_each_date_in_front_of_each_element(list_dates, res_list)
         whole_text = self.put_together_type_info_with_related_store_info(res_list)
-
-        whole_text = self.clean_top(top) + "\n" + whole_text + self.clean_bottom(bottom)
         list_res = self.remove_single_dates_and_get_list(whole_text)
-
+        list_res = self.remove_balance_amount_from_each_transaction(list_res)
+        list_res.append(self.clean_bottom(bottom))
+        list_res.insert(0, self.clean_top(top))
         return list_res
 
     def put_together_type_info_with_related_store_info(self, a_list):
@@ -37,6 +37,12 @@ class TransactionCleaner:
             res += each_string + "\n"
         return res
     # ------------------------------------------------------------------------------------------------------------
+
+    def remove_balance_amount_from_each_transaction(self, lista):
+        res = []
+        for each in lista:
+            res.append(self.remove_balance_amount_from_transaction(each))
+        return res
 
     @staticmethod
     def remove_balance_amount_from_transaction(string):
