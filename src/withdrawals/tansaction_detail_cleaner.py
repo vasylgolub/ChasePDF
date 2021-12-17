@@ -5,152 +5,90 @@ class TransactionCleaner:
     def __init__(self, whole_text=None):
         if whole_text is not None:
             self.whole_text = whole_text
-            self.list = self.make_whole_text_a_list_with_unnecessary_info_removed()
+            # self.list = self.make_whole_text_a_list_with_unnecessary_info_removed()
 
-    def get_wrapped_text(self):
-        return "\n".join(self.list)
-
-    # ------------------------------------------------------------------------------------------------
-    def make_whole_text_a_list_with_unnecessary_info_removed(self):
-        result = self.get_fixed_list_with_dates_positioned_properly()
-        result[0] = "ATM & DEBIT CARD WITHDRAWALS"
-        result[-1] = result[-1].strip()
-        return result
-
-    def a_list_with_some_text_removed_but_not_with_dates_in_the_right_place(self):
-        not_perfect_list = self.inline_based_on_key_words().splitlines()
-        return self.remove_unnecessary_info_from_some_elements(not_perfect_list)
-
-    def inline_based_on_key_words(self, section_str=None):
+    def inline_and_clean(self, section_str=None):
         if section_str is None:
             section_str = self.whole_text
-        section_str = section_str.replace("Recurring Card Purchase", "\nRecurring Card Purchase")
-        section_str = section_str.replace("Card Purchase", "\nCard Purchase")
+        list_dates = self.get_list_of_all_dates_in_text(section_str)
+        in_lined = re.sub(r'\d\d/\d\d', "\n", section_str)
+        in_lined = in_lined.replace("Ending Balance", "\nEnding Balance")  # little more inlining
+        res_list = in_lined.split("\n")  # Let's make it a list
+        top, bottom, res_list = self.split_in_3_sections(res_list)  # Split
+        res_list = self.get_new_list_without_elements_with_long_unnecessary_text(res_list)
+        res_list = self.strip_each_element(res_list)
+        res_list = self.insert_each_date_in_front_of_each_element(list_dates, res_list)
+        whole_text = self.put_together_type_info_with_related_store_info(res_list)
+        return self.remove_single_dates(whole_text)
 
-        # little fix since both previous operations have "Purchase" word
-        section_str = section_str.replace("Recurring \n", "Recurring ")
-
-        section_str = section_str.replace("Total ATM & Debit Card Withdrawals", "\nTotal ATM & Debit Card Withdrawals")
-        section_str = section_str.replace("ATM Withdrawal ", "\nATM Withdrawal ")
-        section_str = section_str.replace("Payment Sent", "\nPayment Sent")
-        section_str = section_str.replace("Non-Chase ATM Withdraw", "\nNon-Chase ATM Withdraw")
-        return section_str
-
-    #----------------------------------------
-    def remove_unnecessary_info_from_some_elements(self, a_list):
-        count_elements = len(a_list)
-        for pos in range(0, count_elements - 1):  # Not till the last one
-
-            if self.it_has_cash_back(a_list[pos]):
-                a_list[pos] = self.get_string_without_cash_back_text(a_list[pos])
-
-            if self.it_has_Exchg_Rte(a_list[pos]):
-                a_list[pos] = self.get_string_without_Exchg_Rte_text(a_list[pos])
-
-            if self.does_have_unnecessary_long_text(a_list[pos]):
-                a_list[pos] = self.get_text_without_unnecessary_long_sub_text(a_list[pos])
-
-        if self.does_have_unnecessary_long_text(a_list[-1]):  # If last element has unnecessary text
-            a_list[-1] = self.get_left_side_only(a_list[-1])
-
-        return a_list
-
-    #-------------------------------International transactions-------------------------------------------------
-    def get_string_without_Exchg_Rte_text(self, string):
-        exchange_rate_sub_text = self.extract_exchange_rate_info(string)
-        result = string.replace(exchange_rate_sub_text, "")  # Remove that subtext from string
-        return self.get_string_with_last_space_char_removed(result)
+    def put_together_type_info_with_related_store_info(self, a_list):
+        list_of_types = ["Recurring Card Purchase", "Card Purchase", "Beginning Balance",
+                         "Non-Chase ATM Withdraw", "ATM Withdrawal", "Payment Sent", "Foreign Exch"]
+        inff = "Insufficient Funds Fee"
+        res = ""
+        for each_string in a_list:
+            if self.any_element_of_this_list_is_in_this_string(list_of_types, each_string) and inff not in each_string:
+                res += each_string + " "
+                continue
+            res += each_string + "\n"
+        return res
+    # ------------------------------------------------------------------------------------------------------------
 
     @staticmethod
-    def extract_exchange_rate_info(string):
-        pattern = re.compile(r'Card \d{4} .+?\)')  # 4 digits used as reference point. Match till first occurrence of )
-        result = pattern.search(string)
-        return result.group()[10:]  # Card and 4 digits are then removed from string
-
-    #-----------------------------------Cash Back-------------------------------------------------------------
-    def get_string_without_cash_back_text(self, string):
-        cash_back_section_text = self.extract_cash_back_info(string)
-        result = string.replace(cash_back_section_text, "")
-        return self.get_string_with_last_space_char_removed(result)  # Documentation: 1.0
+    def remove_single_dates(text):  # This function removes some dates.
+        res = []
+        for each in text.split("\n"):
+            if len(each) < 6:  # if it is just a date
+                continue
+            res.append(each)
+        return res
 
     @staticmethod
-    def extract_cash_back_info(string):
-        pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d')
-        result = pattern.search(string)
-        return result.group()
-
-    # I think this one is not used anywhere ---!
-    def get_cash_back_position_and_info_text_about(self, a_list):
-        count_elements = len(a_list)
-        result = []
-        for pos in range(0, count_elements - 1):
-            if self.it_has_cash_back(a_list[pos]):
-                result.append([pos, self.extract_cash_back_info(a_list[pos])])
-        return result
-    #-----------------------------------------Fix Dates-------------------------------------------------------
-
-    def get_fixed_list_with_dates_positioned_properly(self):
-        result_list = []
-        list_of_dates = self.extract_dates()
-        length = len(self.a_list_with_some_text_removed_but_not_with_dates_in_the_right_place())
-        for position in range(0, length):
-            string = self.a_list_with_some_text_removed_but_not_with_dates_in_the_right_place()[position]
-            new_string = list_of_dates[position] + " " + self.get_str_with_date_removed_at_the_end(string)
-            result_list.append(new_string)
-        return result_list
-
-
-    def extract_dates(self):
-        result_list = [""]  # Because the first element in list is a description
-        for each in self.a_list_with_some_text_removed_but_not_with_dates_in_the_right_place():
-            result_list.append(self.extract_date_at_the_end(each))
-        return result_list
-
-#-----------------------------------------------Delegating functions-----------------------------------------------#
-    @staticmethod
-    def get_string_with_last_space_char_removed(string):
-        last_space_pos = string.rfind(" ")
-        result = string[:last_space_pos] + string[last_space_pos + 1:]
-        return result
+    def split_in_3_sections(a_list):
+        return a_list[0], a_list[-1], a_list[1:-1]
 
     @staticmethod
-    def it_has_cash_back(string):
-        return "Cash Back" in string
+    def any_element_of_this_list_is_in_this_string(a_list, string):
+        for each in a_list:
+            if each in string:
+                return True
+        return False
+
+    def get_new_list_without_elements_with_long_unnecessary_text(self, a_list):
+        res = []
+        for each in a_list:
+            if self.does_have_unnecessary_long_text(each):
+                res.append(self.remove_long_unnecessary_text(each))
+                continue
+            res.append(each)
+        return res
 
     @staticmethod
-    def it_has_Exchg_Rte(string):
-        return "Exchg Rte" in string
+    def strip_each_element(a_list):
+        res = []
+        for each in a_list:
+            res.append(each.strip())
+        return res
 
     @staticmethod
-    def get_left_side_only(string):
-        period_pos = string.find(".")
-        return string[:period_pos+3]
+    def get_list_of_all_dates_in_text(string):
+        pattern = re.compile(r'\d\d/\d\d')
+        return pattern.findall(string)
+
+    @staticmethod
+    def insert_each_date_in_front_of_each_element(list_date, list_string):
+        res = []
+        for i in range(0, len(list_date)):
+            res.append(list_date[i] + list_string[i])
+        return res
+
+    @staticmethod
+    def remove_long_unnecessary_text(whole_string):
+        pattern = re.compile(r'.+\d+\.\d{2}')
+        res = pattern.search(whole_string)
+        return res.group()
 
     @staticmethod
     def does_have_unnecessary_long_text(string):
         return len(string) > 200
 
-    def get_text_without_unnecessary_long_sub_text(self, string):
-        end_position = self.get_end_position_of_target(string)
-        last_5_chars = string[-5:]
-        return string[: end_position] + last_5_chars
-
-    @staticmethod
-    def get_end_position_of_target(string):
-        pattern = re.compile(r'\d\d\.\d\d')
-        return pattern.search(string).end()
-
-    def get_str_with_date_removed_at_the_end(self, string):
-        if self.has_date_at_the_end(string):
-            return string[:-5]
-        return string
-
-    def extract_date_at_the_end(self, string):
-        if self.has_date_at_the_end(string):
-            return string[-5:]
-        return ""
-
-    @staticmethod
-    def has_date_at_the_end(string):
-        last_5_chars = string[-5:]
-        return last_5_chars.find("/") != -1
