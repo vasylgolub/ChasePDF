@@ -3,6 +3,7 @@ from colorama import Fore
 import textwrap
 import os
 from src.withdrawals.withdrawals import Withdrawals
+from src.withdrawals.transaction_detail import TransactionDetail
 
 # This class is supposed to work on a Chase Bank statement in pdf format.
 # A bank statement is a list of all transactions for a bank account over a set period, usually monthly.
@@ -53,9 +54,11 @@ class Pdf:
         withdrawals_section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
         return Withdrawals(withdrawals_section)
 
+    # Gate to TransactionDetail class methods. This functions is related to only transaction details info in personal
+    # bank account.
     def get_transaction_detail(self):
-        withdrawals_section = self.get_desired_section("TRANSACTION DETAIL")
-        return Withdrawals(withdrawals_section)
+        transaction_detail_section = self.get_desired_section("TRANSACTION DETAIL")
+        return TransactionDetail(transaction_detail_section)
 
     def get_date_of_this_statement(self, text=None):
         # The header has the information regarding the statement's date.
