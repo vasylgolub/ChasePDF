@@ -1,4 +1,5 @@
 import re
+from src.withdrawals.helper import Helper
 
 
 class WithdrawalsTextCleaner:
@@ -45,7 +46,7 @@ class WithdrawalsTextCleaner:
                 a_list[pos] = self.get_string_without_cash_back_text(a_list[pos])
 
             if self.it_has_Exchg_Rte(a_list[pos]):
-                a_list[pos] = self.get_string_without_Exchg_Rte_text(a_list[pos])
+                a_list[pos] = Helper.get_string_without_Exchg_Rte_text(a_list[pos])
 
             if self.does_have_unnecessary_long_text(a_list[pos]):
                 a_list[pos] = self.get_text_without_unnecessary_long_sub_text(a_list[pos])
@@ -55,23 +56,11 @@ class WithdrawalsTextCleaner:
 
         return a_list
 
-    #-------------------------------International transactions-------------------------------------------------
-    def get_string_without_Exchg_Rte_text(self, string):
-        exchange_rate_sub_text = self.extract_exchange_rate_info(string)
-        result = string.replace(exchange_rate_sub_text, "")  # Remove that subtext from string
-        return self.get_string_with_last_space_char_removed(result)
-
-    @staticmethod
-    def extract_exchange_rate_info(string):
-        pattern = re.compile(r'Card \d{4} .+?\)')  # 4 digits used as reference point. Match till first occurrence of )
-        result = pattern.search(string)
-        return result.group()[10:]  # Card and 4 digits are then removed from string
-
     #-----------------------------------Cash Back-------------------------------------------------------------
     def get_string_without_cash_back_text(self, string):
         cash_back_section_text = self.extract_cash_back_info(string)
         result = string.replace(cash_back_section_text, "")
-        return self.get_string_with_last_space_char_removed(result)  # Documentation: 1.0
+        return Helper.get_string_with_last_space_char_removed(result)  # Documentation: 1.0
 
     @staticmethod
     def extract_cash_back_info(string):
@@ -107,11 +96,6 @@ class WithdrawalsTextCleaner:
         return result_list
 
 #-----------------------------------------------Delegating functions-----------------------------------------------#
-    @staticmethod
-    def get_string_with_last_space_char_removed(string):
-        last_space_pos = string.rfind(" ")
-        result = string[:last_space_pos] + string[last_space_pos + 1:]
-        return result
 
     @staticmethod
     def it_has_cash_back(string):
