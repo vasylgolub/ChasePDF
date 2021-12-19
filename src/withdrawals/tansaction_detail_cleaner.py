@@ -12,19 +12,16 @@ class TransactionCleaner:
             self.bottom = self.clean_bottom(bottom)
             self.transactions = self.get_transactions_in_list_format(self.whole_text)
 
+            list_of_patterns_to_put_space_after = [r'Transaction#: \d{10}',
+                                                   r'Card \d{4}',
+                                                   r'ID: \d{10}',
+                                                   r'ATM/Dep Error']
+
             for this_transaction in self.transactions:
-                pos_current_el = self.transactions.index(this_transaction)
-                if "Exchg Rte" in this_transaction:
-                    this_transaction = Helper.get_string_without_Exchg_Rte_text(this_transaction)
-                if "Transaction#: " in this_transaction:
-                    this_transaction = self.put_space_between_transactionN_and_amount(this_transaction)
-                if " Card " in this_transaction:
-                    this_transaction = self.put_space_between_cardN_and_amount(this_transaction)
-                if " ID: " in this_transaction:
-                    this_transaction = self.put_space_between_ID_and_amount(this_transaction)
-                if "ATM/Dep Error" in this_transaction:
-                    this_transaction = self.put_space_between_Error_and_amount(this_transaction)
-                self.transactions[pos_current_el] = this_transaction
+                pos_el = self.transactions.index(this_transaction)
+                for each_pattern in list_of_patterns_to_put_space_after:
+                    if self.string_matches_pattern(each_pattern, this_transaction):
+                        self.transactions[pos_el] = self.put_space_after_this_pattern(each_pattern, this_transaction)
 
 
     def get_transactions_in_list_format(self, text=None):
@@ -55,31 +52,16 @@ class TransactionCleaner:
 
     # ----------------------------------------put space before amount------------------------------------------
     @staticmethod
-    def put_space_between_transactionN_and_amount(transaction_string):
-        pattern = re.compile(r'Transaction#: \d{10}')
-        match = pattern.search(transaction_string)
-        string = match.group()
-        return transaction_string.replace(string, string + " ")
+    def string_matches_pattern(pattern_str, string):
+        pattern = re.compile(pattern_str)
+        found = pattern.search(string)
+        return bool(found)
 
     @staticmethod
-    def put_space_between_cardN_and_amount(transaction_string):
-        pattern = re.compile(r'Card \d{4}')
-        match = pattern.search(transaction_string)
-        string = match.group()
-        return transaction_string.replace(string, string + " ")
-
-    @staticmethod
-    def put_space_between_ID_and_amount(transaction_string):
-        pattern = re.compile(r'ID: \d{10}')
-        match = pattern.search(transaction_string)
-        string = match.group()
-        return transaction_string.replace(string, string + " ")
-
-    @staticmethod
-    def put_space_between_Error_and_amount(transaction_string):
-        pattern = re.compile(r'ATM/Dep Error')
-        match = pattern.search(transaction_string)
-        string = match.group()
+    def put_space_after_this_pattern(pattern, transaction_string):
+        pattern = re.compile(pattern)
+        found = pattern.search(transaction_string)
+        string = found.group()
         return transaction_string.replace(string, string + " ")
     # ------------------------------------------------------------------------------------------------------------
 
