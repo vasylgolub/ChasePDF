@@ -29,7 +29,8 @@ class TransactionCleaner:
 
     def put_together_type_info_with_related_store_info(self, a_list):
         list_of_types = ["Recurring Card Purchase", "Card Purchase", "Beginning Balance",
-                         "Non-Chase ATM Withdraw", "ATM Withdrawal", "Payment Sent", "Foreign Exch"]
+                         "Non-Chase ATM Withdraw", "ATM Withdrawal", "Payment Sent", "Foreign Exch",
+                         "Payment Received"]
         inff = "Insufficient Funds Fee"
         res = ""
         for each_string in a_list:
@@ -47,9 +48,15 @@ class TransactionCleaner:
                                                r'ATM/Dep Error']
         for this_transaction in self.transactions:
             pos_el = self.transactions.index(this_transaction)
-            for each_pattern in list_of_patterns_to_put_space_after:
-                if self.string_matches_pattern(each_pattern, this_transaction):
-                    self.transactions[pos_el] = self.put_space_after_this_pattern(each_pattern, this_transaction)
+            for pattern in list_of_patterns_to_put_space_after:
+                if self.string_matches_pattern(pattern, this_transaction):
+
+                    if "Online Transfer From" in this_transaction:
+                        exception_pattern = r'Transaction#: \d{11}'
+                        self.transactions[pos_el] = self.put_space_after_this_pattern(exception_pattern,
+                                                                                      this_transaction)
+                        continue
+                    self.transactions[pos_el] = self.put_space_after_this_pattern(pattern, this_transaction)
 
     @staticmethod
     def string_matches_pattern(pattern_str, string):
