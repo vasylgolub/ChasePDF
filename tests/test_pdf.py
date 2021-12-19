@@ -297,19 +297,19 @@ def test_get_store():
 
 #-------------------------------------------other---------------------------------------------------------
 
-def test_extract_exchange_rate_info():
-    test_text = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398 Euro " \
-                "250.00 X 1.175000 (Exchg Rte)293.7509/27"
-    expected_result = "Euro 250.00 X 1.175000 (Exchg Rte)"
-    assert Helper.extract_exchange_rate_info(test_text) == expected_result
-
-    test_text = "Card Purchase 08/28 Autogrill 0038 Caponago Card 6398 Euro 8.19 X 1.180708 (Exchg Rte)9.6708/30"
-    expected_result = "Euro 8.19 X 1.180708 (Exchg Rte)"
-    assert Helper.extract_exchange_rate_info(test_text) == expected_result
-
-    test_text = "01/06Card Purchase 01/04Egoditor Ug Haftungsbe Bielefeld Card 8653 Euro 60.00 X 1.118167 (Exchg Rte)-67.09"
-    expected_result = "Euro 60.00 X 1.118167 (Exchg Rte)"
-    assert Helper.extract_exchange_rate_info(test_text) == expected_result
+# def test_extract_exchange_rate_info():
+#     test_text = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398 Euro " \
+#                 "250.00 X 1.175000 (Exchg Rte)293.7509/27"
+#     expected_result = "Euro 250.00 X 1.175000 (Exchg Rte)"
+#     assert Helper.extract_exchange_rate_info(test_text) == expected_result
+#
+#     test_text = "Card Purchase 08/28 Autogrill 0038 Caponago Card 6398 Euro 8.19 X 1.180708 (Exchg Rte)9.6708/30"
+#     expected_result = "Euro 8.19 X 1.180708 (Exchg Rte)"
+#     assert Helper.extract_exchange_rate_info(test_text) == expected_result
+#
+#     test_text = "01/06Card Purchase 01/04Egoditor Ug Haftungsbe Bielefeld Card 8653 Euro 60.00 X 1.118167 (Exchg Rte)-67.09"
+#     expected_result = "Euro 60.00 X 1.118167 (Exchg Rte)"
+#     assert Helper.extract_exchange_rate_info(test_text) == expected_result
 
 
 #-------------------------------------------transaction_detail---------------------------------------------------------
