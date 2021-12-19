@@ -1,4 +1,5 @@
 import re
+from src.withdrawals.helper import Helper
 
 
 class TransactionCleaner:
@@ -9,6 +10,21 @@ class TransactionCleaner:
             top, bottom, _ = self.split_in_3_sections(inline)
             self.top = self.clean_top(top)
             self.bottom = self.clean_bottom(bottom)
+            self.transactions = self.get_transactions_in_list_format(self.whole_text)
+
+            for this_transaction in self.transactions:
+                pos_current_el = self.transactions.index(this_transaction)
+                if "Exchg Rte" in this_transaction:
+                    this_transaction = Helper.get_string_without_Exchg_Rte_text(this_transaction)
+                if "Transaction#: " in this_transaction:
+                    this_transaction = self.put_space_between_transactionN_and_amount(this_transaction)
+                if " Card " in this_transaction:
+                    this_transaction = self.put_space_between_cardN_and_amount(this_transaction)
+                if " ID: " in this_transaction:
+                    this_transaction = self.put_space_between_ID_and_amount(this_transaction)
+                if "ATM/Dep Error" in this_transaction:
+                    this_transaction = self.put_space_between_Error_and_amount(this_transaction)
+                self.transactions[pos_current_el] = this_transaction
 
 
     def get_transactions_in_list_format(self, text=None):
@@ -37,6 +53,34 @@ class TransactionCleaner:
             res += each_string + "\n"
         return res
 
+    # ----------------------------------------put space before amount------------------------------------------
+    @staticmethod
+    def put_space_between_transactionN_and_amount(transaction_string):
+        pattern = re.compile(r'Transaction#: \d{10}')
+        match = pattern.search(transaction_string)
+        string = match.group()
+        return transaction_string.replace(string, string + " ")
+
+    @staticmethod
+    def put_space_between_cardN_and_amount(transaction_string):
+        pattern = re.compile(r'Card \d{4}')
+        match = pattern.search(transaction_string)
+        string = match.group()
+        return transaction_string.replace(string, string + " ")
+
+    @staticmethod
+    def put_space_between_ID_and_amount(transaction_string):
+        pattern = re.compile(r'ID: \d{10}')
+        match = pattern.search(transaction_string)
+        string = match.group()
+        return transaction_string.replace(string, string + " ")
+
+    @staticmethod
+    def put_space_between_Error_and_amount(transaction_string):
+        pattern = re.compile(r'ATM/Dep Error')
+        match = pattern.search(transaction_string)
+        string = match.group()
+        return transaction_string.replace(string, string + " ")
     # ------------------------------------------------------------------------------------------------------------
 
     def inline_without_dates(self, text=None):

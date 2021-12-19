@@ -339,3 +339,9 @@ def test_remove_balance_amount_from_transaction():
     test_list = "12/17Doordash, Inc. Doordash, St-U3X5B7R1F5V6 CCD ID: 18009485981,156.651,301.80"
     expected_res = "12/17Doordash, Inc. Doordash, St-U3X5B7R1F5V6 CCD ID: 18009485981,156.65"
     assert TransactionCleaner.remove_balance_amount_from_transaction(test_list) == expected_res
+
+
+def test_put_space_between_transactionN_and_amount():
+    test_list = "12/24Online Transfer From Chk ...7190 Transaction#: 900374239350.00"
+    expected_res = "12/24Online Transfer From Chk ...7190 Transaction#: 9003742393 50.00"
+    assert TransactionCleaner.put_space_between_transactionN_and_amount(test_list) == expected_res
