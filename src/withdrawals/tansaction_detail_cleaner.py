@@ -7,13 +7,21 @@ class TransactionCleaner:
             self.whole_text = whole_text
             # self.list = self.make_whole_text_a_list_with_unnecessary_info_removed()
 
+
+    def inline(self, text=None):
+        if text is None:
+            text = self.whole_text
+        in_lined_without_dates = re.sub(r'\d\d/\d\d', "\n", text)
+        in_lined = in_lined_without_dates.replace("Ending Balance", "\nEnding Balance")  # little more inlining
+        return in_lined
+
     def inline_and_clean(self, section_str=None):
         if section_str is None:
             section_str = self.whole_text
         list_dates = self.get_list_of_all_dates_in_text(section_str)
-        in_lined = re.sub(r'\d\d/\d\d', "\n", section_str)
-        in_lined = in_lined.replace("Ending Balance", "\nEnding Balance")  # little more inlining
+        in_lined = self.inline(section_str)
         res_list = in_lined.split("\n")  # Let's make it a list
+
         top, bottom, res_list = self.split_in_3_sections(res_list)  # Split
         res_list = self.get_new_list_without_elements_with_long_unnecessary_text(res_list)
         res_list = self.strip_each_element(res_list)
@@ -21,6 +29,7 @@ class TransactionCleaner:
         whole_text = self.put_together_type_info_with_related_store_info(res_list)
         list_res = self.remove_single_dates_and_get_list(whole_text)
         list_res = self.remove_balance_amount_from_each_transaction(list_res)
+
         list_res.append(self.clean_bottom(bottom))
         list_res.insert(0, self.clean_top(top))
         return list_res
