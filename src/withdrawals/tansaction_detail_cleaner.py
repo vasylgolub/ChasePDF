@@ -45,18 +45,20 @@ class TransactionCleaner:
         list_of_patterns_to_put_space_after = [r'Transaction#: \d{10}',
                                                r'Card \d{4}',
                                                r'ID: \d{10}',
-                                               r'ATM/Dep Error']
+                                               r'ATM/Dep Error',
+                                               r'ATM Fee-With']
+
         for this_transaction in self.transactions:
             pos_el = self.transactions.index(this_transaction)
+
             for pattern in list_of_patterns_to_put_space_after:
                 if self.string_matches_pattern(pattern, this_transaction):
 
                     if "Online Transfer From" in this_transaction:
                         exception_pattern = r'Transaction#: \d{11}'
-                        self.transactions[pos_el] = self.put_space_after_this_pattern(exception_pattern,
-                                                                                      this_transaction)
+                        self.transactions[pos_el] = self.put_space(exception_pattern, this_transaction)
                         continue
-                    self.transactions[pos_el] = self.put_space_after_this_pattern(pattern, this_transaction)
+                    self.transactions[pos_el] = self.put_space(pattern, this_transaction)
 
     @staticmethod
     def string_matches_pattern(pattern_str, string):
@@ -65,7 +67,7 @@ class TransactionCleaner:
         return bool(found)
 
     @staticmethod
-    def put_space_after_this_pattern(pattern, transaction_string):
+    def put_space(pattern, transaction_string):
         pattern = re.compile(pattern)
         found = pattern.search(transaction_string)
         string = found.group()
