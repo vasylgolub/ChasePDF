@@ -26,11 +26,11 @@ class TransactionCleaner:
         res_list = self.get_new_list_without_elements_with_long_unnecessary_text(res_list)  # Cleaning
         res_list = self.strip_each_element(res_list)  # Cleaning
         res_list = self.insert_each_date_in_front_of_each_el(res_list)  # Reassembling
-        whole_text = self.put_together_type_info_with_related_store_info(res_list)
-        list_res = self.remove_single_dates_and_get_list(whole_text)
-        list_res = self.remove_balance_amount_from_each_transaction(list_res)
+        text = self.put_together_type_info_with_related_store_info(res_list)  # Making it a string again
+        res_list = self.remove_single_dates_and_get_list(text)  # Now bring it back as a list. Remove single dd/dd
+        res_list = self.remove_balance_amount_from_each_transaction(res_list)
 
-        return list_res
+        return res_list
 
 
     def put_together_type_info_with_related_store_info(self, a_list):
