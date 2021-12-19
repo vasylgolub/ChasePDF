@@ -11,13 +11,6 @@ class TransactionCleaner:
             self.bottom = self.clean_bottom(bottom)
 
 
-    def inline_without_dates(self, text=None):
-        if text is None:
-            text = self.whole_text
-        in_lined_without_dates = re.sub(r'\d\d/\d\d', "\n", text)
-        in_lined = in_lined_without_dates.replace("Ending Balance", "\nEnding Balance")  # little more inlining
-        return in_lined
-
     def get_transactions_in_list_format(self, text=None):
         if text is None:
             text = self.whole_text
@@ -32,7 +25,6 @@ class TransactionCleaner:
 
         return res_list
 
-
     def put_together_type_info_with_related_store_info(self, a_list):
         list_of_types = ["Recurring Card Purchase", "Card Purchase", "Beginning Balance",
                          "Non-Chase ATM Withdraw", "ATM Withdrawal", "Payment Sent", "Foreign Exch"]
@@ -46,6 +38,14 @@ class TransactionCleaner:
         return res
 
     # ------------------------------------------------------------------------------------------------------------
+
+    def inline_without_dates(self, text=None):
+        if text is None:
+            text = self.whole_text
+        in_lined_without_dates = re.sub(r'\d\d/\d\d', "\n", text)
+        in_lined = in_lined_without_dates.replace("Ending Balance", "\nEnding Balance")  # little more inlining
+        return in_lined
+
 
     def remove_balance_amount_from_each_transaction(self, lista):
         res = []
