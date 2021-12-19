@@ -11,16 +11,21 @@ class Helper:
 
     # -------------------------------International transactions-------------------------------------------------
 
-    def get_string_without_Exchg_Rte_text(self, string):
-        exchange_rate_sub_text = self.extract_exchange_rate_info(string)
-        result = string.replace(exchange_rate_sub_text, "")  # Remove that subtext from string
-        return self.get_string_with_last_space_char_removed(result)
-
     @staticmethod
-    def extract_exchange_rate_info(string):
+    def get_string_without_Exchg_Rte_text(string):
         pattern = re.compile(r'Card \d{4} .+?\)')  # 4 digits used as reference point. Match till first occurrence of )
         result = pattern.search(string)
-        return result.group()[10:]  # Card and 4 digits are then removed from string
+        extracted_exchange_rate_info = result.group()[10:]  # Card and 4 digits are then removed from string
+
+        exchange_rate_sub_text = extracted_exchange_rate_info
+        result = string.replace(exchange_rate_sub_text, "")  # Remove that subtext from string
+        return result
+
+    # @staticmethod
+    # def extract_exchange_rate_info(string):
+    #     pattern = re.compile(r'Card \d{4} .+?\)')  # 4 digits used as reference point. Match till first occurrence of )
+    #     result = pattern.search(string)
+    #     return result.group()[10:]  # Card and 4 digits are then removed from string
 
     @staticmethod
     def get_string_with_last_space_char_removed(string):
