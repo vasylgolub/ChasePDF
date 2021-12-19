@@ -18,24 +18,20 @@ class TransactionCleaner:
         in_lined = in_lined_without_dates.replace("Ending Balance", "\nEnding Balance")  # little more inlining
         return in_lined
 
-    def inline_and_clean(self, section_str=None):
-        if section_str is None:
-            section_str = self.whole_text
-        list_dates = self.get_list_of_all_dates_in_text(section_str)
-        in_lined = self.inline_without_dates(section_str)
-        res_list = in_lined.split("\n")  # Let's make it a list
+    def get_transactions_in_list_format(self, text=None):
+        if text is None:
+            text = self.whole_text
 
-        top, bottom, res_list = self.split_in_3_sections(res_list)  # Split
-        res_list = self.get_new_list_without_elements_with_long_unnecessary_text(res_list)
-        res_list = self.strip_each_element(res_list)
-        res_list = self.insert_each_date_in_front_of_each_element(list_dates, res_list)
+        _, _, res_list = self.split_in_3_sections(self.inline_without_dates(text))  # Split
+        res_list = self.get_new_list_without_elements_with_long_unnecessary_text(res_list)  # Cleaning
+        res_list = self.strip_each_element(res_list)  # Cleaning
+        res_list = self.insert_each_date_in_front_of_each_el(res_list)  # Reassembling
         whole_text = self.put_together_type_info_with_related_store_info(res_list)
         list_res = self.remove_single_dates_and_get_list(whole_text)
         list_res = self.remove_balance_amount_from_each_transaction(list_res)
 
-        list_res.append(self.clean_bottom(bottom))
-        list_res.insert(0, self.clean_top(top))
         return list_res
+
 
     def put_together_type_info_with_related_store_info(self, a_list):
         list_of_types = ["Recurring Card Purchase", "Card Purchase", "Beginning Balance",
@@ -118,9 +114,9 @@ class TransactionCleaner:
         pattern = re.compile(r'\d\d/\d\d')
         return pattern.findall(string)
 
-    @staticmethod
-    def insert_each_date_in_front_of_each_element(list_date, list_string):
+    def insert_each_date_in_front_of_each_el(self, list_string):
         res = []
+        list_date = self.get_list_of_all_dates_in_text(self.whole_text)
         for i in range(0, len(list_date)):
             res.append(list_date[i] + list_string[i])
         return res
