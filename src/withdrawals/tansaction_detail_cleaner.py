@@ -5,10 +5,13 @@ class TransactionCleaner:
     def __init__(self, whole_text=None):
         if whole_text is not None:
             self.whole_text = whole_text
-            # self.list = self.make_whole_text_a_list_with_unnecessary_info_removed()
+            inline = self.inline_without_dates(self.whole_text)
+            top, bottom, _ = self.split_in_3_sections(inline)
+            self.top = self.clean_top(top)
+            self.bottom = self.clean_bottom(bottom)
 
 
-    def inline(self, text=None):
+    def inline_without_dates(self, text=None):
         if text is None:
             text = self.whole_text
         in_lined_without_dates = re.sub(r'\d\d/\d\d', "\n", text)
@@ -19,7 +22,7 @@ class TransactionCleaner:
         if section_str is None:
             section_str = self.whole_text
         list_dates = self.get_list_of_all_dates_in_text(section_str)
-        in_lined = self.inline(section_str)
+        in_lined = self.inline_without_dates(section_str)
         res_list = in_lined.split("\n")  # Let's make it a list
 
         top, bottom, res_list = self.split_in_3_sections(res_list)  # Split
@@ -45,6 +48,7 @@ class TransactionCleaner:
                 continue
             res += each_string + "\n"
         return res
+
     # ------------------------------------------------------------------------------------------------------------
 
     def remove_balance_amount_from_each_transaction(self, lista):
@@ -58,13 +62,13 @@ class TransactionCleaner:
         pos_last_dot = string.rfind(".")
         res = string[:pos_last_dot]
         pos_last_dot = res.rfind(".")
-        res = res[:pos_last_dot+3]
+        res = res[:pos_last_dot + 3]
         return res
 
     @staticmethod
     def clean_bottom(string):
         period_pos = string.find(".")
-        return string[:period_pos+3].replace("$", " ")
+        return string[:period_pos + 3].replace("$", " ")
 
     @staticmethod
     def clean_top(string):
@@ -82,6 +86,8 @@ class TransactionCleaner:
 
     @staticmethod
     def split_in_3_sections(a_list):
+        if type(a_list) != type([]):  # if passed parameter is not a list then
+            a_list = a_list.split("\n")  # Let's make it a list
         return a_list[0], a_list[-1], a_list[1:-1]
 
     @staticmethod
@@ -128,4 +134,3 @@ class TransactionCleaner:
     @staticmethod
     def does_have_unnecessary_long_text(string):
         return len(string) > 200
-
