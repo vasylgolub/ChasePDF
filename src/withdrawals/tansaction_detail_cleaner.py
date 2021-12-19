@@ -11,18 +11,7 @@ class TransactionCleaner:
             self.top = self.clean_top(top)
             self.bottom = self.clean_bottom(bottom)
             self.transactions = self.get_transactions_in_list_format(self.whole_text)
-
-            list_of_patterns_to_put_space_after = [r'Transaction#: \d{10}',
-                                                   r'Card \d{4}',
-                                                   r'ID: \d{10}',
-                                                   r'ATM/Dep Error']
-
-            for this_transaction in self.transactions:
-                pos_el = self.transactions.index(this_transaction)
-                for each_pattern in list_of_patterns_to_put_space_after:
-                    if self.string_matches_pattern(each_pattern, this_transaction):
-                        self.transactions[pos_el] = self.put_space_after_this_pattern(each_pattern, this_transaction)
-
+            self.put_space_before_amount_in_each_transaction()
 
     def get_transactions_in_list_format(self, text=None):
         if text is None:
@@ -51,6 +40,17 @@ class TransactionCleaner:
         return res
 
     # ----------------------------------------put space before amount------------------------------------------
+    def put_space_before_amount_in_each_transaction(self):
+        list_of_patterns_to_put_space_after = [r'Transaction#: \d{10}',
+                                               r'Card \d{4}',
+                                               r'ID: \d{10}',
+                                               r'ATM/Dep Error']
+        for this_transaction in self.transactions:
+            pos_el = self.transactions.index(this_transaction)
+            for each_pattern in list_of_patterns_to_put_space_after:
+                if self.string_matches_pattern(each_pattern, this_transaction):
+                    self.transactions[pos_el] = self.put_space_after_this_pattern(each_pattern, this_transaction)
+
     @staticmethod
     def string_matches_pattern(pattern_str, string):
         pattern = re.compile(pattern_str)
