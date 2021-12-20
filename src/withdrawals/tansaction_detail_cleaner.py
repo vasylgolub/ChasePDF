@@ -46,7 +46,8 @@ class TransactionCleaner:
                                                r'Card \d{4}',
                                                r'ID: \d{10}',
                                                r'ATM/Dep Error',
-                                               r'ATM Fee-With']
+                                               r'ATM Fee-With',
+                                               r'Quickpay With Zelle .+ \d{11}']
 
         for this_transaction in self.transactions:
             pos_el = self.transactions.index(this_transaction)
