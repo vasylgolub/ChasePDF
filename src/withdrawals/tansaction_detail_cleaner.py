@@ -13,6 +13,12 @@ class TransactionCleaner:
             self.transactions = self.get_transactions_in_list_format(self.whole_text)
             self.put_space_before_amount_in_each_transaction()
 
+            for transaction in self.transactions:
+                pos_el = self.transactions.index(transaction)
+                if self.string_matches_pattern(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d', transaction):
+                    self.transactions[pos_el] = Helper.get_string_without_cash_back_text(transaction)
+
+
     def get_transactions_in_list_format(self, text=None):
         if text is None:
             text = self.whole_text
