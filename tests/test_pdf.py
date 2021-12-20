@@ -199,8 +199,11 @@ def test_extract_cash_back():
     test_text = "Card Purchase W/Cash 12/31 Usps PO 05199001 1100 Daly City CA Card 6427 " \
                 "Purchase $36.25 Cash Back $110.00" \
                 "146.2512/31"
-
     result = "Purchase $36.25 Cash Back $110.00"
+    assert my_withdrawals.extract_cash_back_info(test_text) == result
+
+    test_text = "11/16Card Purchase W/Cash 11/15Safeway #3031 Daly City CA Card 8653  Purchase $22.80 Cash Back $60.00-82.80"
+    result = "Purchase $22.80 Cash Back $60.00"
     assert my_withdrawals.extract_cash_back_info(test_text) == result
 
 
@@ -339,9 +342,3 @@ def test_remove_balance_amount_from_transaction():
     test_list = "12/17Doordash, Inc. Doordash, St-U3X5B7R1F5V6 CCD ID: 18009485981,156.651,301.80"
     expected_res = "12/17Doordash, Inc. Doordash, St-U3X5B7R1F5V6 CCD ID: 18009485981,156.65"
     assert TransactionCleaner.remove_balance_amount_from_transaction(test_list) == expected_res
-
-
-def test_put_space_between_transactionN_and_amount():
-    test_list = "12/24Online Transfer From Chk ...7190 Transaction#: 900374239350.00"
-    expected_res = "12/24Online Transfer From Chk ...7190 Transaction#: 9003742393 50.00"
-    assert TransactionCleaner.put_space_between_transactionN_and_amount(test_list) == expected_res

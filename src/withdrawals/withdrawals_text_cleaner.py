@@ -68,14 +68,6 @@ class WithdrawalsTextCleaner:
         result = pattern.search(string)
         return result.group()
 
-    # I think this one is not used anywhere ---!
-    def get_cash_back_position_and_info_text_about(self, a_list):
-        count_elements = len(a_list)
-        result = []
-        for pos in range(0, count_elements - 1):
-            if self.it_has_cash_back(a_list[pos]):
-                result.append([pos, self.extract_cash_back_info(a_list[pos])])
-        return result
     #-----------------------------------------Fix Dates-------------------------------------------------------
 
     def get_fixed_list_with_dates_positioned_properly(self):
