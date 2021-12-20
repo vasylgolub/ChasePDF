@@ -43,7 +43,7 @@ class WithdrawalsTextCleaner:
         for pos in range(0, count_elements - 1):  # Not till the last one
 
             if self.it_has_cash_back(a_list[pos]):
-                a_list[pos] = self.get_string_without_cash_back_text(a_list[pos])
+                a_list[pos] = Helper.get_string_without_cash_back_text(a_list[pos])
 
             if self.it_has_Exchg_Rte(a_list[pos]):
                 a_list[pos] = Helper.get_string_without_Exchg_Rte_text(a_list[pos])
@@ -55,19 +55,6 @@ class WithdrawalsTextCleaner:
             a_list[-1] = self.get_left_side_only(a_list[-1])
 
         return a_list
-
-    #-----------------------------------Cash Back-------------------------------------------------------------
-    def get_string_without_cash_back_text(self, string):
-        cash_back_section_text = self.extract_cash_back_info(string)
-        result = string.replace(cash_back_section_text, "")
-        return Helper.get_string_with_last_space_char_removed(result)  # Documentation: 1.0
-
-    @staticmethod
-    def extract_cash_back_info(string):
-        pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d')
-        result = pattern.search(string)
-        return result.group()
-
     #-----------------------------------------Fix Dates-------------------------------------------------------
 
     def get_fixed_list_with_dates_positioned_properly(self):
