@@ -13,6 +13,12 @@ class TransactionCleaner:
             self.transactions = self.get_transactions_in_list_format(self.whole_text)
             self.put_space_before_amount_in_each_transaction()
 
+            # Extract (Exchg Rte) detail txt
+            for transaction in self.transactions:
+                pos_el = self.transactions.index(transaction)
+                if self.string_matches_pattern(r'Card \d{4} .+?\)', transaction):
+                    self.transactions[pos_el] = Helper.get_string_without_Exchg_Rte_text(transaction)
+
             # Extract Cash Back detail txt
             for transaction in self.transactions:
                 pos_el = self.transactions.index(transaction)
@@ -28,7 +34,9 @@ class TransactionCleaner:
             # Remove two spaces
             new_list = []
             for transaction in self.transactions:
-                new_list.append(transaction.replace("  ", " "))
+                new_str = transaction.replace("   ", " ")
+                new_str = new_str.replace("  ", " ")
+                new_list.append(new_str)
 
             self.transactions = new_list
 
