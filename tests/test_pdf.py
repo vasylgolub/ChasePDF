@@ -188,23 +188,24 @@ def test_extract_cash_back():
                 "Purchase $107.42 Cash Back $40.00" \
                 "147.4206/26"
     result = "Purchase $107.42 Cash Back $40.00"
-    assert my_withdrawals.extract_cash_back_info(test_text) == result
+    assert Helper.extract_cash_back_info(test_text) == result
 
     test_text = "Card Purchase W/Cash 09/29 Target T-2768 2675 G San Francisco CA Card 6427 " \
                 "Purchase $74.28 Cash Back $40.00" \
                 "114.2810/01"
     result = "Purchase $74.28 Cash Back $40.00"
-    assert my_withdrawals.extract_cash_back_info(test_text) == result
+    assert Helper.extract_cash_back_info(test_text) == result
 
     test_text = "Card Purchase W/Cash 12/31 Usps PO 05199001 1100 Daly City CA Card 6427 " \
                 "Purchase $36.25 Cash Back $110.00" \
                 "146.2512/31"
     result = "Purchase $36.25 Cash Back $110.00"
-    assert my_withdrawals.extract_cash_back_info(test_text) == result
+    assert Helper.extract_cash_back_info(test_text) == result
 
-    test_text = "11/16Card Purchase W/Cash 11/15Safeway #3031 Daly City CA Card 8653  Purchase $22.80 Cash Back $60.00-82.80"
+    test_text = "11/16Card Purchase W/Cash 11/15Safeway #3031 Daly City CA Card 8653  Purchase $22.80 Cash Back " \
+                "$60.00-82.80"
     result = "Purchase $22.80 Cash Back $60.00"
-    assert my_withdrawals.extract_cash_back_info(test_text) == result
+    assert Helper.extract_cash_back_info(test_text) == result
 
 
 #-------------------------------------------extractor class---------------------------------------------------------
@@ -300,19 +301,20 @@ def test_get_store():
 
 #-------------------------------------------other---------------------------------------------------------
 
-# def test_extract_exchange_rate_info():
-#     test_text = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398 Euro " \
-#                 "250.00 X 1.175000 (Exchg Rte)293.7509/27"
-#     expected_result = "Euro 250.00 X 1.175000 (Exchg Rte)"
-#     assert Helper.extract_exchange_rate_info(test_text) == expected_result
-#
-#     test_text = "Card Purchase 08/28 Autogrill 0038 Caponago Card 6398 Euro 8.19 X 1.180708 (Exchg Rte)9.6708/30"
-#     expected_result = "Euro 8.19 X 1.180708 (Exchg Rte)"
-#     assert Helper.extract_exchange_rate_info(test_text) == expected_result
-#
-#     test_text = "01/06Card Purchase 01/04Egoditor Ug Haftungsbe Bielefeld Card 8653 Euro 60.00 X 1.118167 (Exchg Rte)-67.09"
-#     expected_result = "Euro 60.00 X 1.118167 (Exchg Rte)"
-#     assert Helper.extract_exchange_rate_info(test_text) == expected_result
+def test_extract_exchange_rate_info():
+    test_text = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398 Euro " \
+                "250.00 X 1.175000 (Exchg Rte)293.7509/27"
+    expected_result = "Euro 250.00 X 1.175000 (Exchg Rte)"
+    assert Helper.extract_exchange_rate_info(test_text) == expected_result
+
+    test_text = "Card Purchase 08/28 Autogrill 0038 Caponago Card 6398 Euro 8.19 X 1.180708 (Exchg Rte)9.6708/30"
+    expected_result = "Euro 8.19 X 1.180708 (Exchg Rte)"
+    assert Helper.extract_exchange_rate_info(test_text) == expected_result
+
+    test_text = "01/06Card Purchase 01/04Egoditor Ug Haftungsbe Bielefeld Card 8653 Euro 60.00 X 1.118167 " \
+                "(Exchg Rte)-67.09"
+    expected_result = "Euro 60.00 X 1.118167 (Exchg Rte)"
+    assert Helper.extract_exchange_rate_info(test_text) == expected_result
 
 
 #-------------------------------------------transaction_detail---------------------------------------------------------
@@ -320,7 +322,8 @@ def test_remove_long_unnecessary_text():
     test_text = " 5 Southgate Ave Daly City CA Card 8653-655.001,653.36 " \
                 "1459296030200000006336Pageof*start*transactiondetail*end*transactiondetail*start*" \
                 "posttransactiondetailmessage*end*posttransactiondetailmessage*start*overdraftandreturneditem*end*" \
-                "overdraftandreturneditemApril 16, 2020 through May 15, 2020Account Number: 000000932651222TRANSACTION" \
+                "overdraftandreturneditemApril 16, 2020 through May 15, 2020Account Number: " \
+                "000000932651222TRANSACTION" \
                 " DETAIL (continued)DATEDESCRIPTIONAMOUNTBALANCE"
     expected_res = " 5 Southgate Ave Daly City CA Card 8653-655.001,653.36"
     assert TransactionCleaner.remove_long_unnecessary_text(test_text) == expected_res
