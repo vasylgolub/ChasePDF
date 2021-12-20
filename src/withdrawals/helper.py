@@ -26,3 +26,17 @@ class Helper:
         last_space_pos = string.rfind(" ")
         result = string[:last_space_pos] + string[last_space_pos + 1:]
         return result
+
+    #-----------------------------------Cash Back-------------------------------------------------------------
+    @staticmethod
+    def get_string_without_cash_back_text(string):
+        cash_back_section_text = Helper.extract_cash_back_info(string)
+        result = string.replace(cash_back_section_text, "")
+        # return Helper.get_string_with_last_space_char_removed(result)  # Documentation: 1.0
+        return result
+
+    @staticmethod
+    def extract_cash_back_info(string):
+        pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d')
+        result = pattern.search(string)
+        return result.group()
