@@ -23,12 +23,11 @@ class Helper:
         result = pattern.search(string)
         return result.group()[10:]  # Card and 4 digits are then removed from string
 
-    @staticmethod
-    def get_string_with_last_space_char_removed(string):
-        last_space_pos = string.rfind(" ")
-        result = string[:last_space_pos] + string[last_space_pos + 1:]
-        return result
-
+    # @staticmethod
+    # def get_string_with_last_space_char_removed(string):
+    #     last_space_pos = string.rfind(" ")
+    #     result = string[:last_space_pos] + string[last_space_pos + 1:]
+    #     return result
     #-----------------------------------Cash Back-------------------------------------------------------------
     @staticmethod
     def get_string_without_cash_back_text(string):
@@ -40,5 +39,18 @@ class Helper:
     @staticmethod
     def extract_cash_back_info(string):
         pattern = re.compile(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d')
+        result = pattern.search(string)
+        return result.group()
+    #---------------------------------------------------------------------------------------------------------
+
+    @staticmethod
+    def get_string_with_space_before_deduction_amount(string):
+        negative_amount = Helper.get_amount_string(string)
+        result = string.replace(negative_amount, " " + negative_amount)
+        return result
+
+    @staticmethod
+    def get_amount_string(string):
+        pattern = re.compile(r'-\d+.\d\d$')
         result = pattern.search(string)
         return result.group()

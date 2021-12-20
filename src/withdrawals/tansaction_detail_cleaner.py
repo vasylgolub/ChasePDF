@@ -13,10 +13,25 @@ class TransactionCleaner:
             self.transactions = self.get_transactions_in_list_format(self.whole_text)
             self.put_space_before_amount_in_each_transaction()
 
+            # Extract Cash Back detail txt
             for transaction in self.transactions:
                 pos_el = self.transactions.index(transaction)
                 if self.string_matches_pattern(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d', transaction):
                     self.transactions[pos_el] = Helper.get_string_without_cash_back_text(transaction)
+
+            # Put space before -d+.dd
+            for transaction in self.transactions:
+                pos_el = self.transactions.index(transaction)
+                if self.string_matches_pattern(r'-\d+.\d\d$', transaction):
+                    self.transactions[pos_el] = Helper.get_string_with_space_before_deduction_amount(transaction)
+
+            # Remove two spaces
+            new_list = []
+            for transaction in self.transactions:
+                new_list.append(transaction.replace("  ", " "))
+
+            self.transactions = new_list
+
 
 
     def get_transactions_in_list_format(self, text=None):
@@ -172,3 +187,4 @@ class TransactionCleaner:
     @staticmethod
     def does_have_unnecessary_long_text(string):
         return len(string) > 200
+
