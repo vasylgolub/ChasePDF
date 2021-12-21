@@ -3,10 +3,10 @@ import re
 
 class Helper:
     @staticmethod
-    def get_total_from_this_string(string):
+    def get_float_format(string):
         dollar_sign_pos = string.find("$")
-        str_num = string[dollar_sign_pos + 1:]
-        str_num = str_num.replace(",", "")
+        str_num = string[dollar_sign_pos + 1:]  # exclude dollar sign
+        str_num = str_num.replace(",", "")  # remove comma sign
         return float(str_num)
 
     # -------------------------------International transactions-------------------------------------------------

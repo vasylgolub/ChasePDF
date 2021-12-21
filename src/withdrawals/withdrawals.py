@@ -15,5 +15,5 @@ class Withdrawals:
 
             total_withdrawals_text = cleaned_withdrawals_text.list[-1]
             self.total_withdrawals = {"text": total_withdrawals_text,
-                                      "amount": helper.get_total_from_this_string(total_withdrawals_text)}
+                                      "amount": helper.get_float_format(total_withdrawals_text)}
 
