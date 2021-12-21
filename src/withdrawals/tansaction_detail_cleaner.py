@@ -40,7 +40,10 @@ class TransactionCleaner:
 
             self.transactions = new_list
 
+            self.list = [self.top] + self.transactions + [self.bottom]
 
+    def get_wrapped_text(self):
+        return "\n".join(self.list)
 
     def get_transactions_in_list_format(self, text=None):
         if text is None:
@@ -83,11 +86,17 @@ class TransactionCleaner:
 
             for pattern in list_of_patterns_to_put_space_after:
                 if self.string_matches_pattern(pattern, this_transaction):
-
+                    # =======================================================================================
                     if "Online Transfer From" in this_transaction:
-                        exception_pattern = r'Transaction#: \d{11}'
-                        self.transactions[pos_el] = self.put_space(exception_pattern, this_transaction)
+                        found = Helper.extract_this_pattern(r'\d{10}', this_transaction)
+                        if int(found[0]) < 9:
+                            exception_pattern = r'Transaction#: \d{11}'
+                            self.transactions[pos_el] = self.put_space(exception_pattern, this_transaction)
+                        else:
+                            exception_pattern = r'Transaction#: \d{10}'
+                            self.transactions[pos_el] = self.put_space(exception_pattern, this_transaction)
                         continue
+                    # =======================================================================================
                     self.transactions[pos_el] = self.put_space(pattern, this_transaction)
 
     @staticmethod
@@ -195,4 +204,3 @@ class TransactionCleaner:
     @staticmethod
     def does_have_unnecessary_long_text(string):
         return len(string) > 200
-
