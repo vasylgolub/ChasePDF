@@ -16,6 +16,29 @@ class Helper:
         amount = string[pos_last_space+1:]
         return text, amount
 
+    @staticmethod
+    def get_beginning_balance_as_dictionary(whole_text_wrapped):
+        beginning_balance_whole_text = whole_text_wrapped[:whole_text_wrapped.find("\n")]  # take only the top
+        bb_text, bb_amount = Helper.get_text_and_amount_separated(beginning_balance_whole_text)  # BeginningBalance
+        return {bb_text: float(bb_amount)}
+
+    @staticmethod
+    def get_ending_balance_as_dictionary(whole_text_wrapped):
+        ending_balance_whole_text = whole_text_wrapped[whole_text_wrapped.rfind("\n")+1:]  # take only the top
+        eb_text, eb_amount = Helper.get_text_and_amount_separated(ending_balance_whole_text)  # Ending_balance
+        return {eb_text: float(eb_amount)}
+
+    #---------------------------------------------------------------------------------------------------------
+
+    @staticmethod
+    def get_sum_of_all_transactions(transaction_list):
+        res = 0
+        for transaction in transaction_list:
+            _, str_amount = Helper.get_text_and_amount_separated(transaction)
+            res += Helper.get_float_format(str_amount) * 100
+        return res/100
+
+
     # -------------------------------International transactions-------------------------------------------------
 
     @staticmethod
