@@ -167,10 +167,14 @@ def test_get_str_with_date_removed_at_the_end_that_doesnt_need_removal():
     assert my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
 
 
-def test_get_total_from_string():
+def test_get_float_format():
     txt_test = " Total ATM & Debit Card Withdrawals $6,896.00"
     print(my_withdrawals_helper.get_float_format(txt_test))
     assert my_withdrawals_helper.get_float_format(txt_test) == 6896.00
+
+    txt_test = "  Withdrawals $-6,896.00"
+    print(my_withdrawals_helper.get_float_format(txt_test))
+    assert my_withdrawals_helper.get_float_format(txt_test) == -6896.00
 
 
 def test_get_left_side_only():
