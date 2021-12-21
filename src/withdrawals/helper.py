@@ -9,6 +9,13 @@ class Helper:
         str_num = str_num.replace(",", "")  # remove comma sign
         return float(str_num)
 
+    @staticmethod
+    def get_text_and_amount_separated(string):
+        pos_last_space = string.rfind(" ")
+        text = string[:pos_last_space]
+        amount = string[pos_last_space+1:]
+        return text, amount
+
     # -------------------------------International transactions-------------------------------------------------
 
     @staticmethod
@@ -42,6 +49,12 @@ class Helper:
         result = pattern.search(string)
         return result.group()
     #---------------------------------------------------------------------------------------------------------
+
+    @staticmethod
+    def extract_this_pattern(pattern, string):
+        pattern = re.compile(pattern)
+        result = pattern.search(string)
+        return result.group()
 
     @staticmethod
     def get_string_with_space_before_deduction_amount(string):
