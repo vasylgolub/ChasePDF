@@ -1,10 +1,9 @@
 from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
-from src.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
-from src.withdrawals.extractor import Extractor
-from src.withdrawals.helper import Helper
-from src.withdrawals.tansaction_detail_cleaner import TransactionCleaner
-
+from src.withdrawals_and_transactions.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
+from src.withdrawals_and_transactions.withdrawals.extractor import Extractor
+from src.withdrawals_and_transactions.helper import Helper
+from src.withdrawals_and_transactions.transactions.transaction_details_cleaner import TransactionCleaner
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
 file_path = list_of_files.with_full_path()[0]
 my_pdf = Pdf(file_path)
