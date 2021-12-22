@@ -4,14 +4,15 @@ from pathlib import Path
 
 # To be used with a directory that has pdf files already renamed properly
 class ListOfFilesFromDirectory:
-    def __init__(self, path_to_folder):
-        self.months = ['January', 'February', 'March', 'April', 'May',
-                       'June', 'July', 'August', 'September', 'October', 'November', 'December']
-        self.path_to_folder = path_to_folder
-        self.files = os.listdir(path_to_folder)
-        self.remove_non_pdf_files()
-        self.sorted_list_of_files = self.sorted()
-        self.sorted_full_path_list = self.get_sorted_full_path_list()
+    def __init__(self, path_to_folder=None):
+        if path_to_folder is not None:
+            self.months = ['January', 'February', 'March', 'April', 'May',
+                           'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            self.path_to_folder = path_to_folder
+            self.files = os.listdir(path_to_folder)
+            self.remove_non_pdf_files()
+            # self.sorted_list_of_files = self.sorted()
+            # self.sorted_full_path_list = self.get_sorted_full_path_list()
 
     def remove_non_pdf_files(self):
         self.files = [each_file for each_file in self.files if ".pdf" in each_file]
