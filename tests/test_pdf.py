@@ -4,12 +4,13 @@ from src.withdrawals_and_transactions.withdrawals.withdrawals_text_cleaner impor
 from src.withdrawals_and_transactions.withdrawals.extractor import Extractor
 from src.withdrawals_and_transactions.helper import Helper
 from src.withdrawals_and_transactions.transactions.transaction_details_cleaner import TransactionCleaner
+from src.list_of_files_from_directory import ListOfFilesFromDirectory
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
 file_path = list_of_files.with_full_path()[0]
 my_pdf = Pdf(file_path)
 my_withdrawals = WithdrawalsTextCleaner()
 my_withdrawals_helper = Helper
-from src.list_of_files_from_directory import ListOfFilesFromDirectory
+
 
 def test_is_path_correct():
     assert Pdf.is_file_a_pdf(file_path) is True
@@ -81,30 +82,6 @@ def test_split_text_in_three():
     text = "this is a test text"
     left, right = my_pdf.get_sides_of_text(text, "test")
     assert text == left + "test" + right
-
-
-#--------------------------------------------------------------------------------------------------------------
-# list must have 12 elements
-# def test_get_sorted_list_of_files():
-#     list_of_unordered_files = ['June 01, 2019.pdf', 'June 29, 2019.pdf', 'May 01, 2019.pdf', 'January 01, 2019.pdf',
-#                                'October 01, 2019.pdf', 'March 01, 2019.pdf', 'March 30, 2019.pdf',
-#                                'November 01, 2019.pdf', 'November 30, 2019.pdf', 'August 01, 2019.pdf',
-#                                'August 31, 2019.pdf', 'February 01, 2019.pdf']
-#
-#     expected_list_of_files = ['January 01, 2019.pdf',
-#                               'February 01, 2019.pdf',
-#                               'March 01, 2019.pdf',
-#                               'March 30, 2019.pdf',
-#                               'May 01, 2019.pdf',
-#                               'June 01, 2019.pdf',
-#                               'June 29, 2019.pdf',
-#                               'August 01, 2019.pdf',
-#                               'August 31, 2019.pdf',
-#                               'October 01, 2019.pdf',
-#                               'November 01, 2019.pdf',
-#                               'November 30, 2019.pdf']
-#     result = list_of_files.sorted(list_of_unordered_files)
-#     assert result == expected_list_of_files
 
 
 def test_function_et_date_of_this_statement():
@@ -349,25 +326,6 @@ def test_remove_balance_amount_from_transaction():
     assert TransactionCleaner.remove_balance_amount_from_transaction(test_list) == expected_res
 
 #-------------------------------------------files_sorting---------------------------------------------------------
-
-
-# def test_get_hint_on_how_to_sort_this_list_of_months():
-#     # Non sorted list
-#     test_list = ['January 09, 2018.pdf',
-#                  'July 18, 2018.pdf',
-#                  'September 19, 2018.pdf',
-#                  'March 16, 2018.pdf',
-#                  'August 16, 2018.pdf',
-#                  'November 17, 2018.pdf',
-#                  'February 16, 2018.pdf',
-#                  'May 16, 2018.pdf',
-#                  'April 17, 2018.pdf',
-#                  'October 17, 2018.pdf',
-#                  'June 16, 2018.pdf',
-#                  'January 18, 2018.pdf']
-#     expected_result = [0, 7, 9, 3, 8, 11, 2, 5, 4, 10, 6, 1]
-#     assert ListOfFilesFromDirectory().get_hint_on_how_to_sort_this_list_of_months(test_list) == expected_result
-
 def test_sort_by_month_excluding_date():
     # Non sorted list
     test_list = ['January 09, 2018.pdf',
