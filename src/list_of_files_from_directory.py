@@ -23,6 +23,25 @@ class ListOfFilesFromDirectory:
             result_list.append(os.path.join(self.path_to_folder, each))
         return result_list
 
+
+    def sort_by_month_then_date(self, unordered_list_of_files=None) -> list:
+        months_values = {'January': 0, 'February': 100, 'March': 200, 'April': 300, 'May': 400,
+                         'June': 500, 'July': 600, 'August': 700, 'September': 800, 'October': 900,
+                         'November': 1000, 'December': 1100}
+        if unordered_list_of_files is None:
+            unordered_list = self.files
+
+        dic_of_file_names = {}
+
+        # Each file's name will get a unique value
+        for file_name in unordered_list_of_files:
+            month, day = self.extract_month_and_day_string(file_name)
+            day_plus_month_value = int(day) + months_values[month]
+            dic_of_file_names[day_plus_month_value] = file_name
+
+        sorted_based_on_key = dict(sorted(dic_of_file_names.items()))
+        return list(sorted_based_on_key.values())
+
     # ------------------------------------------------------------------------------------------------
     def sorted(self, list_to_sort=None):
         n_files_in_folder = len(self.files)  # In case we want to sort files that are less then 12
