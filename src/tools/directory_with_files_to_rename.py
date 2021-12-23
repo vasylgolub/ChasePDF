@@ -18,6 +18,7 @@ class DirectoryWithFilesToRename:
         for each_file_name in self._files:
             f = FileToRename(self._directory + "/" + each_file_name)
             f.rename_file()
+        self._files = os.listdir(self._directory)  # Update list of files
 
     def get_list_of_target_files(self):
         return self._files
