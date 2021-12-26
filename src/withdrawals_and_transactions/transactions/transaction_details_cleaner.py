@@ -6,7 +6,9 @@ class TransactionCleaner:
     def __init__(self, whole_text=None):
         if whole_text is not None:
             self.whole_text = whole_text
-            inline = self.inline_without_dates(self.whole_text)
+            inline = self.substitute_dates_with_new_lines(self.whole_text)
+            inline = inline.replace("Ending Balance", "\nEnding Balance")  # little more inlining
+
             top, bottom, _ = self.split_in_3_sections(inline)
             self.top = self.clean_top(top)
             self.bottom = self.clean_bottom(bottom)
@@ -113,12 +115,11 @@ class TransactionCleaner:
         return transaction_string.replace(string, string + " ")
     # ------------------------------------------------------------------------------------------------------------
 
-    def inline_without_dates(self, text=None):
+    def substitute_dates_with_new_lines(self, text=None):
         if text is None:
             text = self.whole_text
-        in_lined_without_dates = re.sub(r'\d\d/\d\d', "\n", text)
-        in_lined = in_lined_without_dates.replace("Ending Balance", "\nEnding Balance")  # little more inlining
-        return in_lined
+        res = re.sub(r'\d\d/\d\d', "\n", text)
+        return res
 
 
     def remove_balance_amount_from_each_transaction(self, lista):
