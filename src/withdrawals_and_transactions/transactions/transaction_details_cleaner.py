@@ -51,7 +51,7 @@ class TransactionCleaner:
         if text is None:
             text = self.whole_text
 
-        _, _, res_list = self.split_in_3_sections(self.inline_without_dates(text))  # Split
+        _, _, res_list = self.split_in_3_sections(self.inline)  # Split
         res_list = self.get_new_list_without_elements_with_long_unnecessary_text(res_list)  # Cleaning
         res_list = self.strip_each_element(res_list)  # Cleaning
         res_list = self.insert_each_date_in_front_of_each_el(res_list)  # Reassembling
