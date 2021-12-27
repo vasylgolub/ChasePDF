@@ -17,9 +17,14 @@ class TransactionCleaner:
             self.transactions = self.strip_each_element(self.transactions)  # Cleaning
             self.transactions = self.insert_each_date_in_front_of_each_el(self.transactions)  # Reassembling
 
-            self.text = self.put_together_type_info_with_related_store_info(self.transactions)  # Make it a string again
-            # res_list = self.remove_single_dates_and_get_list(text)  # Now bring it back as a list. Remove single dd/dd
-            # res_list = self.detach_balance_amount_from_each_transaction(res_list)
+            text = self.put_together_type_info_with_related_store_info(self.transactions)  # Make it a string again
+
+            self.transactions = self.remove_single_dates_and_get_list(text)  # Remove single dd/dd
+            self.transactions = self.detach_balance_amount_from_each_transaction(self.transactions)
+
+            self.balances = self.get_balances_from_transactions()
+            # self.transactions = self.remove_balance_amount_from_transaction()
+
 
             # self.transactions = self.get_transactions_in_list_format(self.whole_text)
             # self.put_space_before_amount_in_each_transaction()
