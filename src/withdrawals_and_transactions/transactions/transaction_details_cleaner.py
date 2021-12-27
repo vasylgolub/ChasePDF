@@ -9,40 +9,20 @@ class TransactionCleaner:
             inline = self.substitute_dates_with_new_lines(self.whole_text)
             inline = inline.replace("Ending Balance", "\nEnding Balance")  # little more inlining
 
-            top, bottom, _ = self.split_in_3_sections(inline)
-            self.top = self.clean_top(top)
-            self.bottom = self.clean_bottom(bottom)
-            self.transactions = self.get_transactions_in_list_format(self.whole_text)
-            self.put_space_before_amount_in_each_transaction()
+            top, bottom, middle = self.split_in_3_sections(inline)
+            self.beginning_balance = self.clean_top(top)
+            self.ending_balance = self.clean_bottom(bottom)
 
-            # Extract (Exchg Rte) detail txt
-            for transaction in self.transactions:
-                pos_el = self.transactions.index(transaction)
-                if self.string_matches_pattern(r'Card \d{4} .+?\)', transaction):
-                    self.transactions[pos_el] = Helper.get_string_without_Exchg_Rte_text(transaction)
+            self.transactions = self.get_new_list_without_elements_with_long_unnecessary_text(middle)  # Cleaning
+            self.transactions = self.strip_each_element(self.transactions)  # Cleaning
+            self.transactions = self.insert_each_date_in_front_of_each_el(self.transactions)  # Reassembling
 
-            # Extract Cash Back detail txt
-            for transaction in self.transactions:
-                pos_el = self.transactions.index(transaction)
-                if self.string_matches_pattern(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d', transaction):
-                    self.transactions[pos_el] = Helper.get_string_without_cash_back_text(transaction)
+            self.text = self.put_together_type_info_with_related_store_info(self.transactions)  # Make it a string again
+            # res_list = self.remove_single_dates_and_get_list(text)  # Now bring it back as a list. Remove single dd/dd
+            # res_list = self.detach_balance_amount_from_each_transaction(res_list)
 
-            # Put space before -d+.dd
-            for transaction in self.transactions:
-                pos_el = self.transactions.index(transaction)
-                if self.string_matches_pattern(r'-\d+.\d\d$', transaction):
-                    self.transactions[pos_el] = Helper.get_string_with_space_before_deduction_amount(transaction)
-
-            # Remove two spaces
-            new_list = []
-            for transaction in self.transactions:
-                new_str = transaction.replace("   ", " ")
-                new_str = new_str.replace("  ", " ")
-                new_list.append(new_str)
-
-            self.transactions = new_list
-
-            self.list = [self.top] + self.transactions + [self.bottom]
+            # self.transactions = self.get_transactions_in_list_format(self.whole_text)
+            # self.put_space_before_amount_in_each_transaction()
 
     def get_wrapped_text(self):
         return "\n".join(self.list)
@@ -51,15 +31,19 @@ class TransactionCleaner:
         if text is None:
             text = self.whole_text
 
-        _, _, res_list = self.split_in_3_sections(self.inline)  # Split. Exclude top and bottom
-        res_list = self.get_new_list_without_elements_with_long_unnecessary_text(res_list)  # Cleaning
-        res_list = self.strip_each_element(res_list)  # Cleaning
-        res_list = self.insert_each_date_in_front_of_each_el(res_list)  # Reassembling
-        text = self.put_together_type_info_with_related_store_info(res_list)  # Making it a string again
-        res_list = self.remove_single_dates_and_get_list(text)  # Now bring it back as a list. Remove single dd/dd
-        res_list = self.detach_balance_amount_from_each_transaction(res_list)
-
-        return res_list
+    # def get_clean_transactions_in_list_format(self, text=None) -> list:
+    #     if text is None:
+    #         text = self.whole_text
+    #
+    #     _, _, res_list = self.split_in_3_sections(self.inline)  # Split. Exclude top and bottom
+    #     res_list = self.get_new_list_without_elements_with_long_unnecessary_text(res_list)  # Cleaning
+    #     res_list = self.strip_each_element(res_list)  # Cleaning
+    #     res_list = self.insert_each_date_in_front_of_each_el(res_list)  # Reassembling
+    #     text = self.put_together_type_info_with_related_store_info(res_list)  # Making it a string again
+    #     res_list = self.remove_single_dates_and_get_list(text)  # Now bring it back as a list. Remove single dd/dd
+    #     res_list = self.detach_balance_amount_from_each_transaction(res_list)
+    #
+    #     return res_list
 
     def put_together_type_info_with_related_store_info(self, a_list):
         list_of_types = ["Recurring Card Purchase", "Card Purchase", "Beginning Balance",
@@ -170,6 +154,7 @@ class TransactionCleaner:
                 return True
         return False
 
+    # Remove text that is present on every new page.
     def get_new_list_without_elements_with_long_unnecessary_text(self, a_list):
         res = []
         for each in a_list:
