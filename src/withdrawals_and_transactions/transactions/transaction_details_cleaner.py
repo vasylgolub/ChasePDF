@@ -61,19 +61,14 @@ class TransactionCleaner:
     # def get_wrapped_text(self):
     #     return "\n".join(self.list)
 
-    # def get_clean_transactions_in_list_format(self, text=None) -> list:
-    #     if text is None:
-    #         text = self.whole_text
-    #
-    #     _, _, res_list = self.split_in_3_sections(self.inline)  # Split. Exclude top and bottom
-    #     res_list = self.get_new_list_without_elements_with_long_unnecessary_text(res_list)  # Cleaning
-    #     res_list = self.strip_each_element(res_list)  # Cleaning
-    #     res_list = self.insert_each_date_in_front_of_each_el(res_list)  # Reassembling
-    #     text = self.put_together_type_info_with_related_store_info(res_list)  # Making it a string again
-    #     res_list = self.remove_single_dates_and_get_list(text)  # Now bring it back as a list. Remove single dd/dd
-    #     res_list = self.detach_balance_amount_from_each_transaction(res_list)
-    #
-    #     return res_list
+
+    def get_balances_from_transactions(self, transactions=None):
+        if transactions is None:
+            transactions = self.transactions
+        res = []
+        for transaction in transactions:
+            res.append(transaction[transaction.rfind(" "):])
+        return res
 
     def put_together_type_info_with_related_store_info(self, a_list):
         list_of_types = ["Recurring Card Purchase", "Card Purchase", "Beginning Balance",
