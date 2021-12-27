@@ -149,6 +149,12 @@ class TransactionCleaner:
         return string[pos_of:].replace("$", " ")
 
     @staticmethod
+    def split_in_3_sections(a_list):
+        if type(a_list) != type([]):  # if passed parameter is not a list then
+            a_list = a_list.split("\n")  # Let's make it a list
+        return a_list[0], a_list[-1], a_list[1:-1]
+
+    @staticmethod
     def remove_single_dates_and_get_list(text):  # This function removes some dates.
         res = []
         for each in text.split("\n"):
@@ -156,12 +162,6 @@ class TransactionCleaner:
                 continue
             res.append(each)
         return res
-
-    @staticmethod
-    def split_in_3_sections(a_list):
-        if type(a_list) != type([]):  # if passed parameter is not a list then
-            a_list = a_list.split("\n")  # Let's make it a list
-        return a_list[0], a_list[-1], a_list[1:-1]
 
     @staticmethod
     def any_element_of_this_list_is_in_this_string(a_list, string):

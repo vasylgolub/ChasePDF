@@ -49,6 +49,7 @@ class Pdf:
 
         self.remove_sections_not_in_the_text()  # from document_sections
 
+    # ----------------------------------------------------------------------------------------------------------------
     # Gate to Withdrawals class methods. This functions is related to only withdrawals info.
     def get_withdrawals(self):
         withdrawals_section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
@@ -59,6 +60,7 @@ class Pdf:
     def get_transaction_detail(self):
         transaction_detail_section = self.get_desired_section("TRANSACTION DETAIL")
         return TransactionDetail(transaction_detail_section)
+    # ----------------------------------------------------------------------------------------------------------------
 
     def get_date_of_this_statement(self, text=None):
         # The header has the information regarding the statement's date.
