@@ -367,6 +367,16 @@ def test_make_it_in_textual_format():
     expected_res = "-233,124.99"
     assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
 
+
+def test_clean_top():
+    test = "TRANSACTION DETAILDATEDESCRIPTIONAMOUNTBALANCEBeginning Balance-$33.53"
+    expected_res = "Beginning Balance -33.53"
+    assert TransactionCleaner.clean_top(test) == expected_res
+
+    test = "Beginning Balance$33.53"
+    expected_res = "Beginning Balance 33.53"
+    assert TransactionCleaner.clean_top(test) == expected_res
+
 #-------------------------------------------files_sorting---------------------------------------------------------
 def test_sort_by_month_excluding_date():
     # Non sorted list

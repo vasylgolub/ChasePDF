@@ -126,8 +126,13 @@ class TransactionCleaner:
         return string[:period_pos + 3].replace("$", " ")
 
     @staticmethod
-    def clean_top(string):
+    def clean_top(string):  # Check test_clean_top() for more info
         pos_of = string.find("Beginning Balance")
+
+        if "-" in string:  # If the beginning balance is negative we need to take this other approach
+            string = string.replace("-", " -")
+            return string[pos_of:].replace("$", "")
+
         return string[pos_of:].replace("$", " ")
 
     @staticmethod
