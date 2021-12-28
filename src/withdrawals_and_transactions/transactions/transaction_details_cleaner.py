@@ -84,33 +84,6 @@ class TransactionCleaner:
             res += each_string + "\n"
         return res
 
-    # ----------------------------------------put space before amount------------------------------------------
-    # def put_space_before_amount_in_each_transaction(self):
-    #     list_of_patterns_to_put_space_after = [r'Transaction#: \d{10}',
-    #                                            r'Card \d{4}',
-    #                                            r'ID: \d{10}',
-    #                                            r'ATM/Dep Error',
-    #                                            r'ATM Fee-With',
-    #                                            r'Quickpay With Zelle .+ \d{11}']
-    #
-    #     for this_transaction in self.transactions:
-    #         pos_el = self.transactions.index(this_transaction)
-    #
-    #         for pattern in list_of_patterns_to_put_space_after:
-    #             if self.string_matches_pattern(pattern, this_transaction):
-    #                 # =======================================================================================
-    #                 if "Online Transfer From" in this_transaction:
-    #                     found = Helper.extract_this_pattern(r'\d{10}', this_transaction)
-    #                     if int(found[0]) < 9:
-    #                         exception_pattern = r'Transaction#: \d{11}'
-    #                         self.transactions[pos_el] = self.put_space(exception_pattern, this_transaction)
-    #                     else:
-    #                         exception_pattern = r'Transaction#: \d{10}'
-    #                         self.transactions[pos_el] = self.put_space(exception_pattern, this_transaction)
-    #                     continue
-    #                 # =======================================================================================
-    #                 self.transactions[pos_el] = self.put_space(pattern, this_transaction)
-
     @staticmethod
     def string_matches_pattern(pattern_str, string):
         pattern = re.compile(pattern_str)
@@ -130,7 +103,6 @@ class TransactionCleaner:
             text = self.whole_text
         res = re.sub(r'\d\d/\d\d', "\n", text)
         return res
-
 
     def detach_balance_amount_from_each_transaction(self, lista):
         res = []
