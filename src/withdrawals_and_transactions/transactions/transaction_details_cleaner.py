@@ -22,13 +22,19 @@ class TransactionCleaner:
             self.transactions = self.remove_single_dates_and_get_list(text)  # Remove single dd/dd
             self.transactions = self.detach_balance_amount_from_each_transaction(self.transactions)
 
-            self.balances = self.get_balances_from_transactions()
-            # self.transactions = self.remove_balance_amount_from_transaction()
+            self.balances: list = self.get_balances_from_transactions()
+            self.transactions = self.remove_balances_from_transactions()
 
+            amounts = self.calc_amounts()  # get_amounts_using_beginning_balance_and_balances
 
+            amount_in_textual_format = []
+            for amount in amounts:
+                amount_in_textual_format.append(self.make_it_in_textual_format(amount))
 
-            # self.transactions = self.get_clean_transactions_in_list_format(self.whole_text)
-            # self.put_space_before_amount_in_each_transaction()
+            new = []
+            for transaction, amount in zip(self.transactions, amount_in_textual_format):
+                new.append(transaction.replace(amount, " " + amount))
+            self.transactions = new
 
             # # Extract (Exchg Rte) detail txt
             # for transaction in self.transactions:
@@ -73,7 +79,7 @@ class TransactionCleaner:
             beginning_balance = each_bal_f
         return res
 
-    def get_balances_from_transactions(self, transactions=None):
+    def get_balances_from_transactions(self, transactions=None) -> list:
         if transactions is None:
             transactions = self.transactions
         res = []
@@ -128,6 +134,15 @@ class TransactionCleaner:
         res = string[:pos_last_dot]
         pos_last_dot = res.rfind(".")
         res = res[:pos_last_dot + 3]
+        return res
+
+    # Only when the balances had been already detached from transactions
+    def remove_balances_from_transactions(self, transactions=None):
+        if transactions is None:
+            transactions = self.transactions
+        res = []
+        for transaction in transactions:
+            res.append(transaction[:transaction.rfind(" ")])
         return res
 
     @staticmethod
