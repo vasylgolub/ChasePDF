@@ -194,12 +194,18 @@ class TransactionCleaner:
 
     @staticmethod
     def make_it_in_textual_format(amount) -> str:
-        amount = round(amount * 100)
         amount_str = str(amount)
-        right_side = amount_str[-2:]  # Decimal
-        left_side = amount_str[:-2]
+        decimal_point_pos = amount_str.find(".")
+        fractional_part = str(round(amount * 100))[-2:]  # Ex: 23.99 -> 2399 -> 2399 -> 2399[-2:] -> 99
+        whole_number_part = amount_str[:decimal_point_pos]
 
-        if len(left_side) > 3:
-            left_side = left_side.replace(left_side[-3:], "," + left_side[-3:])  # Ex: 1324 -> 1,324
+        sign = ""
+        if "-" in whole_number_part:
+            sign = "-"
+            whole_number_part = whole_number_part.replace("-", "")
 
-        return left_side + "." + right_side
+        if len(whole_number_part) > 3:
+            whole_number_part = \
+                whole_number_part.replace(whole_number_part[-3:], "," + whole_number_part[-3:])  # Ex: 1324 -> 1,324
+
+        return sign + whole_number_part + "." + fractional_part
