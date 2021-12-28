@@ -62,6 +62,16 @@ class TransactionCleaner:
     # def get_wrapped_text(self):
     #     return "\n".join(self.list)
 
+    def calc_amounts(self):
+        res = []
+        get_amount_bb: str = self.beginning_balance[self.beginning_balance.rfind(" "):]
+        beginning_balance = round(Helper.get_float_format(get_amount_bb) * 100)
+        for each_bal in self.balances:
+            each_bal_f = round(Helper.get_float_format(each_bal) * 100)
+            amount = each_bal_f - beginning_balance
+            res.append(amount / 100)
+            beginning_balance = each_bal_f
+        return res
 
     def get_balances_from_transactions(self, transactions=None):
         if transactions is None:
