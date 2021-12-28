@@ -25,6 +25,8 @@ class TransactionCleaner:
             self.balances: list = self.get_balances_from_transactions()
             self.transactions = self.remove_balances_from_transactions()
 
+
+
             amounts = self.calc_amounts()  # get_amounts_using_beginning_balance_and_balances
 
             amount_in_textual_format = []
@@ -36,37 +38,39 @@ class TransactionCleaner:
                 new.append(transaction.replace(amount, " " + amount))
             self.transactions = new
 
-            # # Extract (Exchg Rte) detail txt
-            # for transaction in self.transactions:
-            #     pos_el = self.transactions.index(transaction)
-            #     if self.string_matches_pattern(r'Card \d{4} .+?\)', transaction):
-            #         self.transactions[pos_el] = Helper.get_string_without_Exchg_Rte_text(transaction)
-            #
-            # # Extract Cash Back detail txt
-            # for transaction in self.transactions:
-            #     pos_el = self.transactions.index(transaction)
-            #     if self.string_matches_pattern(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d', transaction):
-            #         self.transactions[pos_el] = Helper.get_string_without_cash_back_text(transaction)
-            #
-            # # Put space before -d+.dd
-            # for transaction in self.transactions:
-            #     pos_el = self.transactions.index(transaction)
-            #     if self.string_matches_pattern(r'-\d+.\d\d$', transaction):
-            #         self.transactions[pos_el] = Helper.get_string_with_space_before_deduction_amount(transaction)
-            #
-            # # Remove two spaces
-            # new_list = []
-            # for transaction in self.transactions:
-            #     new_str = transaction.replace("   ", " ")
-            #     new_str = new_str.replace("  ", " ")
-            #     new_list.append(new_str)
-            #
-            # self.transactions = new_list
-            #
-            # self.list = [self.top] + self.transactions + [self.bottom]
 
-    # def get_wrapped_text(self):
-    #     return "\n".join(self.list)
+
+            # Extract (Exchg Rte) detail txt
+            for transaction in self.transactions:
+                pos_el = self.transactions.index(transaction)
+                if self.string_matches_pattern(r'Card \d{4} .+?\)', transaction):
+                    self.transactions[pos_el] = Helper.get_string_without_Exchg_Rte_text(transaction)
+
+            # Extract Cash Back detail txt
+            for transaction in self.transactions:
+                pos_el = self.transactions.index(transaction)
+                if self.string_matches_pattern(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d', transaction):
+                    self.transactions[pos_el] = Helper.get_string_without_cash_back_text(transaction)
+
+            # Put space before -d+.dd
+            for transaction in self.transactions:
+                pos_el = self.transactions.index(transaction)
+                if self.string_matches_pattern(r'-\d+.\d\d$', transaction):
+                    self.transactions[pos_el] = Helper.get_string_with_space_before_deduction_amount(transaction)
+
+            # Remove two spaces
+            new_list = []
+            for transaction in self.transactions:
+                new_str = transaction.replace("   ", " ")
+                new_str = new_str.replace("  ", " ")
+                new_list.append(new_str)
+
+            self.transactions = new_list
+
+            self.list = [self.beginning_balance] + self.transactions + [self.ending_balance]
+
+    def get_wrapped_text(self):
+        return "\n".join(self.list)
 
     def calc_amounts(self):
         res = []
