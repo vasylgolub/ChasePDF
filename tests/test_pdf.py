@@ -325,6 +325,28 @@ def test_remove_balance_amount_from_transaction():
     expected_res = "12/17Doordash, Inc. Doordash, St-U3X5B7R1F5V6 CCD ID: 18009485981,156.65"
     assert TransactionCleaner.remove_balance_amount_from_transaction(test_list) == expected_res
 
+
+def test_make_it_in_textual_format():
+    test = 12.9
+    expected_res = "12.90"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = 12.91
+    expected_res = "12.91"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = 124.0
+    expected_res = "124.00"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = 2124.0
+    expected_res = "2,124.00"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = 233124.99
+    expected_res = "233,124.99"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
 #-------------------------------------------files_sorting---------------------------------------------------------
 def test_sort_by_month_excluding_date():
     # Non sorted list

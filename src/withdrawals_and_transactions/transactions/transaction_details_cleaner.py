@@ -190,3 +190,16 @@ class TransactionCleaner:
     @staticmethod
     def does_have_unnecessary_long_text(string):
         return len(string) > 200
+    # ------------------------------------------------------------------------------------------------------------
+
+    @staticmethod
+    def make_it_in_textual_format(amount) -> str:
+        amount = round(amount * 100)
+        amount_str = str(amount)
+        right_side = amount_str[-2:]  # Decimal
+        left_side = amount_str[:-2]
+
+        if len(left_side) > 3:
+            left_side = left_side.replace(left_side[-3:], "," + left_side[-3:])  # Ex: 1324 -> 1,324
+
+        return left_side + "." + right_side
