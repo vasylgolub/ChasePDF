@@ -9,11 +9,36 @@ class TransactionCleaner:
             inline = self.substitute_dates_with_new_lines(self.whole_text)
             inline = inline.replace("Ending Balance", "\nEnding Balance")  # little more inlining
 
-            top, bottom, _ = self.split_in_3_sections(inline)
-            self.top = self.clean_top(top)
-            self.bottom = self.clean_bottom(bottom)
-            self.transactions = self.get_transactions_in_list_format(self.whole_text)
-            self.put_space_before_amount_in_each_transaction()
+            top, bottom, middle = self.split_in_3_sections(inline)
+            self.beginning_balance = self.clean_top(top)
+            self.ending_balance = self.clean_bottom(bottom)
+
+            self.transactions = self.get_new_list_without_elements_with_long_unnecessary_text(middle)  # Cleaning
+            self.transactions = self.strip_each_element(self.transactions)  # Cleaning
+            self.transactions = self.insert_each_date_in_front_of_each_el(self.transactions)  # Reassembling
+
+            text = self.put_together_type_info_with_related_store_info(self.transactions)  # Make it a string again
+
+            self.transactions = self.remove_single_dates_and_get_list(text)  # Remove single dd/dd
+            self.transactions = self.detach_balance_amount_from_each_transaction(self.transactions)
+
+            self.balances: list = self.get_balances_from_transactions()
+            self.transactions = self.remove_balances_from_transactions()
+
+
+
+            amounts = self.calc_amounts()  # get_amounts_using_beginning_balance_and_balances
+
+            amount_in_textual_format = []
+            for amount in amounts:
+                amount_in_textual_format.append(self.make_it_in_textual_format(amount))
+
+            new = []
+            for transaction, amount in zip(self.transactions, amount_in_textual_format):
+                new.append(transaction.replace(amount, " " + amount))
+            self.transactions = new
+
+
 
             # Extract (Exchg Rte) detail txt
             for transaction in self.transactions:
@@ -42,29 +67,34 @@ class TransactionCleaner:
 
             self.transactions = new_list
 
-            self.list = [self.top] + self.transactions + [self.bottom]
+            self.list = [self.beginning_balance] + self.transactions + [self.ending_balance]
 
     def get_wrapped_text(self):
         return "\n".join(self.list)
 
-    def get_transactions_in_list_format(self, text=None):
-        if text is None:
-            text = self.whole_text
+    def calc_amounts(self):
+        res = []
+        get_amount_bb: str = self.beginning_balance[self.beginning_balance.rfind(" "):]
+        beginning_balance = round(Helper.get_float_format(get_amount_bb) * 100)
+        for each_bal in self.balances:
+            each_bal_f = round(Helper.get_float_format(each_bal) * 100)
+            amount = each_bal_f - beginning_balance
+            res.append(amount / 100)
+            beginning_balance = each_bal_f
+        return res
 
-        _, _, res_list = self.split_in_3_sections(self.inline)  # Split. Exclude top and bottom
-        res_list = self.get_new_list_without_elements_with_long_unnecessary_text(res_list)  # Cleaning
-        res_list = self.strip_each_element(res_list)  # Cleaning
-        res_list = self.insert_each_date_in_front_of_each_el(res_list)  # Reassembling
-        text = self.put_together_type_info_with_related_store_info(res_list)  # Making it a string again
-        res_list = self.remove_single_dates_and_get_list(text)  # Now bring it back as a list. Remove single dd/dd
-        res_list = self.detach_balance_amount_from_each_transaction(res_list)
-
-        return res_list
+    def get_balances_from_transactions(self, transactions=None) -> list:
+        if transactions is None:
+            transactions = self.transactions
+        res = []
+        for transaction in transactions:
+            res.append(transaction[transaction.rfind(" "):])
+        return res
 
     def put_together_type_info_with_related_store_info(self, a_list):
         list_of_types = ["Recurring Card Purchase", "Card Purchase", "Beginning Balance",
                          "Non-Chase ATM Withdraw", "ATM Withdrawal", "Payment Sent", "Foreign Exch",
-                         "Payment Received"]
+                         "Payment Received", "Check Deposit"]
         inff = "Insufficient Funds Fee"
         res = ""
         for each_string in a_list:
@@ -73,33 +103,6 @@ class TransactionCleaner:
                 continue
             res += each_string + "\n"
         return res
-
-    # ----------------------------------------put space before amount------------------------------------------
-    def put_space_before_amount_in_each_transaction(self):
-        list_of_patterns_to_put_space_after = [r'Transaction#: \d{10}',
-                                               r'Card \d{4}',
-                                               r'ID: \d{10}',
-                                               r'ATM/Dep Error',
-                                               r'ATM Fee-With',
-                                               r'Quickpay With Zelle .+ \d{11}']
-
-        for this_transaction in self.transactions:
-            pos_el = self.transactions.index(this_transaction)
-
-            for pattern in list_of_patterns_to_put_space_after:
-                if self.string_matches_pattern(pattern, this_transaction):
-                    # =======================================================================================
-                    if "Online Transfer From" in this_transaction:
-                        found = Helper.extract_this_pattern(r'\d{10}', this_transaction)
-                        if int(found[0]) < 9:
-                            exception_pattern = r'Transaction#: \d{11}'
-                            self.transactions[pos_el] = self.put_space(exception_pattern, this_transaction)
-                        else:
-                            exception_pattern = r'Transaction#: \d{10}'
-                            self.transactions[pos_el] = self.put_space(exception_pattern, this_transaction)
-                        continue
-                    # =======================================================================================
-                    self.transactions[pos_el] = self.put_space(pattern, this_transaction)
 
     @staticmethod
     def string_matches_pattern(pattern_str, string):
@@ -121,7 +124,6 @@ class TransactionCleaner:
         res = re.sub(r'\d\d/\d\d', "\n", text)
         return res
 
-
     def detach_balance_amount_from_each_transaction(self, lista):
         res = []
         for each in lista:
@@ -138,14 +140,28 @@ class TransactionCleaner:
         res = res[:pos_last_dot + 3]
         return res
 
+    # Only when the balances had been already detached from transactions
+    def remove_balances_from_transactions(self, transactions=None):
+        if transactions is None:
+            transactions = self.transactions
+        res = []
+        for transaction in transactions:
+            res.append(transaction[:transaction.rfind(" ")])
+        return res
+
     @staticmethod
     def clean_bottom(string):
         period_pos = string.find(".")
         return string[:period_pos + 3].replace("$", " ")
 
     @staticmethod
-    def clean_top(string):
+    def clean_top(string):  # Check test_clean_top() for more info
         pos_of = string.find("Beginning Balance")
+
+        if "-" in string:  # If the beginning balance is negative we need to take this other approach
+            string = string.replace("-", " -")
+            return string[pos_of:].replace("$", "")
+
         return string[pos_of:].replace("$", " ")
 
     @staticmethod
@@ -170,6 +186,7 @@ class TransactionCleaner:
                 return True
         return False
 
+    # Remove text that is present on every new page.
     def get_new_list_without_elements_with_long_unnecessary_text(self, a_list):
         res = []
         for each in a_list:
@@ -207,3 +224,22 @@ class TransactionCleaner:
     @staticmethod
     def does_have_unnecessary_long_text(string):
         return len(string) > 200
+    # ------------------------------------------------------------------------------------------------------------
+
+    @staticmethod
+    def make_it_in_textual_format(amount) -> str:
+        amount_str = str(amount)
+        decimal_point_pos = amount_str.find(".")
+        fractional_part = str(round(amount * 100))[-2:]  # Ex: 23.99 -> 2399 -> 2399 -> 2399[-2:] -> 99
+        whole_number_part = amount_str[:decimal_point_pos]
+
+        sign = ""
+        if "-" in whole_number_part:
+            sign = "-"
+            whole_number_part = whole_number_part.replace("-", "")
+
+        if len(whole_number_part) > 3:
+            whole_number_part = \
+                whole_number_part.replace(whole_number_part[-3:], "," + whole_number_part[-3:])  # Ex: 1324 -> 1,324
+
+        return sign + whole_number_part + "." + fractional_part

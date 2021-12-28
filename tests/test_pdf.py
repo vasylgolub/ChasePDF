@@ -151,6 +151,10 @@ def test_get_float_format():
     print(my_withdrawals_helper.get_float_format(txt_test))
     assert my_withdrawals_helper.get_float_format(txt_test) == -6896.00
 
+    txt_test = "896.00"
+    print(my_withdrawals_helper.get_float_format(txt_test))
+    assert my_withdrawals_helper.get_float_format(txt_test) == 896.00
+
 
 def test_get_left_side_only():
     string_test = "Total ATM & Debit Card Withdrawals $4,261.68 1010897020200000006234Pageof*start*atmanddebitcard" \
@@ -324,6 +328,54 @@ def test_remove_balance_amount_from_transaction():
     test_list = "12/17Doordash, Inc. Doordash, St-U3X5B7R1F5V6 CCD ID: 18009485981,156.651,301.80"
     expected_res = "12/17Doordash, Inc. Doordash, St-U3X5B7R1F5V6 CCD ID: 18009485981,156.65"
     assert TransactionCleaner.remove_balance_amount_from_transaction(test_list) == expected_res
+
+
+def test_make_it_in_textual_format():
+    test = -0.99
+    expected_res = "-0.99"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = 12.9
+    expected_res = "12.90"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = -12.9
+    expected_res = "-12.90"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = 12.91
+    expected_res = "12.91"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = 124.0
+    expected_res = "124.00"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = -124.0
+    expected_res = "-124.00"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = 2124.0
+    expected_res = "2,124.00"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = 233124.99
+    expected_res = "233,124.99"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+    test = -233124.99
+    expected_res = "-233,124.99"
+    assert TransactionCleaner.make_it_in_textual_format(test) == expected_res
+
+
+def test_clean_top():
+    test = "TRANSACTION DETAILDATEDESCRIPTIONAMOUNTBALANCEBeginning Balance-$33.53"
+    expected_res = "Beginning Balance -33.53"
+    assert TransactionCleaner.clean_top(test) == expected_res
+
+    test = "Beginning Balance$33.53"
+    expected_res = "Beginning Balance 33.53"
+    assert TransactionCleaner.clean_top(test) == expected_res
 
 #-------------------------------------------files_sorting---------------------------------------------------------
 def test_sort_by_month_excluding_date():
