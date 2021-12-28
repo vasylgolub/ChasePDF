@@ -74,7 +74,7 @@ class TransactionCleaner:
     def put_together_type_info_with_related_store_info(self, a_list):
         list_of_types = ["Recurring Card Purchase", "Card Purchase", "Beginning Balance",
                          "Non-Chase ATM Withdraw", "ATM Withdrawal", "Payment Sent", "Foreign Exch",
-                         "Payment Received"]
+                         "Payment Received", "Check Deposit"]
         inff = "Insufficient Funds Fee"
         res = ""
         for each_string in a_list:
