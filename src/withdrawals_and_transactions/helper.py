@@ -20,13 +20,13 @@ class Helper:
     def get_beginning_balance_as_dictionary(whole_text_wrapped):
         beginning_balance_whole_text = whole_text_wrapped[:whole_text_wrapped.find("\n")]  # take only the top
         bb_text, bb_amount = Helper.get_text_and_amount_separated(beginning_balance_whole_text)  # BeginningBalance
-        return {bb_text: float(bb_amount)}
+        return {bb_text: float(bb_amount.replace(',', ''))}
 
     @staticmethod
     def get_ending_balance_as_dictionary(whole_text_wrapped):
         ending_balance_whole_text = whole_text_wrapped[whole_text_wrapped.rfind("\n")+1:]  # take only the top
         eb_text, eb_amount = Helper.get_text_and_amount_separated(ending_balance_whole_text)  # Ending_balance
-        return {eb_text: float(eb_amount)}
+        return {eb_text: float(eb_amount.replace(',', ''))}  # In case there is a comma
 
     #---------------------------------------------------------------------------------------------------------
 

@@ -210,6 +210,7 @@ def test_get_amount():
     expected_result = 127.61
     assert my_extractor.get_amount() == expected_result
 
+    # tests for transactions from personal bank account statement
 
 
 def test_get_type_withdrawal():
@@ -377,6 +378,7 @@ def test_clean_top():
     expected_res = "Beginning Balance 33.53"
     assert TransactionCleaner.clean_top(test) == expected_res
 
+
 #-------------------------------------------files_sorting---------------------------------------------------------
 def test_sort_by_month_excluding_date():
     # Non sorted list
@@ -392,7 +394,6 @@ def test_sort_by_month_excluding_date():
                  'October 17, 2018.pdf',
                  'June 16, 2018.pdf',
                  'January 18, 2018.pdf']
-
     expected_result = ['January 09, 2018.pdf',
                        'January 18, 2018.pdf',
                        'February 16, 2018.pdf',
@@ -405,17 +406,15 @@ def test_sort_by_month_excluding_date():
                        'September 19, 2018.pdf',
                        'October 17, 2018.pdf',
                        'November 17, 2018.pdf']
-
     assert ListOfFilesFromDirectory().sort_by_month_then_date(test_list) == expected_result
+
     # Non sorted list
     test_list = ['January 09, 2018.pdf',
                  'July 18, 2018.pdf',
                  'September 19, 2018.pdf',
                  'March 16, 2018.pdf']
-
     expected_result = ['January 09, 2018.pdf',
                        'March 16, 2018.pdf',
                        'July 18, 2018.pdf',
                        'September 19, 2018.pdf']
-
     assert ListOfFilesFromDirectory().sort_by_month_then_date(test_list) == expected_result
