@@ -43,22 +43,22 @@ class TransactionCleaner:
             # Extract (Exchg Rte) detail txt
             for transaction in self.transactions:
                 pos_el = self.transactions.index(transaction)
-                if self.string_matches_pattern(r'Card \d{4} .+?\)', transaction):
+                if self.is_pattern_in_string(r'Card \d{4} .+?\)', transaction):
                     self.transactions[pos_el] = Helper.get_string_without_Exchg_Rte_text(transaction)
 
             # Extract Cash Back detail txt
             for transaction in self.transactions:
                 pos_el = self.transactions.index(transaction)
-                if self.string_matches_pattern(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d', transaction):
+                if self.is_pattern_in_string(r'Purchase \$?\d.+ Cash Back \$?\d+\.\d\d', transaction):
                     self.transactions[pos_el] = Helper.get_string_without_cash_back_text(transaction)
 
             # Put space before -d+.dd
             for transaction in self.transactions:
                 pos_el = self.transactions.index(transaction)
-                if self.string_matches_pattern(r'-\d+.\d\d$', transaction):
+                if self.is_pattern_in_string(r'-\d+.\d\d$', transaction):
                     self.transactions[pos_el] = Helper.get_string_with_space_before_deduction_amount(transaction)
 
-            # Remove two spaces
+            # Remove two or three spaces
             new_list = []
             for transaction in self.transactions:
                 new_str = transaction.replace("   ", " ")
@@ -105,7 +105,7 @@ class TransactionCleaner:
         return res
 
     @staticmethod
-    def string_matches_pattern(pattern_str, string):
+    def is_pattern_in_string(pattern_str, string):
         pattern = re.compile(pattern_str)
         found = pattern.search(string)
         return bool(found)
