@@ -1,7 +1,7 @@
 from src.pdf import Pdf
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
 from src.withdrawals_and_transactions.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
-from src.withdrawals_and_transactions.withdrawals.extractor import Extractor
+from src.withdrawals_and_transactions.extractor import Extractor
 from src.withdrawals_and_transactions.helper import Helper
 from src.withdrawals_and_transactions.transactions.transaction_details_cleaner import TransactionCleaner
 from src.list_of_files_from_directory import ListOfFilesFromDirectory
@@ -241,6 +241,11 @@ def test_get_date():
     expected_result = ["01/02", "01/02"]
     assert Extractor.get_date(test_text) == expected_result
 
+    # tests for transactions from personal bank account statement
+    test_text = "01/26Online Transfer To Chk ...7190 Transaction#: 9117443874 -500.00"
+    expected_result = ["01/26", "0"]
+    assert Extractor.get_date(test_text) == expected_result
+
 
 def test_get_last_4_digits():
     test_text = ["01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24",
@@ -263,6 +268,16 @@ def test_get_last_4_digits():
 
     test_text = "01/02 Card Purchase With Pin 01/02 Safeway Store 0785 San Francisco CA Card 6427 35.15"
     expected_result = "6427"
+    assert Extractor.get_card_last_4_digits(test_text) == expected_result
+
+    # tests for transactions from personal bank account statement
+    test_text = "01/30Card Purchase 01/30Public Storage 26834 800-567-0759 CA Card 8653 -103.00"
+    expected_result = "8653"
+    assert Extractor.get_card_last_4_digits(test_text) == expected_result
+
+    test_text = "01/31Insufficient Funds Fee For A $15.00 Recurring Card Purchase - " \
+                "Details: 0130Mixcloud Pro London 04833160170958653 00 -34.00"
+    expected_result = "0000"
     assert Extractor.get_card_last_4_digits(test_text) == expected_result
 
 
@@ -288,6 +303,14 @@ def test_get_store():
     expected_result = "Patio Latino Bosa"
     assert my_extractor.store == expected_result
 
+    # tests for transactions from personal bank account statement
+    my_extractor = Extractor("01/15Recurring Card Purchase 01/15Amazon Prime*2O5Kd6T Amzn.Com/Bill WA Card 8653 -14.09")
+    expected_result = "Amazon Prime*2O5Kd6T Amzn.Com/Bill WA"
+    assert my_extractor.store == expected_result
+
+    # my_extractor = Extractor("01/08Online Transfer To Chk ...7190 Transaction#: 9056204609 -120.00")
+    # expected_result = "Online Transfer To Chk ...7190 Transaction#: 9056204609"
+    # assert my_extractor.store == expected_result
 
 #-------------------------------------------other---------------------------------------------------------
 
