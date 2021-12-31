@@ -211,7 +211,13 @@ def test_get_amount():
     assert my_extractor.get_amount() == expected_result
 
     # tests for transactions from personal bank account statement
+    my_extractor = Extractor("01/21Card Purchase 01/17Amzn Mktp US*S65O20Q Amzn.Com/Bill WA Card 8653 -17.49")
+    expected_result = -17.49
+    assert my_extractor.get_amount() == expected_result
 
+    my_extractor = Extractor("01/21Doordash, Inc. Doordash, St-L3R7J1G5W2Y5 CCD ID: 1800948598 882.54")
+    expected_result = 882.54
+    assert my_extractor.get_amount() == expected_result
 
 def test_get_type_withdrawal():
     test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"

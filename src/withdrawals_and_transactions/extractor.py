@@ -14,8 +14,12 @@ class Extractor:
         if string is None:
             string = self.whole_text
 
+        right_side_string = string[string.rfind(" "):]
         last_4_digits = self.get_card_last_4_digits(string)
-        right_side_string = string[string.find(last_4_digits)+4:]
+
+        if last_4_digits != "0000":
+            right_side_string = string[string.find(last_4_digits)+4:]
+
 
         if '$' in right_side_string:
             right_side_string = right_side_string.replace('$', "")
