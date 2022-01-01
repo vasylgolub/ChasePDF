@@ -219,6 +219,7 @@ def test_get_amount():
     expected_result = 882.54
     assert my_extractor.get_amount() == expected_result
 
+
 def test_get_type_withdrawal():
     test_text = "01/16 Card Purchase 01/13 Dj Tech 877-645-5377 CA Card 6427$239.24"
     expected_result = "Card Purchase"

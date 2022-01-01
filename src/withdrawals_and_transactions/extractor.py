@@ -5,7 +5,7 @@ class Extractor:
     def __init__(self, source_text):
         self.whole_text = source_text
         self.amount = self.get_amount(self.whole_text)
-        self.type = self.get_type_withdrawal(self.whole_text)
+        # self.type = self.get_type_withdrawal(self.whole_text)
         self.date = self.get_date(self.whole_text)
         self.last_4_digits = self.get_card_last_4_digits(self.whole_text)
         self.store = self.get_store(self.whole_text)
@@ -42,13 +42,20 @@ class Extractor:
         result = []
         for match in matches:
             result.append(match.group())
+
+        # If the result has only one element, that means in transaction description text there is only one date: dd/dd.
+        # The returning result better have always two elements in it. So the second will be just "0" maybe. For now.
+        if len(result) == 1:
+            result.append("0")
         return result
 
     @staticmethod
     def get_card_last_4_digits(string):
         pattern = re.compile(r'Card ?\d\d\d\d')
         matches = pattern.search(string)
-        return matches.group()[-4:]
+        if bool(matches):
+            return matches.group()[-4:]
+        return "0000"  # Meaning that there is no 4 digit card number in the description.
 
     def get_store(self, string):
         pos_4_digits = string.rfind(self.last_4_digits)
