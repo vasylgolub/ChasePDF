@@ -75,12 +75,3 @@ class WithdrawalsTextCleaner:
         pattern = re.compile(r'\d\d\.\d\d')
         return pattern.search(string).end()
 
-    def extract_date_at_the_end(self, string):
-        if self.has_date_at_the_end(string):
-            return string[-5:]
-        return ""
-
-    @staticmethod
-    def has_date_at_the_end(string):
-        last_5_chars = string[-5:]
-        return last_5_chars.find("/") != -1
