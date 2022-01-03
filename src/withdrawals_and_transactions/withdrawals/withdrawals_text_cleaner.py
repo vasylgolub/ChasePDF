@@ -20,7 +20,18 @@ class WithdrawalsTextCleaner:
             for left, right in zip(a_list[0::2], a_list[1::2]):
                 self.withdrawals.append(left + right)
 
-            self.cleaned_withdrawals = self.remove_unnecessary_info_from_some_elements(self.withdrawals)
+            cleaned_withdrawals = self.remove_unnecessary_info_from_some_elements(self.withdrawals)
+            self.cleaned_withdrawals = self.add_space_after_4_digit_card(cleaned_withdrawals)
+    # ------------------------------------------------------------------------------------------------------
+
+    @staticmethod
+    def add_space_after_4_digit_card(withdrawals):
+        res = []
+        for each in withdrawals:
+            pos_last_space = each.rfind(" ")
+            res.append(each[:pos_last_space+5] + " " + each[pos_last_space+5:])
+        return res
+
 
     def get_total_info_from_whole_text(self, tot_info_text):
         pos = self.whole_text.find(tot_info_text)
@@ -33,6 +44,7 @@ class WithdrawalsTextCleaner:
     def remove_total_info_from_whole_text(self):
         pos = self.whole_text.find("Total ATM & Debit Card Withdrawals")
         return self.whole_text[:pos]
+    # ------------------------------------------------------------------------------------------------------
 
     def get_wrapped_text(self):
         return "\n".join(self.cleaned_withdrawals)
