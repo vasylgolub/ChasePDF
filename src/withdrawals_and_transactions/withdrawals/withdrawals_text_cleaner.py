@@ -6,7 +6,24 @@ class WithdrawalsTextCleaner:
     def __init__(self, whole_text=None):
         if whole_text is not None:
             self.whole_text = whole_text
-            self.list = self.make_whole_text_a_list_with_unnecessary_info_removed()
+            # self.list = self.make_whole_text_a_list_with_unnecessary_info_removed()
+
+            pos = self.whole_text.find("Total ATM & Debit Card Withdrawals")
+            self.total_atm_and_debit_card__withdrawals_text = self.whole_text[pos:]
+            whole_text_without_total = self.whole_text[:pos]
+
+            text_without_title = \
+                whole_text_without_total.replace("ATM & DEBIT CARD WITHDRAWALSDATEDESCRIPTIONAMOUNT", "")
+
+            self.inlined_by_date = re.sub(r'(\d\d/\d\d)', "\n\\1", text_without_title)
+            self.inlined_by_date = self.inlined_by_date.strip()
+
+            a_list = self.inlined_by_date.split("\n")
+            self.withdrawals = []
+            for left, right in zip(a_list[0::2], a_list[1::2]):
+                self.withdrawals.append(left + right)
+
+            self.cleaned_withdrawals = self.remove_unnecessary_info_from_some_elements2(self.withdrawals)
 
     def get_wrapped_text(self):
         return "\n".join(self.list)
