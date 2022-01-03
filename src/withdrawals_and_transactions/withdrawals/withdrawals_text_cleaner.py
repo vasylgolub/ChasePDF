@@ -7,10 +7,8 @@ class WithdrawalsTextCleaner:
         if whole_text is not None:
             self.whole_text = whole_text
 
-            pos = self.whole_text.find("Total ATM & Debit Card Withdrawals")
-            self.total_info = self.get_total_info(pos)
-
-            whole_text_without_total = self.whole_text[:pos]
+            self.total_info = self.get_total_info(self.whole_text.find("Total ATM & Debit Card Withdrawals"))
+            whole_text_without_total = self.remove_total_info_from_whole_text()
 
             text_without_title = \
                 whole_text_without_total.replace("ATM & DEBIT CARD WITHDRAWALSDATEDESCRIPTIONAMOUNT", "")
@@ -31,6 +29,10 @@ class WithdrawalsTextCleaner:
             pos_period = res.find('.')
             res = res[:pos_period + 2]
         return res
+
+    def remove_total_info_from_whole_text(self):
+        pos = self.whole_text.find("Total ATM & Debit Card Withdrawals")
+        return self.whole_text[:pos]
 
     def get_wrapped_text(self):
         return "\n".join(self.cleaned_withdrawals)
