@@ -8,13 +8,12 @@ class WithdrawalsTextCleaner:
             self.whole_text = whole_text
 
             self.total_info = self.get_total_info_from_whole_text("Total ATM & Debit Card Withdrawals")
-            whole_text_without_total = self.remove_total_info_from_whole_text()  # And everything that is after it.
 
-            text_without_title = \
+            whole_text_without_total = self.remove_total_info_from_whole_text()  # And everything that is after it.
+            whole_text_without_total_and_title = \
                 whole_text_without_total.replace("ATM & DEBIT CARD WITHDRAWALSDATEDESCRIPTIONAMOUNT", "")
 
-            self.inlined_by_date = re.sub(r'(\d\d/\d\d)', "\n\\1", text_without_title)
-            self.inlined_by_date = self.inlined_by_date.strip()
+            self.inlined_by_date = re.sub(r'(\d\d/\d\d)', "\n\\1", whole_text_without_total_and_title).strip()
 
             a_list = self.inlined_by_date.split("\n")
             self.withdrawals = []
