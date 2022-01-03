@@ -8,10 +8,7 @@ class WithdrawalsTextCleaner:
             self.whole_text = whole_text
 
             pos = self.whole_text.find("Total ATM & Debit Card Withdrawals")
-            self.total_info = self.whole_text[pos:]
-            if self.does_have_unnecessary_long_text(self.total_info):
-                pos_period = self.total_info.find('.')
-                self.total_info = self.total_info[:pos_period + 2]
+            self.total_info = self.get_total_info(pos)
 
             whole_text_without_total = self.whole_text[:pos]
 
@@ -27,6 +24,13 @@ class WithdrawalsTextCleaner:
                 self.withdrawals.append(left + right)
 
             self.cleaned_withdrawals = self.remove_unnecessary_info_from_some_elements(self.withdrawals)
+
+    def get_total_info(self, ref_point):
+        res = self.whole_text[ref_point:]
+        if self.does_have_unnecessary_long_text(res):
+            pos_period = res.find('.')
+            res = res[:pos_period + 2]
+        return res
 
     def get_wrapped_text(self):
         return "\n".join(self.cleaned_withdrawals)
