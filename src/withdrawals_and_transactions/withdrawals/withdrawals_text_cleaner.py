@@ -55,24 +55,6 @@ class WithdrawalsTextCleaner:
             a_list[-1] = self.get_left_side_only(a_list[-1])
 
         return a_list
-    #-----------------------------------------Fix Dates-------------------------------------------------------
-
-    def get_fixed_list_with_dates_positioned_properly(self):
-        result_list = []
-        list_of_dates = self.extract_dates()
-        length = len(self.a_list_with_some_text_removed_but_not_with_dates_in_the_right_place())
-        for position in range(0, length):
-            string = self.a_list_with_some_text_removed_but_not_with_dates_in_the_right_place()[position]
-            new_string = list_of_dates[position] + " " + self.get_str_with_date_removed_at_the_end(string)
-            result_list.append(new_string)
-        return result_list
-
-
-    def extract_dates(self):
-        result_list = [""]  # Because the first element in list is a description
-        for each in self.a_list_with_some_text_removed_but_not_with_dates_in_the_right_place():
-            result_list.append(self.extract_date_at_the_end(each))
-        return result_list
 
 #-----------------------------------------------Delegating functions-----------------------------------------------#
 
