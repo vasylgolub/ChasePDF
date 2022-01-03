@@ -26,38 +26,11 @@ class WithdrawalsTextCleaner:
             self.cleaned_withdrawals = self.remove_unnecessary_info_from_some_elements2(self.withdrawals)
 
     def get_wrapped_text(self):
-        return "\n".join(self.list)
+        return "\n".join(self.cleaned_withdrawals)
 
-    # ------------------------------------------------------------------------------------------------
-    def make_whole_text_a_list_with_unnecessary_info_removed(self):
-        result = self.get_fixed_list_with_dates_positioned_properly()
-        result[0] = "ATM & DEBIT CARD WITHDRAWALS"
-        result[-1] = result[-1].strip()
-        return result
-
-    def a_list_with_some_text_removed_but_not_with_dates_in_the_right_place(self):
-        not_perfect_list = self.inline_based_on_key_words().splitlines()
-        return self.remove_unnecessary_info_from_some_elements(not_perfect_list)
-
-    def inline_based_on_key_words(self, section_str=None):
-        if section_str is None:
-            section_str = self.whole_text
-        section_str = section_str.replace("Recurring Card Purchase", "\nRecurring Card Purchase")
-        section_str = section_str.replace("Card Purchase", "\nCard Purchase")
-
-        # little fix since both previous operations have "Purchase" word
-        section_str = section_str.replace("Recurring \n", "Recurring ")
-
-        section_str = section_str.replace("Total ATM & Debit Card Withdrawals", "\nTotal ATM & Debit Card Withdrawals")
-        section_str = section_str.replace("ATM Withdrawal ", "\nATM Withdrawal ")
-        section_str = section_str.replace("Payment Sent", "\nPayment Sent")
-        section_str = section_str.replace("Non-Chase ATM Withdraw", "\nNon-Chase ATM Withdraw")
-        return section_str
-
-    #----------------------------------------
-    def remove_unnecessary_info_from_some_elements(self, a_list):
+    def remove_unnecessary_info_from_some_elements2(self, a_list):
         count_elements = len(a_list)
-        for pos in range(0, count_elements - 1):  # Not till the last one
+        for pos in range(0, count_elements):  # Not till the last one
 
             if self.it_has_cash_back(a_list[pos]):
                 a_list[pos] = Helper.get_string_without_cash_back_text(a_list[pos])
