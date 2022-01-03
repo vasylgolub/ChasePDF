@@ -8,11 +8,10 @@ class Withdrawals:
             helper = Helper
             cleaned_withdrawals_text = WithdrawalsTextCleaner(whole_text)
             self.whole_text = whole_text
-            self.whole_text_wrapped = cleaned_withdrawals_text.get_wrapped_text()
-            self.title = self.whole_text_wrapped[:self.whole_text_wrapped.find("\n")]  # The title is on top
-            self.list_of_transactions = cleaned_withdrawals_text.cleaned_withdrawals
-
-            total_withdrawals_text = cleaned_withdrawals_text.total_atm_and_debit_card__withdrawals_text
-            self.total_withdrawals = {"text": total_withdrawals_text,
-                                      "amount": helper.get_float_format(total_withdrawals_text)}
-
+            self.title = "ATM & DEBIT CARD WITHDRAWALS"
+            self.list_of_withdrawals = cleaned_withdrawals_text.cleaned_withdrawals
+            total_withdrawals_text = cleaned_withdrawals_text.total_info
+            self.total_withdrawals: dict = {"text": total_withdrawals_text,
+                                            "amount": helper.get_float_format(total_withdrawals_text)}
+            self.whole_text_wrapped = \
+                self.title + "\n" + cleaned_withdrawals_text.get_wrapped_text() + "\n" + total_withdrawals_text

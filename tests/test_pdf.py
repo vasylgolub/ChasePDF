@@ -1,5 +1,4 @@
 from src.pdf import Pdf
-from src.list_of_files_from_directory import ListOfFilesFromDirectory
 from src.withdrawals_and_transactions.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
 from src.withdrawals_and_transactions.extractor import Extractor
 from src.withdrawals_and_transactions.helper import Helper
@@ -292,6 +291,7 @@ def test_get_store():
     # assert my_extractor.store == expected_result
 
 #-------------------------------------------other---------------------------------------------------------
+
 
 def test_extract_exchange_rate_info():
     test_text = "Non-Chase ATM Withdraw 09/25 Via Lungolago Matteotti Porlezza Card 6398 Euro " \

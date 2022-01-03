@@ -6,10 +6,13 @@ class WithdrawalsTextCleaner:
     def __init__(self, whole_text=None):
         if whole_text is not None:
             self.whole_text = whole_text
-            # self.list = self.make_whole_text_a_list_with_unnecessary_info_removed()
 
             pos = self.whole_text.find("Total ATM & Debit Card Withdrawals")
-            self.total_atm_and_debit_card__withdrawals_text = self.whole_text[pos:]
+            self.total_info = self.whole_text[pos:]
+            if self.does_have_unnecessary_long_text(self.total_info):
+                pos_period = self.total_info.find('.')
+                self.total_info = self.total_info[:pos_period + 2]
+
             whole_text_without_total = self.whole_text[:pos]
 
             text_without_title = \
@@ -23,12 +26,12 @@ class WithdrawalsTextCleaner:
             for left, right in zip(a_list[0::2], a_list[1::2]):
                 self.withdrawals.append(left + right)
 
-            self.cleaned_withdrawals = self.remove_unnecessary_info_from_some_elements2(self.withdrawals)
+            self.cleaned_withdrawals = self.remove_unnecessary_info_from_some_elements(self.withdrawals)
 
     def get_wrapped_text(self):
         return "\n".join(self.cleaned_withdrawals)
 
-    def remove_unnecessary_info_from_some_elements2(self, a_list):
+    def remove_unnecessary_info_from_some_elements(self, a_list):
         count_elements = len(a_list)
         for pos in range(0, count_elements):  # Not till the last one
 
