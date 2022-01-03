@@ -120,28 +120,6 @@ def test_get_text_without_unnecessary_long_sub_text():
     assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line3) == expected_line3
 
 
-def test_extract_date_at_the_end_of_a_string():
-    txt_test = "Card Purchase 02/01 Tst* Vegan Picnic - San Francisco CA Card 642718.2902/03"
-    assert my_withdrawals.extract_date_at_the_end(txt_test) == "02/03"
-
-
-def test_extract_date_at_the_end_of_a_string2():
-    txt_test2 = "Card Purchase With Pin 02/28 Nst Best Buy 0630 Colma CA Card 6427243.48"
-    assert my_withdrawals.extract_date_at_the_end(txt_test2) == ""
-
-
-def test_get_str_with_date_removed_at_the_end():
-    txt_test = "Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.1502/27"
-    expected_string = "Card Purchase 02/27 Wingstop Daly City #517 Daly City CA Card 642713.15"
-    assert my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
-
-
-def test_get_str_with_date_removed_at_the_end_that_doesnt_need_removal():
-    txt_test = "Total ATM & Debit Card Withdrawals $5,375.22"
-    expected_string = "Total ATM & Debit Card Withdrawals $5,375.22"
-    assert my_withdrawals.get_str_with_date_removed_at_the_end(txt_test) == expected_string
-
-
 def test_get_float_format():
     txt_test = " Total ATM & Debit Card Withdrawals $6,896.00"
     print(my_withdrawals_helper.get_float_format(txt_test))
