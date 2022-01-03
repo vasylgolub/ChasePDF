@@ -7,8 +7,8 @@ class WithdrawalsTextCleaner:
         if whole_text is not None:
             self.whole_text = whole_text
 
-            self.total_info = self.get_total_info(self.whole_text.find("Total ATM & Debit Card Withdrawals"))
-            whole_text_without_total = self.remove_total_info_from_whole_text()
+            self.total_info = self.get_total_info_from_whole_text("Total ATM & Debit Card Withdrawals")
+            whole_text_without_total = self.remove_total_info_from_whole_text()  # And everything that is after it.
 
             text_without_title = \
                 whole_text_without_total.replace("ATM & DEBIT CARD WITHDRAWALSDATEDESCRIPTIONAMOUNT", "")
@@ -23,11 +23,12 @@ class WithdrawalsTextCleaner:
 
             self.cleaned_withdrawals = self.remove_unnecessary_info_from_some_elements(self.withdrawals)
 
-    def get_total_info(self, ref_point):
-        res = self.whole_text[ref_point:]
+    def get_total_info_from_whole_text(self, tot_info_text):
+        pos = self.whole_text.find(tot_info_text)
+        res = self.whole_text[pos:]
         if self.does_have_unnecessary_long_text(res):
             pos_period = res.find('.')
-            res = res[:pos_period + 2]
+            res = res[:pos_period + 3]
         return res
 
     def remove_total_info_from_whole_text(self):
