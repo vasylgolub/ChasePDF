@@ -28,8 +28,7 @@ class WithdrawalsTextCleaner:
     def add_space_after_4_digit_card(withdrawals):
         res = []
         for each in withdrawals:
-            pos_last_space = each.rfind(" ")
-            res.append(each[:pos_last_space+5] + " " + each[pos_last_space+5:])
+            res.append(re.sub(r'(Card ?\d{4})', "\\1 ", each))
         return res
 
 
