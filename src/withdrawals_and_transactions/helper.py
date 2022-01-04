@@ -24,7 +24,7 @@ class Helper:
 
     @staticmethod
     def get_ending_balance_as_dictionary(whole_text_wrapped):
-        ending_balance_whole_text = whole_text_wrapped[whole_text_wrapped.rfind("\n")+1:]  # take only the top
+        ending_balance_whole_text = whole_text_wrapped[whole_text_wrapped.rfind("\n")+1:]  # take only the bottom
         eb_text, eb_amount = Helper.get_text_and_amount_separated(ending_balance_whole_text)  # Ending_balance
         return {eb_text: float(eb_amount.replace(',', ''))}  # In case there is a comma
 
@@ -35,7 +35,7 @@ class Helper:
         res = 0
         for transaction in transaction_list:
             _, str_amount = Helper.get_text_and_amount_separated(transaction)
-            res += Helper.get_float_format(str_amount) * 100
+            res += round(Helper.get_float_format(str_amount) * 100)
         return res/100
 
 

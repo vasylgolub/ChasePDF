@@ -19,7 +19,7 @@ class TransactionDetail:
         beg = self.beginning_balance["Beginning Balance"]
         tot = self.total_sum_transactions
         end = self.ending_balance["Ending Balance"]
-        beg_and_tot = (beg * 100 + tot * 100) / 100
+        beg_and_tot = (round(beg * 100) + round(tot * 100)) / 100
         lines = "-------------------------------"
         textual_result = f"Beginning Balance: {beg: 12} +\n" \
                          f"Sum of all Transactions: {tot} =\n" \
@@ -33,4 +33,4 @@ class TransactionDetail:
         beg = self.beginning_balance["Beginning Balance"]
         tot = self.total_sum_transactions
         end = self.ending_balance["Ending Balance"]
-        return (beg * 100 + tot * 100 - end * 100) == 0
+        return (round(beg * 100) + round(tot * 100) - round(end * 100)) == 0
