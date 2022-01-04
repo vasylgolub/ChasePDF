@@ -88,8 +88,7 @@ class WithdrawalsTextCleaner:
 
     def get_text_without_unnecessary_long_sub_text(self, string):
         end_position = self.get_end_position_of_target(string)
-        last_5_chars = string[-5:]
-        return string[: end_position] + last_5_chars
+        return string[: end_position]
 
     @staticmethod
     def get_end_position_of_target(string):
