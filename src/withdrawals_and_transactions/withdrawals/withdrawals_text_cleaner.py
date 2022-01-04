@@ -13,8 +13,7 @@ class WithdrawalsTextCleaner:
             whole_text_without_total_and_title = \
                 whole_text_without_total.replace("ATM & DEBIT CARD WITHDRAWALSDATEDESCRIPTIONAMOUNT", "")
 
-            self.inlined_by_date = re.sub(r'(\d\d/\d\d)', "\n\\1", whole_text_without_total_and_title).strip()
-
+            self.inlined_by_date = re.sub(r'(\d\d/\d\d)(?!\d)', "\n\\1", whole_text_without_total_and_title).strip()
             a_list = self.inlined_by_date.split("\n")
             self.withdrawals = []
             for left, right in zip(a_list[0::2], a_list[1::2]):
