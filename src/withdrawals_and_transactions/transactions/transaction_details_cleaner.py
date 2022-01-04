@@ -69,6 +69,7 @@ class TransactionCleaner:
 
             self.list = [self.beginning_balance] + self.transactions + [self.ending_balance]
 
+
     def get_wrapped_text(self):
         return "\n".join(self.list)
 
@@ -152,7 +153,10 @@ class TransactionCleaner:
     @staticmethod
     def clean_bottom(string):
         period_pos = string.find(".")
-        return string[:period_pos + 3].replace("$", " ")
+        res = string[:period_pos + 3]
+        res = res.replace("$", "")
+        res = res.replace("Ending Balance", "Ending Balance ")
+        return res
 
     @staticmethod
     def clean_top(string):  # Check test_clean_top() for more info

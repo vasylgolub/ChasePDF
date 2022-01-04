@@ -6,7 +6,6 @@ class TransactionDetail:
     def __init__(self, whole_text=None):
         if whole_text is not None:
             cleaned_withdrawals_text = TransactionCleaner(whole_text)
-            # self.cleaner = TransactionCleaner(whole_text)
             self.whole_text = whole_text
             self.whole_text_wrapped = cleaned_withdrawals_text.get_wrapped_text()
             self.beginning_balance = Helper.get_beginning_balance_as_dictionary(self.whole_text_wrapped)
