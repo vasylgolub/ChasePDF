@@ -1,11 +1,28 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
+
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" href="index.html"/>
 </head>
+
+
+
 <body>
 
+<form action="/action_page.php">
+  <input type="file" id="myFile" name="filename">
+    <br>
+  <input type="submit">
+</form>
+<br>
+
+
+<h3>List of Transactions</h3>
 {% if lista %}
     <ul>
     {% for i in lista %}
@@ -18,4 +35,7 @@
 
 
 </body>
+
+
+
 </html>
