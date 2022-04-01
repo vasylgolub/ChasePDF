@@ -1,3 +1,75 @@
 h3 {
-    color: red;
+    color: #54a536;
+    border-width: thick;
 }
+
+.submit_button {
+
+    /*border:none;*/
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+
+    border-color: #006da0;
+    color: #006da0;
+    background-color: rgba(51, 170, 51, .1);
+    border-style: solid;
+    border-width: 1px;
+    padding: 2px;
+
+    border-radius: 50% 20% / 10% 40%;
+}
+
+.submit_button:active{
+    background-color: rgba(0, 132, 190, 0.14);
+     -moz-box-shadow: 0 0 5px #777777;
+    -webkit-box-shadow: 0 0 5px #777777;
+    box-shadow: 0 0 5px #777777;
+}
+
+
+.submit_button:hover{
+    border-width: 2px;
+}
+
+h1 span{
+
+    border-style: solid;
+    border-width: 1px;
+    padding: 2px;
+
+
+
+    -moz-box-shadow: 0 0 1px #777777;
+    -webkit-box-shadow: 0 0 1px #777777;
+    box-shadow: 0 0 1px #777777;
+
+    border-top-left-radius: 10px 70px;
+    border-top-right-radius: 20px 160px;
+    border-bottom-left-radius: 160px 20px;
+    border-bottom-right-radius: 70px 10px;
+
+
+    background-color: rgba(51, 170, 51, .1);
+}
+
+
+
+
+a:link{
+    color: brown;
+    text-decoration: none;
+}
+a:visited{
+    color: cadetblue;
+}
+a:hover span{
+    /*text-decoration: underline;*/
+    border-width: 2px;
+}
+a:focus{}
+a:active{
+    color: #396567
+}
+
+
