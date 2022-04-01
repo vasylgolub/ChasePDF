@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>result of upload</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
+{% include 'navbar.html' %}
+<!--{% csrf_token %}-->
+<h1>{{ text }}</h1>
+
+<form action="{% url 'page:result' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="just_a_text">
+<!--    <input type="submit" value="submit"/>-->
+</form>
+
+</body>
+</html>
