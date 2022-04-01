@@ -2,6 +2,7 @@
 <html lang="en">
 
 
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -11,30 +12,50 @@
 
 
 
+
+
+
+
 <body>
 
-<form action="/action_page.php">
-  <input type="file" id="myFile" name="filename">
-    <br>
-  <input type="submit">
+<!--<form action="{% url 'page:index' %}" method="post" enctype="multipart/form-data">-->
+<!--    {% csrf_token %}-->
+<!--  <input type="file" id="myFile" name="filename">-->
+<!--    <br>-->
+
+<!--&lt;!&ndash;  <input type="image" src="">&ndash;&gt;-->
+<!--    <button class="submit_button">Submit</button>-->
+
+<!--</form>-->
+
+
+<form enctype="multipart/form-data" action="{% url 'page:index' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
 </form>
+
 <br>
 
+<!--<img src="{% static 'mypage/pic.jpg' %}">-->
 
-<h3>List of Transactions</h3>
-{% if lista %}
-    <ul>
-    {% for i in lista %}
-        <li>{{i}}</li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+<!--{% if message %}-->
+<!--<h3>{{message}}</h3>-->
+<!--{% endif %}-->
+
+
+<!--<h3>List of Transactions</h3>-->
+<!--{% if lista %}-->
+<!--    <ul>-->
+<!--    {% for i in lista %}-->
+<!--        <li>{{i}}</li>-->
+<!--    {% endfor %}-->
+<!--    </ul>-->
+<!--{% else %}-->
+<!--    <p>No polls are available.</p>-->
+<!--{% endif %}-->
+
 
 
 </body>
-
-
-
 </html>
