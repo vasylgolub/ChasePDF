@@ -1,4 +1,5 @@
 import os
+import sys
 
 """
 Django settings for mypage project.
@@ -16,6 +17,16 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Changed sys.path so to be able to include module in src directory------------
+EXTERNAL_LIBS_PATH = os.path.join(
+    Path(__file__).resolve().parent.parent.parent, "src"
+)
+
+sys.path = ["", EXTERNAL_LIBS_PATH] + \
+    sys.path
+#------------------------------------------------------------------------------
 
 
 # Quick-start development settings - unsuitable for production
