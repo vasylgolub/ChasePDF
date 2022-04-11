@@ -286,6 +286,7 @@ def test_get_store():
     expected_result = "Amazon Prime*2O5Kd6T Amzn.Com/Bill WA"
     assert my_extractor.store == expected_result
 
+    #This one was commented out, don't remember why. Maybe it an unresolved case.
     # my_extractor = Extractor("01/08Online Transfer To Chk ...7190 Transaction#: 9056204609 -120.00")
     # expected_result = "Online Transfer To Chk ...7190 Transaction#: 9056204609"
     # assert my_extractor.store == expected_result

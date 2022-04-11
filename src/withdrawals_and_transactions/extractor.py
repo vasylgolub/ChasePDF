@@ -16,8 +16,18 @@ class Extractor:
 
         right_side_string = string[string.rfind(" "):]
 
+        if "Card" in right_side_string:
+            right_side_string = right_side_string.replace("Card", "")
+
+        card_4_digits = self.get_card_last_4_digits(string)
+        if card_4_digits in string:
+            right_side_string = right_side_string.replace(card_4_digits, "")
+            # pos_card_4_digits = right_side_string.index(card_4_digits)
+            # right_side_string = right_side_string[pos_card_4_digits+4:]
+
         if '$' in right_side_string:
-            right_side_string = right_side_string.replace('$', "")
+            pos_dollar_sign = right_side_string.index("$")
+            right_side_string = right_side_string[pos_dollar_sign+1:]
 
         if "," in right_side_string:
             right_side_string = right_side_string.replace(",", "")
