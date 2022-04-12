@@ -94,6 +94,8 @@ def test_function_et_date_of_this_statement():
     assert result == expected_result
 
 
+#Task to do
+# These tests don't pass. Need to see if the date discarded at the end is needed or not.
 #-------------------------------------------Withdrawals class---------------------------------------------------------
 def test_get_text_without_unnecessary_long_sub_text():
     line1 = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.09 " \
