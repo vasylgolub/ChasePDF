@@ -20,12 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Changed sys.path so to be able to include module in src directory------------
-EXTERNAL_LIBS_PATH = os.path.join(
-    Path(__file__).resolve().parent.parent.parent, "src"
-)
-
-sys.path = ["", EXTERNAL_LIBS_PATH] + \
-    sys.path
+# EXTERNAL_LIBS_PATH = os.path.join(
+#     Path(__file__).resolve().parent.parent.parent, "src"
+# )
+#
+# sys.path = ["", EXTERNAL_LIBS_PATH] + \
+#     sys.path
 #------------------------------------------------------------------------------
 
 
