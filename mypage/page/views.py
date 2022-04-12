@@ -2,9 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from .forms import NameForm, UploadFileForm
-from PyPDF2 import PdfFileReader
-from django.core.files.uploadedfile import SimpleUploadedFile
-
+import sys
+# from .handle_uploaded_file import HandleUploadedFile
 
 # Create your views here.
 def index(request):
@@ -12,16 +11,13 @@ def index(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             file = form.cleaned_data['file']
-
-            opened_file = file.open()
-            read_pdf_file = PdfFileReader(opened_file)
-            if read_pdf_file.isEncrypted:
-                read_pdf_file.decrypt("")
-            print(read_pdf_file)
+            # list_of_transactions = HandleUploadedFile(file).transactions
+            # print(list_of_transactions)
+            # print(file)
+            for i in sys.path:
+                print(i)
 
             return HttpResponseRedirect(reverse("page:index"))
-        # message = request.FILES
-        # return render(request, 'page/index.html', {'message': message})
     else:
         form = UploadFileForm()
     return render(request, 'page/index.html', {'form': form})
