@@ -102,20 +102,22 @@ def test_get_text_without_unnecessary_long_sub_text():
                 "otherwithdrawals*end*otherwithdrawals*start*feessection*end*feessection*start*" \
                 "postfeesmessage*end*postfeesmessageFebruary 01, 2020 through February 28, 2020Account Number: " \
                 "000000253227190ATM & DEBIT CARD WITHDRAWALS (continued)DATEDESCRIPTIONAMOUNT02/27"
+    expected_line = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.0902/27"
+    assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line1) == expected_line
+
+
     line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.03 " \
             "26Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawalFebruary 01, 2020 through February 28, " \
             "2020Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS (continued)DATEDESCRIPTIONAMOUNT02/03"
+    expected_line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.0302/03"
+    assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line2) == expected_line2
+
+
     line3 = "Card Purchase 02/13 Paypal *Theau 402-935-7733 CA Card 642759.00 " \
             "1015440030200000006336Pageof*start*atmdebitwithdrawal*end*atmdebitwithdrawalFebruary 01, " \
             "2020 through February 28, 2020Account Number: 000000253227190ATM & DEBIT CARD WITHDRAWALS " \
             "(continued)DATEDESCRIPTIONAMOUNT 02/14"
-
-    expected_line = "Card Purchase With Pin 02/26 Guitar Center #220 San Francisco CA Card 642714.0902/27"
-    expected_line2 = "Card Purchase With Pin 02/01 Safeway #3031 Daly City CA Card 64277.0302/03"
     expected_line3 = "Card Purchase 02/13 Paypal *Theau 402-935-7733 CA Card 642759.0002/14"
-
-    assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line1) == expected_line
-    assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line2) == expected_line2
     assert my_withdrawals.get_text_without_unnecessary_long_sub_text(line3) == expected_line3
 
 
