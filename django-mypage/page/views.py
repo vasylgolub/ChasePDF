@@ -1,8 +1,11 @@
+import sys, os
+sys.path.append(os.path.realpath('../src'))
+# for i in sys.path:
+#     print(i)
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from .forms import NameForm, UploadFileForm
-import sys
 # from .handle_uploaded_file import HandleUploadedFile
 
 # Create your views here.
@@ -32,4 +35,5 @@ def result_page(request):
         return HttpResponseRedirect(reverse("page:result"))
     else:
         return render(request, 'page/result.html')
+
 
