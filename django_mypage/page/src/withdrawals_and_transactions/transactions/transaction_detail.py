@@ -1,5 +1,5 @@
-from src.withdrawals_and_transactions.transactions.transaction_details_cleaner import TransactionCleaner
-from src.withdrawals_and_transactions.helper import Helper
+from ..transactions.transaction_details_cleaner import TransactionCleaner
+from ..helper import Helper
 
 
 class TransactionDetail:

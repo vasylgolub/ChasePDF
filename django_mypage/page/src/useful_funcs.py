@@ -1,6 +1,7 @@
-from src.pdf import Pdf
-from src.list_of_files_from_directory import ListOfFilesFromDirectory
-from src.withdrawals_and_transactions.extractor import Extractor
+from .pdf import Pdf
+
+from .list_of_files_from_directory import ListOfFilesFromDirectory
+from .withdrawals_and_transactions.extractor import Extractor
 
 
 

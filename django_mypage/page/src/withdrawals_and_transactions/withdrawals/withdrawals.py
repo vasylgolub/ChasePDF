@@ -1,6 +1,5 @@
-from src.withdrawals_and_transactions.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
-from src.withdrawals_and_transactions.helper import Helper
-
+from ..withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
+from ..helper import Helper
 
 class Withdrawals:
     def __init__(self, whole_text=None):
