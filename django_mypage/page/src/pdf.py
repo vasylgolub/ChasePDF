@@ -12,10 +12,15 @@ from .withdrawals_and_transactions.transactions.transaction_detail import Transa
 class Pdf:
     def __init__(self, pdf_file_path, is_personal_account=False):
         # let's save the path just in case
-        self.file_full_path = pdf_file_path
-        self.file_name = os.path.basename(self.file_full_path)
 
-        opened_file = open(pdf_file_path, 'rb')
+        if isinstance(pdf_file_path, str):  # If it is a string then it is probably a path to the file
+            self.file_full_path = pdf_file_path
+            self.file_name = os.path.basename(self.file_full_path)
+            opened_file = open(pdf_file_path, 'rb')
+        else:
+            opened_file = pdf_file_path.open()  # it's actually not a path to a file. It is a file.
+
+        # opened_file = open(pdf_file_path, 'rb')
         read_pdf_file = PdfFileReader(opened_file)
         if read_pdf_file.isEncrypted:
             read_pdf_file.decrypt("")
