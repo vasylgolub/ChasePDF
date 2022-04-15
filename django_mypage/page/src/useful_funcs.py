@@ -46,10 +46,7 @@ def get_transactions_from_each_file_in_folder(folder_path):
 
 def get_transactions_from_file(pdf_file_or_path) -> list:
     result = []
-    if isinstance(pdf_file_or_path, str):
-        opened_pdf = Pdf(pdf_file_or_path)
-    else:
-        opened_pdf = pdf_file_or_path.open()
+    opened_pdf = Pdf(pdf_file_or_path)
     list_of_transactions_in_string = opened_pdf.get_withdrawals().list_of_withdrawals
     for transaction_string in list_of_transactions_in_string:
         extractor_of_each_field = Extractor(transaction_string)
