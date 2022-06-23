@@ -1,5 +1,5 @@
 import os
-from src.file_rename import FileToRename
+from ..file_rename import FileToRename
 
 
 # When you just have downloaded new pdf files from Chase website, use this class to rename all those files inside

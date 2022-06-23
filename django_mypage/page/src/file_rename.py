@@ -1,5 +1,5 @@
 import os
-from src.pdf import Pdf
+from .pdf import Pdf
 
 
 class FileToRename:
