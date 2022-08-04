@@ -1,21 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<style>
+        th, td {
+            border: 1px solid black;
+            padding:4px 6px;
+                }
+
+    /* Revert CSS style of target element and its children */
+    .reset-style, .reset-style * {
+        all: revert;
+    }
+</style>
+
 <head>
     <meta charset="UTF-8">
     <title>result of upload</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+
 </head>
 <body>
 {% include 'navbar.html' %}
 <!--{% csrf_token %}-->
 <h1>{{ text }}</h1>
 
-<form action="{% url 'page:result' %}" method="post">
-    {% csrf_token %}
-    <input type="text" name="just_a_text">
-<!--    <input type="submit" value="submit"/>-->
-</form>
+<!--<form action="{% url 'page:result' %}" method="post">-->
+<!--    {% csrf_token %}-->
+<!--    <input type="text" name="just_a_text">-->
+<!--&lt;!&ndash;    <input type="submit" value="submit"/>&ndash;&gt;-->
+<!--</form>-->
+
+{% if list_of_transactions %}
+
+<!--    {% block content%}-->
+<!--    {% endblock %}-->
+
+
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Amount</th>
+      </tr>
+
+    {% for i in list_of_transactions %}
+      <tr>
+        <td>{{i.date.0}}</td>
+        <td>{{i.store}}</td>
+        <td>{{i.amount}}</td>
+      </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="2" class="reset-style"></td>
+        <td>{{total}}</td>
+    </tr>
+    </table>
+
+{% endif %}
+
 
 </body>
 </html>

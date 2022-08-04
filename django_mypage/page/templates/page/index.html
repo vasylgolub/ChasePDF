@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<style>
-        th, td {
-  border: 1px solid black;
-  padding:4px 6px;
-}
-</style>
+
 
 <head>
     <meta charset="UTF-8">
@@ -43,45 +38,6 @@
 <br>
 
 <!--<img src="{% static 'django-django-django_mypage/pic.jpg' %}">-->
-
-{% if list_of_transactions %}
-
-    {% block content%}
-    {% endblock %}
-
-
-    <table>
-      <tr>
-        <th>Date</th>
-        <th>Description</th>
-        <th>Amount</th>
-      </tr>
-
-    {% for i in list_of_transactions %}
-      <tr>
-        <td>{{i.date.0}}</td>
-        <td>{{i.store}}</td>
-        <td>{{i.amount}}</td>
-      </tr>
-    {% endfor %}
-
-    </table>
-
-{% endif %}
-
-
-<!--<h3>List of Transactions</h3>-->
-<!--{% if lista %}-->
-<!--    <ul>-->
-<!--    {% for i in lista %}-->
-<!--        <li>{{i}}</li>-->
-<!--    {% endfor %}-->
-<!--    </ul>-->
-<!--{% else %}-->
-<!--    <p>No polls are available.</p>-->
-<!--{% endif %}-->
-
-
 
 </body>
 </html>
