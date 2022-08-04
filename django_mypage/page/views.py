@@ -11,7 +11,7 @@ def index(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             file = form.cleaned_data['file']
-            list_of_transactions = HandleUploadedFile(file).transactions
+            list_of_transactions: list = HandleUploadedFile(file).transactions
 
             # insert transactions into database table
 

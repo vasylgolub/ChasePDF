@@ -5,10 +5,6 @@ from .withdrawals_and_transactions.extractor import Extractor
 
 
 
-# These methods aren't able to take the actual file as a parameter, only a path to the file.
-
-
-
 def get_total(p):
     total = 0
     for each in p.withdrawals.list_of_transactions:

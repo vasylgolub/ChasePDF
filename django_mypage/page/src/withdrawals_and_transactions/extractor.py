@@ -1,5 +1,8 @@
 import re
 
+# This class is used to extract substrings from a text that has all the info regarding a certain transaction.
+# Check unit tests to see some examples.
+
 
 class Extractor:
     def __init__(self, source_text):
