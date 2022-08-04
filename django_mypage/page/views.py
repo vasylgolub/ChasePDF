@@ -11,12 +11,16 @@ def index(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             file = form.cleaned_data['file']
-            list_of_transactions: list = HandleUploadedFile(file).transactions
+            uploaded_file = HandleUploadedFile(file)
+            total = uploaded_file.total_amount
+            list_of_transactions: list = uploaded_file.transactions
 
-            # insert transactions into database table
+
+            # insert transactions into database table?
 
             # should render a result page instead of index page
-            return render(request, 'page/index.html', {'list_of_transactions': list_of_transactions})
+            return render(request, 'page/result.html',
+                          {'list_of_transactions': list_of_transactions, 'total': total})
 
             # return HttpResponseRedirect(reverse("page:index"))
     else:
