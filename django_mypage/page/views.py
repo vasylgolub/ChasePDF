@@ -1,26 +1,24 @@
-import sys, os
-sys.path.append(os.path.realpath('../src'))
-# for i in sys.path:
-#     print(i)
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from .forms import NameForm, UploadFileForm
-# from .handle_uploaded_file import HandleUploadedFile
+from .handle_uploaded_file import HandleUploadedFile
 
-# Create your views here.
+
+
 def index(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             file = form.cleaned_data['file']
-            # list_of_transactions = HandleUploadedFile(file).transactions
-            # print(list_of_transactions)
-            # print(file)
-            for i in sys.path:
-                print(i)
+            list_of_transactions = HandleUploadedFile(file).transactions
 
-            return HttpResponseRedirect(reverse("page:index"))
+            # insert transactions into database table
+
+            # should render a result page instead of index page
+            return render(request, 'page/index.html', {'list_of_transactions': list_of_transactions})
+
+            # return HttpResponseRedirect(reverse("page:index"))
     else:
         form = UploadFileForm()
     return render(request, 'page/index.html', {'form': form})
