@@ -32,31 +32,7 @@
 <!--</form>-->
 
 {% if list_of_transactions %}
-
-<!--    {% block content%}-->
-<!--    {% endblock %}-->
-
-
-    <table>
-      <tr>
-        <th>Date</th>
-        <th>Description</th>
-        <th>Amount</th>
-      </tr>
-
-    {% for i in list_of_transactions %}
-      <tr>
-        <td>{{i.date.0}}</td>
-        <td>{{i.store}}</td>
-        <td>{{i.amount}}</td>
-      </tr>
-    {% endfor %}
-    <tr>
-        <td colspan="2" class="reset-style"></td>
-        <td>{{total}}</td>
-    </tr>
-    </table>
-
+{% include 'table.html' %}
 {% endif %}
 
 
