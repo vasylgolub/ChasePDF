@@ -8,8 +8,11 @@ class HandleUploadedFile:
         self.opened_pdf = Pdf(file)
         self.date_of_the_statement = self.opened_pdf.get_date_of_this_statement()
 
-        total = 0
-        for each_transaction in self.transactions:
-            total += each_transaction.amount
 
-        self.total_amount = round(total, 2)
+    def get_transactions(self):
+        result = []
+        list_of_transactions_in_string = self.opened_pdf.get_withdrawals().list_of_withdrawals
+        for transaction_string in list_of_transactions_in_string:
+            extractor_of_each_field = Extractor(transaction_string)
+            result.append(extractor_of_each_field)
+        return result
