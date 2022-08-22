@@ -1,10 +1,12 @@
 from .src.useful_funcs import *
+from .src.pdf import Pdf
 
 
 class HandleUploadedFile:
     def __init__(self, file):
         # transactions are list of objects: Extractor
-        self.transactions = get_transactions_from_file(file)
+        self.opened_pdf = Pdf(file)
+        self.date_of_the_statement = self.opened_pdf.get_date_of_this_statement()
 
         total = 0
         for each_transaction in self.transactions:
