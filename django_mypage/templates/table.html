@@ -1,0 +1,20 @@
+{% load static %}
+   <table>
+      <tr>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Amount</th>
+      </tr>
+
+    {% for i in list_of_transactions %}
+      <tr>
+        <td>{{i.date}}</td>
+        <td>{{i.description}}</td>
+        <td>{{i.amount}}</td>
+      </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="2" class="reset-style"></td>
+        <td>{{total}}</td>
+    </tr>
+    </table>
