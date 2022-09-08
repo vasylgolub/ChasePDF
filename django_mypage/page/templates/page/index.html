@@ -1,43 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/list_of_uploaded_files.css' %}"/>
 </head>
-
-
-
-
-
 
 
 <body>
 
-<!--<form action="{% url 'page:index' %}" method="post" enctype="multipart/form-data">-->
-<!--    {% csrf_token %}-->
-<!--  <input type="file" id="myFile" name="filename">-->
-<!--    <br>-->
+Load pdf bank statement
 
-<!--&lt;!&ndash;  <input type="image" src="">&ndash;&gt;-->
-<!--    <button class="submit_button">Submit</button>-->
-
-<!--</form>-->
-
-
-<form enctype="multipart/form-data" action="{% url 'page:index' %}" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
+    <form enctype="multipart/form-data" action="{% url 'page:index' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
 
 <br>
 
+<form action="" method="post" >
+    {% csrf_token %}
+
+<table>
+      <tr>
+          <th>Uploaded Bank Statements:</th>
+      </tr>
+{% if list_statements %}
+    {% for i in list_statements %}
+      <tr>
+          <td class="name">{{i}}</td>
+          <td class="check-b0x">
+              <input type="checkbox" name="boxes" value={{i}}>
+          </td>
+      </tr>
+    {% endfor %}
+{% endif %}
+</table>
 <!--<img src="{% static 'django-django-django_mypage/pic.jpg' %}">-->
+
+
+    <button class="button-83" role="button">View transactions of selected statements</button>
+
+
+
 
 </body>
 </html>
