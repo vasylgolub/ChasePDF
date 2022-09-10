@@ -8,9 +8,6 @@ from .handle_uploaded_file import HandleUploadedFile
 from .models import BankStatement, ListOfStatementFiles
 
 
-# To do
-# read this post to address the problem of getting duplicate uploads of files when refreshing the page
-# https://stackoverflow.com/questions/65925084/uploading-duplicated-files-with-django-when-reloading-page
 months = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
           "July": 7, "August": 8, "September": 9, "October": 10, "November": 11, "December": 12}
 
@@ -23,8 +20,6 @@ def index(request):
         for selected_box in checked_boxes_list:
             for i in BankStatement.objects.filter(date__month=months.get(selected_box)).values():
                 list_of_statements.append(i)
-                print(i)
-
 
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -64,16 +59,10 @@ def index(request):
 
 
 def result_page(request):
-    all_transactions = BankStatement.objects.all()
-    total = 0
-    for transaction in all_transactions:
-        total += transaction.amount
+    all_transactions = BankStatement.objects.values()
+    total = get_total_amount(all_transactions)
 
     if request.method == "POST":
-        # text = request.POST['just_a_text']
-        # return render(request, 'page/result.html', {'text': text})
-        # assert False
-
         return HttpResponseRedirect(reverse("page:result", {'list_of_transactions': all_transactions, 'total': total}))
     else:
         return render(request, 'page/result.html', {'list_of_transactions': all_transactions, 'total': total})
