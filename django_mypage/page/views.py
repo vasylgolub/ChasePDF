@@ -14,12 +14,12 @@ months = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June":
 
 def index(request):
     statements = ListOfStatementFiles()
-    list_of_statements = []
+    selected_pdf_files = []
     if request.method == 'POST':
         checked_boxes_list = request.POST.getlist('boxes')
         for selected_box in checked_boxes_list:
             for i in BankStatement.objects.filter(date__month=months.get(selected_box)).values():
-                list_of_statements.append(i)
+                selected_pdf_files.append(i)
 
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -47,8 +47,8 @@ def index(request):
 
 
             return HttpResponseRedirect(reverse("page:index"))
-        return render(request, 'page/result.html', {'list_of_transactions': list_of_statements,
-                                                    'total': get_total_amount(list_of_statements)})
+        return render(request, 'page/result.html', {'list_of_transactions': selected_pdf_files,
+                                                    'total': get_total_amount(selected_pdf_files)})
     else:
         form = UploadFileForm()
 
