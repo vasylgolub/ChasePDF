@@ -13,7 +13,7 @@ months = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June":
 
 
 def index(request):
-    statements = ListOfStatementFiles()
+    pdf_statements = ListOfStatementFiles()
     selected_pdf_files = []
     if request.method == 'POST':
         checked_boxes_list = request.POST.getlist('boxes')
@@ -28,18 +28,17 @@ def index(request):
             uploaded_file = HandleUploadedFile(file)
             list_of_transactions: list = uploaded_file.get_transactions()
 
-            date_in_string = uploaded_file.date_of_the_statement
-            year = date_in_string[-4:]
-            month = date_in_string[:date_in_string.index(' ')]
-            month_and_year = month + ' ' + year
+            date_in_string = uploaded_file.date_of_the_statement  # Ex: "March 01, 2022"
+            only_month_and_year = get_only_month_and_year(date_in_string)
+            pdf_statements.uploaded_statement_file = only_month_and_year
+            pdf_statements.save()
 
-            statements.uploaded_statement_file = month_and_year
-            statements.save()
-
-            # insert transactions into database table
+            # write each transaction to database: BankStatement
             for transaction in list_of_transactions:
-                mmdd = transaction.date[0].replace('/', '-')
-                mmddyyyy = year + '-' + mmdd
+                mmdd = transaction.date[0].replace('/', '-')  # Ex: dd/dd -> dd-dd
+
+                mmddyyyy = get_only_month_and_year(date_in_string, just_year=True) + '-' + mmdd
+                current_object =  ListOfStatementFiles.objects.get(uploaded_statement_file=only_month_and_year)
                 bank_statement = BankStatement(date=mmddyyyy,
                                                description=transaction.store,
                                                amount=transaction.amount)
@@ -66,6 +65,19 @@ def result_page(request):
         return HttpResponseRedirect(reverse("page:result", {'list_of_transactions': all_transactions, 'total': total}))
     else:
         return render(request, 'page/result.html', {'list_of_transactions': all_transactions, 'total': total})
+
+
+
+
+
+def get_only_month_and_year(date_in_string, just_year=False, just_month=False) -> str:  # "March 01, 2022" -> March 2022
+    year = date_in_string[-4:]
+    if just_year:
+        return year
+    month = date_in_string[:date_in_string.index(' ')]
+    if just_month:
+        return month
+    return month + ' ' + year
 
 
 def get_total_amount(transactions):
