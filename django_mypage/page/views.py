@@ -41,7 +41,8 @@ def index(request):
                 current_object =  ListOfStatementFiles.objects.get(uploaded_statement_file=only_month_and_year)
                 bank_statement = BankStatement(date=mmddyyyy,
                                                description=transaction.store,
-                                               amount=transaction.amount)
+                                               amount=transaction.amount,
+                                               statement_file=current_object)
                 bank_statement.save()
 
 
