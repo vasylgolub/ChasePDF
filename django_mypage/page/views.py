@@ -58,10 +58,9 @@ def index(request):
 
 
 
-def result_page(request):
+def result_page(request, c):
     all_transactions = BankStatement.objects.values()
     total = get_total_amount(all_transactions)
-
     if request.method == "POST":
         return HttpResponseRedirect(reverse("page:result", {'list_of_transactions': all_transactions, 'total': total}))
     else:
