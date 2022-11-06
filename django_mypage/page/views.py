@@ -5,7 +5,7 @@ from django.urls import reverse
 from .forms import UploadFileForm
 # from .forms import NameForm
 from .handle_uploaded_file import HandleUploadedFile
-from .models import BankStatement, ListOfStatementFiles
+from .models import Transaction, Statement
 
 
 months = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
@@ -13,8 +13,9 @@ months = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June":
 
 
 def index(request):
-    pdf_statements = ListOfStatementFiles()
-    selected_pdf_files = []
+    pdf_statements = Statement()
+
+
     if request.method == 'POST':
         checked_boxes_list = request.POST.getlist('boxes')
         for selected_box in checked_boxes_list:
@@ -38,11 +39,11 @@ def index(request):
                 mmdd = transaction.date[0].replace('/', '-')  # Ex: dd/dd -> dd-dd
 
                 mmddyyyy = get_only_month_and_year(date_in_string, just_year=True) + '-' + mmdd
-                current_object =  ListOfStatementFiles.objects.get(uploaded_statement_file=only_month_and_year)
-                bank_statement = BankStatement(date=mmddyyyy,
-                                               description=transaction.store,
-                                               amount=transaction.amount,
-                                               statement_file=current_object)
+                current_object = Statement.objects.get(uploaded_statement_file=only_month_and_year)
+                bank_statement = Transaction(date=mmddyyyy,
+                                             description=transaction.store,
+                                             amount=transaction.amount,
+                                             statement_file=current_object)
                 bank_statement.save()
 
 

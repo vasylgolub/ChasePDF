@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import BankStatement, ListOfStatementFiles
+from .models import Transaction, Statement
 
-admin.site.register(BankStatement)
-admin.site.register(ListOfStatementFiles)
+admin.site.register(Transaction)
+admin.site.register(Statement)

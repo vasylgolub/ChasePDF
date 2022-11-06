@@ -1,8 +1,8 @@
-from django.db import models
+from django.db import models, migrations
 
 
-class ListOfStatementFiles(models.Model):
-    uploaded_statement_file = models.CharField(max_length=50)  # It will contain just the month and year
+class Statement(models.Model):
+    uploaded_statement_file = models.CharField(max_length=50)  # It will contain just month and year
 
     objects = models.Manager()
 
@@ -10,13 +10,13 @@ class ListOfStatementFiles(models.Model):
         return self.uploaded_statement_file
 
 
-class BankStatement(models.Model):
+class Transaction(models.Model):
     date = models.DateField('Transaction Execution Date')
     description = models.CharField(max_length=200)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
 
     # The statement file that it belongs
-    statement_file = models.ForeignKey(ListOfStatementFiles, on_delete=models.CASCADE, null=True)
+    statement_file = models.ForeignKey(Statement, on_delete=models.CASCADE, null=True)
 
     # https://stackoverflow.com/questions/35543695/type-object-x-has-no-attribute-objects
     objects = models.Manager()
@@ -26,5 +26,17 @@ class BankStatement(models.Model):
 
 
 
-
+# class Migration(migrations.Migration):
+#     atomic = False # <<<< THIS LINE
+#
+#     dependencies = [
+#         ('shop', '0004_product_imgfeat'),
+#     ]
+#
+#     operations = [
+#         migrations.RenameModel(
+#             old_name='Category',
+#             new_name='CategoryShop',
+#         ),
+#     ]
 
