@@ -17,20 +17,20 @@ def index(request):
 
 
     if request.method == 'POST':
-        checked_boxes_list = request.POST.getlist('boxes')
-        for selected_box in checked_boxes_list:
-            for i in BankStatement.objects.filter(date__month=months.get(selected_box)).values():
-                selected_pdf_files.append(i)
 
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
 
             file = form.cleaned_data['file']
+
             uploaded_file = HandleUploadedFile(file)
             list_of_transactions: list = uploaded_file.get_transactions()
 
+            # Uploaded file is a bank statement
             date_in_string = uploaded_file.date_of_the_statement  # Ex: "March 01, 2022"
             only_month_and_year = get_only_month_and_year(date_in_string)
+
+            # Write to ListOfStatementFiles table
             pdf_statements.uploaded_statement_file = only_month_and_year
             pdf_statements.save()
 
@@ -48,27 +48,45 @@ def index(request):
 
 
             return HttpResponseRedirect(reverse("page:index"))
-        return render(request, 'page/result.html', {'list_of_transactions': selected_pdf_files,
-                                                    'total': get_total_amount(selected_pdf_files)})
+        # return render(request, 'page/result.html', {'checked_boxes': selected_pdf_files})
     else:
         form = UploadFileForm()
 
-
     return render(request, 'page/index.html', {'form': form,
-                                               'list_statements': ListOfStatementFiles.objects.all()})
+                                               'list_statements': Statement.objects.all()})
+    # 'checked_boxes': request.POST.getlist('boxes')
 
 
+def result_page(request, boxes=''):
+    all_statements_of_selected_pdf_files = get_transactions_from_selected_statements(request.POST.getlist('boxes'))
+    total = get_total_amount(all_statements_of_selected_pdf_files)
 
-def result_page(request, c):
-    all_transactions = BankStatement.objects.values()
-    total = get_total_amount(all_transactions)
     if request.method == "POST":
-        return HttpResponseRedirect(reverse("page:result", {'list_of_transactions': all_transactions, 'total': total}))
+        # return HttpResponseRedirect(reverse("page:result", {'list_of_transactions': all_transactions,
+        #                                                     'total': total}))
+        return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
+                                                    'total': total})
+
     else:
-        return render(request, 'page/result.html', {'list_of_transactions': all_transactions, 'total': total})
+        return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
+                                                    'total': total})
 
 
 
+
+
+
+
+
+def get_transactions_from_selected_statements(checked_box_list):
+    res = []
+    for selected_box in checked_box_list:
+        selected_pdf_model = Statement.objects.filter(uploaded_statement_file=selected_box)  # Corresponding model
+        selected_model_id = selected_pdf_model.get().id
+
+        for statement in Transaction.objects.filter(statement_file=selected_model_id):
+            res.append(statement)
+    return res
 
 
 def get_only_month_and_year(date_in_string, just_year=False, just_month=False) -> str:  # "March 01, 2022" -> March 2022
@@ -84,5 +102,6 @@ def get_only_month_and_year(date_in_string, just_year=False, just_month=False) -
 def get_total_amount(transactions):
     total = 0
     for transaction in transactions:
-        total += transaction.get('amount')
+        total += transaction.amount
     return total
+

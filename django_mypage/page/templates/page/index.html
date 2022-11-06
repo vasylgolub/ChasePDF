@@ -21,10 +21,16 @@ Load pdf bank statement
 
 <br>
 
-<form action="" method="post" >
-    {% csrf_token %}
 
-<table>
+
+
+
+
+
+<form action="{% url 'page:result' %}" method="post" >
+    {% csrf_token %}
+    <!--<img src="{% static 'django-django-django_mypage/pic.jpg' %}">-->
+    <table>
       <tr>
           <th>Uploaded Bank Statements:</th>
       </tr>
@@ -39,9 +45,6 @@ Load pdf bank statement
     {% endfor %}
 {% endif %}
 </table>
-<!--<img src="{% static 'django-django-django_mypage/pic.jpg' %}">-->
-
-
     <button class="button-83" role="button">View transactions of selected statements</button>
 
 </form>
