@@ -18,6 +18,7 @@ def index(request):
 
     if request.method == 'POST':
 
+
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
 
@@ -39,12 +40,13 @@ def index(request):
                 mmdd = transaction.date[0].replace('/', '-')  # Ex: dd/dd -> dd-dd
 
                 mmddyyyy = get_only_month_and_year(date_in_string, just_year=True) + '-' + mmdd
+                print(mmddyyyy)
                 current_object = Statement.objects.get(uploaded_statement_file=only_month_and_year)
-                bank_statement = Transaction(date=mmddyyyy,
+                transaction = Transaction(date=mmddyyyy,
                                              description=transaction.store,
                                              amount=transaction.amount,
                                              statement_file=current_object)
-                bank_statement.save()
+                transaction.save()
 
 
             return HttpResponseRedirect(reverse("page:index"))
