@@ -51,17 +51,20 @@ def index(request):
         # return render(request, 'page/result.html', {'checked_boxes': selected_pdf_files})
     else:
         form = UploadFileForm()
-
     return render(request, 'page/index.html', {'form': form,
                                                'list_statements': Statement.objects.all()})
     # 'checked_boxes': request.POST.getlist('boxes')
 
 
-def result_page(request, boxes=''):
+def result_page(request):
     all_statements_of_selected_pdf_files = get_transactions_from_selected_statements(request.POST.getlist('boxes'))
     total = get_total_amount(all_statements_of_selected_pdf_files)
 
     if request.method == "POST":
+        if "remove_statement" in request.POST:
+            for selected_box in request.POST.getlist('boxes'):
+                Statement.objects.filter(uploaded_statement_file=selected_box).delete()
+            return index(request)  # Not really a good solution. To be reviewed.
         # return HttpResponseRedirect(reverse("page:result", {'list_of_transactions': all_transactions,
         #                                                     'total': total}))
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
