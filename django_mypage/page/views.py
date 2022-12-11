@@ -65,11 +65,20 @@ def result_page(request):
         if "remove_statement" in request.POST:
             for selected_box in request.POST.getlist('boxes'):
                 Statement.objects.filter(uploaded_statement_file=selected_box).delete()
+            #  Don't jump to result page. Instead, stay at index page.
             return index(request)  # Not really a good solution. To be reviewed.
-        # return HttpResponseRedirect(reverse("page:result", {'list_of_transactions': all_transactions,
-        #                                                     'total': total}))
+
+        if "alist_of_ids" in request.POST:
+            for each in request.POST.getlist("alist_of_ids"):
+                for i in Transaction.objects.filter(statement_file=Statement.objects.get(id=each)):
+                    print(i)
+
+
+
+
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
-                                                    'total': total})
+                                                    'total': total,
+                                                    'selected_statements_ids': get_list_of_ids(list_of_boxes)})
 
     else:
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
@@ -79,6 +88,13 @@ def result_page(request):
 
 
 
+def get_list_of_ids(checked_box_list) -> list:
+    res = []
+    for each in checked_box_list:
+        selected_pdf_model = Statement.objects.filter(uploaded_statement_file=each)  # Corresponding model
+        selected_model_id = selected_pdf_model.get().id
+        res.append(selected_model_id)
+    return res
 
 
 
