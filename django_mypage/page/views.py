@@ -69,9 +69,16 @@ def result_page(request):
             return index(request)  # Not really a good solution. To be reviewed.
 
         if "alist_of_ids" in request.POST:
-            for each in request.POST.getlist("alist_of_ids"):
-                for i in Transaction.objects.filter(statement_file=Statement.objects.get(id=each)):
-                    print(i)
+            id_set = request.POST.getlist("alist_of_ids")
+
+            # https://stackoverflow.com/questions/23096077/django-get-objects-for-many-ids
+            statement_ids = Statement.objects.filter(id__in=id_set)
+            transactions = Transaction.objects.filter(statement_file__in=statement_ids)
+            transactions = transactions.order_by('amount')
+            total = get_total_amount(transactions)
+            return render(request, 'page/result.html', {'list_of_transactions': transactions,
+                                                        'total': total
+                                                        })
 
 
 
