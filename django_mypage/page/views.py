@@ -29,10 +29,10 @@ def index(request):
 
             # Uploaded file is a bank statement
             date_in_string = uploaded_file.date_of_the_statement  # Ex: "March 01, 2022"
-            only_month_and_year = get_only_month_and_year(date_in_string)
+            date_in_string = date_in_string.replace(",", "")  # remove comma
 
-            # Write to ListOfStatementFiles table
-            pdf_statements.uploaded_statement_file = only_month_and_year
+            # Write to Statement table
+            pdf_statements.uploaded_statement_file = date_in_string
             pdf_statements.save()
 
             # write each transaction to database: BankStatement
@@ -40,8 +40,7 @@ def index(request):
                 mmdd = transaction.date[0].replace('/', '-')  # Ex: dd/dd -> dd-dd
 
                 mmddyyyy = get_only_month_and_year(date_in_string, just_year=True) + '-' + mmdd
-                print(mmddyyyy)
-                current_object = Statement.objects.get(uploaded_statement_file=only_month_and_year)
+                current_object = Statement.objects.get(uploaded_statement_file=date_in_string)
                 transaction = Transaction(date=mmddyyyy,
                                              description=transaction.store,
                                              amount=transaction.amount,
