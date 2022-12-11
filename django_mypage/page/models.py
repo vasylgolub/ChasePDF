@@ -2,7 +2,7 @@ from django.db import models, migrations
 
 
 class Statement(models.Model):
-    uploaded_statement_file = models.CharField(max_length=50)  # It will contain just month and year
+    uploaded_statement_file = models.CharField(max_length=50, unique=True)  # It will contain just month and year
 
     objects = models.Manager()
 
