@@ -54,11 +54,11 @@ def index(request):
         form = UploadFileForm()
     return render(request, 'page/index.html', {'form': form,
                                                'list_statements': Statement.objects.all()})
-    # 'checked_boxes': request.POST.getlist('boxes')
 
 
 def result_page(request):
-    all_statements_of_selected_pdf_files = get_transactions_from_selected_statements(request.POST.getlist('boxes'))
+    list_of_boxes = request.POST.getlist('boxes')
+    all_statements_of_selected_pdf_files = get_transactions_from_selected_statements(list_of_boxes)
     total = get_total_amount(all_statements_of_selected_pdf_files)
 
     if request.method == "POST":
