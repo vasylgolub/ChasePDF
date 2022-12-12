@@ -79,26 +79,21 @@ def result_page(request):
             #  Don't jump to result page. Instead, stay at index page.
             return index(request)  # Not really a good solution. To be reviewed.
 
-        if "amount_sort" in request.POST:
-            id_set = request.POST.getlist("alist_of_ids")
 
-            # https://stackoverflow.com/questions/23096077/django-get-objects-for-many-ids
-            statement_ids = Statement.objects.filter(id__in=id_set)
-            transactions = Transaction.objects.filter(statement_file__in=statement_ids)
-            transactions = transactions.order_by(get_negative_sign()+'amount')
-            total = get_total_amount(transactions)
-            return render(request, 'page/result.html', {'list_of_transactions': transactions,
-                                                        'total': total,
-                                                        'selected_statements_ids': id_set})
-        if "description_sort" in request.POST:
+
+        if "amount_sort" in request.POST or "description_sort" in request.POST:
             id_set = request.POST.getlist("alist_of_ids")
-            statement_ids = Statement.objects.filter(id__in=id_set)
+            statement_ids = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
             transactions = Transaction.objects.filter(statement_file__in=statement_ids)
-            transactions = transactions.order_by(get_negative_sign() + 'description')
+
+            column = "amount" if "amount_sort" in request.POST else "description"
+            transactions = transactions.order_by(get_negative_sign()+column)
+
             total = get_total_amount(transactions)
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': total,
                                                         'selected_statements_ids': id_set})
+
 
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
                                                     'total': total,
