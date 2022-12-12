@@ -77,10 +77,8 @@ def result_page(request):
             transactions = transactions.order_by('amount')
             total = get_total_amount(transactions)
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
-                                                        'total': total
-                                                        })
-
-
+                                                        'total': total,
+                                                        'selected_statements_ids': id_set})
 
 
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,

@@ -35,20 +35,20 @@
 
             <div style='float:right;'>
                      <div class="right_side">
-                    <form action="{% url 'page:result' %}" method="post">
-                        {% csrf_token %}
-                        <div class="buttons">
-                            {% if selected_statements_ids%}
-                                {% for i in selected_statements_ids %}
-                                    <input type="hidden" name="alist_of_ids" value={{i}} />
-                                {% endfor %}
-                            {%endif%}
+                        <form action="{% url 'page:result' %}" method="post">
+                            {% csrf_token %}
+                            <div class="buttons">
+                                {% if selected_statements_ids%}
+                                    {% for i in selected_statements_ids %}
+                                        <input type="hidden" name="alist_of_ids" value={{i}} />
+                                    {% endfor %}
+                                {%endif%}
 
-                            <button class="button-83" name="amount_sort">Sort by Amount</button>
-                            <button class="button-83" name="description_sort">Sort by Description</button>
-                        </div>
-                    </form>
-                </div>
+                                <button class="button-83" name="amount_sort">Sort by Amount</button>
+                                <button class="button-83" name="description_sort">Sort by Description</button>
+                            </div>
+                        </form>
+                    </div>
             </div>
 
 
