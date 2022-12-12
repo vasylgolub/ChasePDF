@@ -34,6 +34,12 @@ Load pdf bank statement
           <th>Uploaded Bank Statements:</th>
       </tr>
 {% if list_statements %}
+        <tr>
+            <td class="select_all">Select All</td>
+            <td class="check-b0x"><input type="checkbox" name="selectus" value="select all"></td>
+
+        </tr>
+
     {% for i in list_statements %}
       <tr>
           <td class="name">{{i}}</td>
@@ -43,7 +49,7 @@ Load pdf bank statement
       </tr>
     {% endfor %}
 {% endif %}
-</table>
+    </table>
     <button class="button-83" name="view_statements" role="button">View transactions of selected statements</button>
     <button class="button-83" name="remove_statement" role="button">Remove selected statements</button>
 
