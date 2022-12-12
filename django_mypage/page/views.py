@@ -11,6 +11,18 @@ from .models import Transaction, Statement
 months = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
           "July": 7, "August": 8, "September": 9, "October": 10, "November": 11, "December": 12}
 
+negative_sign = "-"
+
+
+def get_negative_sign():  # Alternate between '-' and ''
+    global negative_sign
+    if negative_sign == "-":
+        negative_sign = ""
+    else:
+        negative_sign = "-"
+    return negative_sign
+
+
 
 def index(request):
     pdf_statements = Statement()
@@ -60,7 +72,6 @@ def result_page(request):
     list_of_boxes = request.POST.getlist('boxes')
     all_statements_of_selected_pdf_files = get_transactions_from_selected_statements(list_of_boxes)
     total = get_total_amount(all_statements_of_selected_pdf_files)
-
     if request.method == "POST":
         if "remove_statement" in request.POST:
             for selected_box in request.POST.getlist('boxes'):
@@ -68,13 +79,13 @@ def result_page(request):
             #  Don't jump to result page. Instead, stay at index page.
             return index(request)  # Not really a good solution. To be reviewed.
 
-        if "alist_of_ids" in request.POST:
+        if "amount_sort" in request.POST:
             id_set = request.POST.getlist("alist_of_ids")
 
             # https://stackoverflow.com/questions/23096077/django-get-objects-for-many-ids
             statement_ids = Statement.objects.filter(id__in=id_set)
             transactions = Transaction.objects.filter(statement_file__in=statement_ids)
-            transactions = transactions.order_by('amount')
+            transactions = transactions.order_by(get_negative_sign()+'amount')
             total = get_total_amount(transactions)
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': total,
