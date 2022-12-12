@@ -22,28 +22,38 @@
 </head>
 
 
-<body>
-{% include 'navbar.html' %}
-<h1>{{ text }}</h1>
+    <body>
+        {% include 'navbar.html' %}
+        <h1>{{ text }}</h1>
+
+        <div class="wrapper">
+            <div class="left_side">
+                {% if list_of_transactions %}
+                {% include 'table.html' %}
+                {% endif %}
+            </div>
+
+            <div style='float:right;'>
+                     <div class="right_side">
+                    <form action="{% url 'page:result' %}" method="post">
+                        {% csrf_token %}
+                        <div class="buttons">
+                            {% if selected_statements_ids%}
+                                {% for i in selected_statements_ids %}
+                                    <input type="hidden" name="alist_of_ids" value={{i}} />
+                                {% endfor %}
+                            {%endif%}
+
+                            <button class="button-83" name="amount_sort">Sort by Amount</button>
+                            <button class="button-83" name="description_sort">Sort by Description</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
 
-{% if list_of_transactions %}
-{% include 'table.html' %}
-{% endif %}
 
-<form action="{% url 'page:result' %}" method="post">
-    {% csrf_token %}
-    <div class="buttons">
-        {% if selected_statements_ids%}
-            {% for i in selected_statements_ids %}
-                <input type="hidden" name="alist_of_ids" value={{i}} />
-            {% endfor %}
-        {%endif%}
 
-        <button class="button-83" name="amount_sort">Sort by Amount</button>
-        <button class="button-83" name="description_sort">Sort by Description</button>
-    </div>
-</form>
-
-</body>
+        </div>
+    </body>
 </html>

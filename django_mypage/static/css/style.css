@@ -3,6 +3,15 @@ h3 {
     border-width: thick;
 }
 
+.wrapper {
+  display: flex;
+}
+
+.right_side{
+    position: fixed;
+    float: right
+}
+
 .submit_button {
 
     /*border:none;*/
