@@ -90,7 +90,15 @@ def result_page(request):
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': total,
                                                         'selected_statements_ids': id_set})
-
+        if "description_sort" in request.POST:
+            id_set = request.POST.getlist("alist_of_ids")
+            statement_ids = Statement.objects.filter(id__in=id_set)
+            transactions = Transaction.objects.filter(statement_file__in=statement_ids)
+            transactions = transactions.order_by(get_negative_sign() + 'description')
+            total = get_total_amount(transactions)
+            return render(request, 'page/result.html', {'list_of_transactions': transactions,
+                                                        'total': total,
+                                                        'selected_statements_ids': id_set})
 
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
                                                     'total': total,
