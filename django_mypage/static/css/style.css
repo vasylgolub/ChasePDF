@@ -3,6 +3,15 @@ h3 {
     border-width: thick;
 }
 
+.wrapper {
+  display: flex;
+}
+
+.right_side{
+    position: fixed;
+    float: right
+}
+
 .submit_button {
 
     /*border:none;*/
@@ -72,4 +81,21 @@ a:active{
     color: #396567
 }
 
+
+
+
+
+
+.button-83 {
+  background-color: #b6b6b6;
+  border: 1px solid black;
+  border-radius: 3px;
+  color: #374cc0;
+  font-size: 80%;
+  margin: 5px;
+}
+
+.button-83:active {
+  background-color: grey;
+}
 
