@@ -1,6 +1,3 @@
-import os
-import sys
-
 """
 Django settings for django_mypage project.
 
