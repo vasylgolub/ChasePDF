@@ -6,6 +6,8 @@
     <title>Title</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/list_of_uploaded_files.css' %}"/>
+    <script src="{% static 'jquery-3.6.2.min.js' %}"></script>
+    <script src="{% static 'jquery.js' %}"></script>
 </head>
 
 
@@ -22,11 +24,6 @@ Load pdf bank statement
 <br>
 
 
-
-
-
-
-
 <form action="{% url 'page:result' %}" method="post" >
     {% csrf_token %}
     <table>
@@ -36,7 +33,7 @@ Load pdf bank statement
 {% if list_statements %}
         <tr>
             <td class="select_all">Select All</td>
-            <td class="check-b0x"><input type="checkbox" name="selectus" value="select all"></td>
+            <td class="check-b0x"><input type="checkbox" id="checkAll" value="select all"></td>
 
         </tr>
 
