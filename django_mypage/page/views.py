@@ -87,18 +87,18 @@ def result_page(request):
 
         if "amount_sort" in request.POST or "description_sort" in request.POST:
             column: str = get_choosen_column_to_sort(request.POST)
-            transactions = transactions.order_by(get_negative_sign()+column)
-            return render(request, 'page/result.html', {'list_of_transactions': transactions,
+            sorted_transactions = transactions.order_by(get_negative_sign()+column)
+            return render(request, 'page/result.html', {'list_of_transactions': sorted_transactions,
                                                         'total': transactions.aggregate(Sum("amount"))["amount__sum"],
                                                         'selected_statements_ids': id_set})
         if "description_group" in request.POST:
-            transactions = (transactions
-                            .values('description')
-                            .annotate(dcount=Count('description'))
-                            .order_by(get_negative_sign() + "dcount")
-                            .annotate(amount=Round(Sum('amount'), 2))
-                            )
-            return render(request, 'page/result.html', {'list_of_transactions': transactions,
+            grouped_transactions = (transactions
+                                    .values('description')
+                                    .annotate(dcount=Count('description'))
+                                    .order_by(get_negative_sign() + "dcount")
+                                    .annotate(amount=Round(Sum('amount'), 2))
+                                    )
+            return render(request, 'page/result.html', {'list_of_transactions': grouped_transactions,
                                                         'total': transactions.aggregate(Sum("amount"))["amount__sum"],
                                                         'selected_statements_ids': id_set})
 
