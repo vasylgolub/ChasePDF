@@ -88,8 +88,7 @@ def result_page(request):
         if "amount_sort" in request.POST or "description_sort" in request.POST:
             column: str = get_choosen_column_to_sort(request.POST)
             transactions = transactions.order_by(get_negative_sign()+column)
-
-            total = get_total_amount(transactions)
+            total = transactions.aggregate(Sum("amount"))["amount__sum"]
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': total,
                                                         'selected_statements_ids': id_set})
