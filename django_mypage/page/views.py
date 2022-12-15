@@ -80,9 +80,10 @@ def result_page(request):
             #  Don't jump to result page. Instead, stay at index page.
             return index(request)  # Not really a good solution. To be reviewed.
         id_set = request.POST.getlist("alist_of_ids")
+        statement_ids = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
+        transactions = Transaction.objects.filter(statement_file__in=statement_ids)
+
         if "amount_sort" in request.POST or "description_sort" in request.POST:
-            statement_ids = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
-            transactions = Transaction.objects.filter(statement_file__in=statement_ids)
             column: str = get_column_to_which_apply_sorting(request.POST)
             transactions = transactions.order_by(get_negative_sign()+column)
 
@@ -91,9 +92,6 @@ def result_page(request):
                                                         'total': total,
                                                         'selected_statements_ids': id_set})
         if "description_group" in request.POST:
-            statement_ids = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
-            transactions = Transaction.objects.filter(statement_file__in=statement_ids)
-
             transactions = (transactions
                             .values('description')
                             .annotate(dcount=Count('description'))
