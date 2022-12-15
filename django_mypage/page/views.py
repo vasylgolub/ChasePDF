@@ -6,7 +6,8 @@ from .forms import UploadFileForm
 # from .forms import NameForm
 from .handle_uploaded_file import HandleUploadedFile
 from .models import Transaction, Statement
-from django.db.models import Count
+from django.db.models import Count, Sum
+from django.db.models.functions import Round
 
 
 months = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
@@ -92,10 +93,12 @@ def result_page(request):
                                                         'total': total,
                                                         'selected_statements_ids': id_set})
         if "description_group" in request.POST:
+
             transactions = (transactions
                             .values('description')
                             .annotate(dcount=Count('description'))
                             .order_by(get_negative_sign() + "dcount")
+                            .annotate(amount=Round(Sum('amount'), 2))
                             )
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': total,
