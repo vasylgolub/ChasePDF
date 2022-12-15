@@ -86,14 +86,13 @@ def result_page(request):
             statement_ids = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
             transactions = Transaction.objects.filter(statement_file__in=statement_ids)
 
-            column = "amount" if "amount_sort" in request.POST else "description"
+            column: str = get_column_to_which_apply_sorting(request.POST)
             transactions = transactions.order_by(get_negative_sign()+column)
 
             total = get_total_amount(transactions)
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': total,
                                                         'selected_statements_ids': id_set})
-
 
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
                                                     'total': total,
@@ -105,6 +104,8 @@ def result_page(request):
 
 
 
+def get_column_to_which_apply_sorting(request_post_list):
+    return "amount" if "amount_sort" in request_post_list else "description"
 
 
 def get_list_of_ids(checked_box_list) -> list:
