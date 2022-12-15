@@ -6,6 +6,8 @@ from .forms import UploadFileForm
 # from .forms import NameForm
 from .handle_uploaded_file import HandleUploadedFile
 from .models import Transaction, Statement
+from django.db.models import Count, Sum
+from django.db.models.functions import Round
 
 
 months = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
@@ -78,22 +80,29 @@ def result_page(request):
                 Statement.objects.filter(uploaded_statement_file=selected_box).delete()
             #  Don't jump to result page. Instead, stay at index page.
             return index(request)  # Not really a good solution. To be reviewed.
-
-
+        id_set = request.POST.getlist("alist_of_ids")
+        statement_ids = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
+        transactions = Transaction.objects.filter(statement_file__in=statement_ids)
 
         if "amount_sort" in request.POST or "description_sort" in request.POST:
-            id_set = request.POST.getlist("alist_of_ids")
-            statement_ids = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
-            transactions = Transaction.objects.filter(statement_file__in=statement_ids)
-
-            column = "amount" if "amount_sort" in request.POST else "description"
+            column: str = get_choosen_column_to_sort(request.POST)
             transactions = transactions.order_by(get_negative_sign()+column)
 
             total = get_total_amount(transactions)
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': total,
                                                         'selected_statements_ids': id_set})
+        if "description_group" in request.POST:
 
+            transactions = (transactions
+                            .values('description')
+                            .annotate(dcount=Count('description'))
+                            .order_by(get_negative_sign() + "dcount")
+                            .annotate(amount=Round(Sum('amount'), 2))
+                            )
+            return render(request, 'page/result.html', {'list_of_transactions': transactions,
+                                                        'total': total,
+                                                        'selected_statements_ids': id_set})
 
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
                                                     'total': total,
@@ -105,6 +114,8 @@ def result_page(request):
 
 
 
+def get_choosen_column_to_sort(request_post_list):
+    return "amount" if "amount_sort" in request_post_list else "description"
 
 
 def get_list_of_ids(checked_box_list) -> list:

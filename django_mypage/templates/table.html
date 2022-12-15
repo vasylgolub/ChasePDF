@@ -1,16 +1,24 @@
 {% load static %}
    <table>
       <tr>
-        <th>Date</th>
-        <th>Description</th>
-        <th>Amount</th>
+          {% if list_of_transactions.0.dcount %}
+            <th>Count</th>
+          {% else %}
+            <th>Date</th>
+          {% endif %}
+          <th>Description</th>
+          <th>Amount</th>
       </tr>
 
     {% for i in list_of_transactions %}
       <tr>
-        <td>{{i.date}}</td>
-        <td>{{i.description}}</td>
-        <td>{{i.amount}}</td>
+          {% if i.dcount %}
+            <td>{{i.dcount}}</td>
+          {% else %}
+            <td>{{i.date}}</td>
+          {% endif %}
+          <td>{{i.description}}</td>
+          <td>{{ i.amount|floatformat:2 }}</td>
       </tr>
     {% endfor %}
     <tr>
