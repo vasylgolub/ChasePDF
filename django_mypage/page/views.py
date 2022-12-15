@@ -78,9 +78,7 @@ def result_page(request):
                 Statement.objects.filter(uploaded_statement_file=selected_box).delete()
             #  Don't jump to result page. Instead, stay at index page.
             return index(request)  # Not really a good solution. To be reviewed.
-
-
-
+        id_set = request.POST.getlist("alist_of_ids")
         if "amount_sort" in request.POST or "description_sort" in request.POST:
             id_set = request.POST.getlist("alist_of_ids")
             statement_ids = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
