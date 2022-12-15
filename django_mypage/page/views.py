@@ -84,7 +84,7 @@ def result_page(request):
         transactions = Transaction.objects.filter(statement_file__in=statement_ids)
 
         if "amount_sort" in request.POST or "description_sort" in request.POST:
-            column: str = get_column_to_which_apply_sorting(request.POST)
+            column: str = get_choosen_column_to_sort(request.POST)
             transactions = transactions.order_by(get_negative_sign()+column)
 
             total = get_total_amount(transactions)
@@ -111,7 +111,7 @@ def result_page(request):
 
 
 
-def get_column_to_which_apply_sorting(request_post_list):
+def get_choosen_column_to_sort(request_post_list):
     return "amount" if "amount_sort" in request_post_list else "description"
 
 
