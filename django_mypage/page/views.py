@@ -87,7 +87,7 @@ def result_page(request):
 
         action = request.POST.get("sort")
         if action == "amount" or action == "description":
-            column = action
+            column = action  # change name
             sorted_transactions = transactions.order_by(get_negative_sign() + column)
             return render(request, 'page/result.html', {'list_of_transactions': sorted_transactions,
                                                         'total': transactions.aggregate(Sum("amount"))["amount__sum"],
@@ -101,6 +101,12 @@ def result_page(request):
                                     )
             return render(request, 'page/result.html', {'list_of_transactions': grouped_transactions,
                                                         'total': transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'selected_statements_ids': id_set})
+
+        textbox_value = request.POST.get("keyword")
+        if textbox_value != "" and textbox_value is not None:
+            return render(request, 'page/result.html', {'list_of_transactions': transactions,
+                                                        'total': total,
                                                         'selected_statements_ids': id_set})
 
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
