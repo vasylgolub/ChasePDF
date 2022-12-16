@@ -18,6 +18,13 @@
     <title>result of upload</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    <script src="{% static 'jquery-3.6.2.min.js' %}"></script>
+    <style>
+        /*.highlightable{background-color: #b6b6b6}*/
+        .highlightable{background-color: rgba(60, 179, 113, .17);}
+        .right_side{position: fixed; float: right}
+    </style>
+
 
 </head>
 
@@ -45,7 +52,9 @@
                                 {%endif%}
 
                                 <button class="button-83" name="amount_sort">Sort by Amount</button>
+                                <br>
                                 <button class="button-83" name="description_sort">Sort by Description</button>
+                                <br>
                                 <button class="button-83" name="description_group" id="dg">Group by Description</button>
                             </div>
                         </form>

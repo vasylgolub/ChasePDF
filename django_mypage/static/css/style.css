@@ -7,10 +7,6 @@ h3 {
   display: flex;
 }
 
-.right_side{
-    position: fixed;
-    float: right
-}
 
 .submit_button {
 
