@@ -103,8 +103,7 @@ def result_page(request):
                                                         'total': transactions.aggregate(Sum("amount"))["amount__sum"],
                                                         'selected_statements_ids': id_set})
 
-        textbox_value = request.POST.get("keyword")
-        if textbox_value != "" and textbox_value is not None:
+        if "keyword" in request.POST:
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': total,
                                                         'selected_statements_ids': id_set})
