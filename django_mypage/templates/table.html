@@ -11,13 +11,13 @@
       </tr>
 
     {% for i in list_of_transactions %}
-      <tr>
+      <tr id="tr_transactions">
           {% if i.dcount %}
             <td>{{i.dcount}}</td>
           {% else %}
             <td>{{i.date}}</td>
           {% endif %}
-          <td>{{i.description}}</td>
+          <td id="description">{{i.description}}</td>
           <td>{{ i.amount|floatformat:2 }}</td>
       </tr>
     {% endfor %}

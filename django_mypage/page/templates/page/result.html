@@ -18,6 +18,12 @@
     <title>result of upload</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    <script src="{% static 'jquery-3.6.2.min.js' %}"></script>
+    <style>
+        .highlightable{background-color: rgba(78, 197, 100, 0.6);}
+        .right_side{position: fixed; float: right}
+    </style>
+
 
 </head>
 
@@ -43,14 +49,51 @@
                                         <input type="hidden" name="alist_of_ids" value={{i}} />
                                     {% endfor %}
                                 {%endif%}
-
-                                <button class="button-83" name="amount_sort">Sort by Amount</button>
-                                <button class="button-83" name="description_sort">Sort by Description</button>
+                                <button class="button-83" name="sort" value="amount">Sort by Amount</button>
+                                <br>
+                                <button class="button-83" name="sort" value="description">Sort by Description</button>
+                                <br>
                                 <button class="button-83" name="description_group" id="dg">Group by Description</button>
                             </div>
                         </form>
+
+                         <form action="{% url 'page:result' %}" method="post">
+                             {% csrf_token %}
+                             {% if selected_statements_ids%}
+                                    {% for i in selected_statements_ids %}
+                                        <input type="hidden" name="alist_of_ids" value={{i}} />
+                                    {% endfor %}
+                                {%endif%}
+                             <input type="text" name="keyword" id="kw" class="search_text"
+                                       placeholder="search" autocorrect="off">
+
+                                <script>
+                                      $("#kw").keyup(
+                                          function(){
+                                              typed_text = $(this).val()
+
+                                                $('#tr_transactions #description').each(function() {
+                                                  var match = $(this).html().toLowerCase().indexOf(typed_text)
+                                                  if (match > -1){
+                                                      $(this).addClass("highlightable")
+                                                  }else{
+                                                      $(this).removeClass("highlightable")
+                                                  }
+                                                  if (typed_text == ""){
+                                                      $(this).removeClass("highlightable")
+                                                  }
+
+                                                });
+                                          }
+                                      );
+                                </script>
+                         </form>
+
                     </div>
             </div>
+
+
+
 
 
 
