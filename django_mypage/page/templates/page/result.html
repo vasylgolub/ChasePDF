@@ -19,6 +19,7 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
     <script src="{% static 'jquery-3.6.2.min.js' %}"></script>
+    <script src="{% static 'jquery.js' %}"></script>
     <style>
         .highlightable{background-color: rgba(78, 197, 100, 0.6);}
         .right_side{position: fixed; float: right}
@@ -76,24 +77,24 @@
 
 
                                 <script>
-                                      $("#kw").keyup(
-                                          function(){
-                                              typed_text = $(this).val()
-
-                                                $('#tr_transactions #description').each(function() {
-                                                  var match = $(this).html().toLowerCase().indexOf(typed_text)
-                                                  if (match > -1){
-                                                      $(this).addClass("highlightable")
-                                                  }else{
-                                                      $(this).removeClass("highlightable")
-                                                  }
-                                                  if (typed_text == ""){
-                                                      $(this).removeClass("highlightable")
-                                                  }
-
-                                                });
-                                          }
-                                      );
+                                      // $("#kw").keyup(
+                                      //     function(){
+                                      //         typed_text = $(this).val()
+                                      //
+                                      //           $('#tr_transactions #description').each(function() {
+                                      //             var match = $(this).html().toLowerCase().indexOf(typed_text)
+                                      //             if (match > -1){
+                                      //                 $(this).addClass("highlightable")
+                                      //             }else{
+                                      //                 $(this).removeClass("highlightable")
+                                      //             }
+                                      //             if (typed_text == ""){
+                                      //                 $(this).removeClass("highlightable")
+                                      //             }
+                                      //
+                                      //           });
+                                      //     }
+                                      // );
                                 </script>
                          </form>
 
