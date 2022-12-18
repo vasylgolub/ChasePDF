@@ -64,8 +64,16 @@
                                         <input type="hidden" name="alist_of_ids" value={{i}} />
                                     {% endfor %}
                                 {%endif%}
-                             <input type="text" name="keyword" id="kw" class="search_text"
-                                       placeholder="search" autocorrect="off">
+                             <div class="mini_box">
+                                 <input type="text" name="keyword" id="kw" class="search_text"
+                                       placeholder="search/select" autocorrect="off">
+                                 <br>
+                                 <button class="button-83" name="add_to_table" value="add"
+                                         title="Add selected transactions to new table.">
+                                     Add
+                                 </button>
+                             </div>
+
 
                                 <script>
                                       $("#kw").keyup(
