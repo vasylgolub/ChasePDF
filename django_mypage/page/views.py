@@ -8,6 +8,7 @@ from .handle_uploaded_file import HandleUploadedFile
 from .models import Transaction, Statement
 from django.db.models import Count, Sum
 from django.db.models.functions import Round
+import json
 
 
 months = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
@@ -84,6 +85,11 @@ def result_page(request):
         id_set = request.POST.getlist("alist_of_ids")
         statement_str = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
         transactions = Transaction.objects.filter(statement_file__in=statement_str)
+
+        if "add_to_table" in request.POST:
+            selected_items: str = request.POST['add_to_table']
+            selected_items: list = json.loads(selected_items)
+
 
 
         action = request.POST.get("sort")
