@@ -82,8 +82,9 @@ def result_page(request):
             return index(request)  # Not really a good solution. To be reviewed.
 
         id_set = request.POST.getlist("alist_of_ids")
-        statement_ids = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
-        transactions = Transaction.objects.filter(statement_file__in=statement_ids)
+        statement_str = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
+        transactions = Transaction.objects.filter(statement_file__in=statement_str)
+
 
         action = request.POST.get("sort")
         if action == "amount" or action == "description":
