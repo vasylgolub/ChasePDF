@@ -17,7 +17,7 @@
           {% else %}
             <td>{{i.date}}</td>
           {% endif %}
-          <td id="description">{{i.description}}</td>
+          <td id="description" value={{i.id}}>{{i.description}}</td>
           <td>{{ i.amount|floatformat:2 }}</td>
       </tr>
     {% endfor %}
