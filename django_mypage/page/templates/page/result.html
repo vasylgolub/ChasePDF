@@ -56,6 +56,7 @@
                             <button class="button-83" name="description_group" id="dg">Group by Description</button>
                         </div>
                     </form>
+
                      <form action="{% url 'page:result' %}" method="post">
                          {% csrf_token %}
                          {% if selected_statements_ids%}
@@ -65,14 +66,15 @@
                             {%endif%}
                          <div class="mini_box">
                              <input type="text" name="keyword" id="kw" class="search_text"
-                                   placeholder="search/select" autocorrect="off">
+                                   placeholder="search/select" autocorrect="off" autocomplete="off">
                              <br>
-                             <button class="button-83" name="add_to_table" value="add"
+                             <button class="button-83" id="Add" name="add_to_table" value=""
                                      title="Add selected transactions to new table.">
                                  Add
                              </button>
                          </div>
                      </form>
+
                 </div>
             </div>
 
