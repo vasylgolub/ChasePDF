@@ -127,11 +127,19 @@ def result_page(request):
 
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
                                                     'total': total,
-                                                    'selected_statements_ids': get_list_of_ids(list_of_boxes)})
+                                                    'selected_statements_ids': get_list_of_ids(list_of_boxes),
+                                                    'list_of_selected_transactions': Transaction2.objects.all(),
+                                                    'total_selected_transactions':
+                                                        Transaction2.objects.all().aggregate(Sum("amount"))["amount__sum"]
+                                                    })
 
     else:
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
-                                                    'total': total})
+                                                    'total': total,
+                                                    'list_of_selected_transactions': Transaction2.objects.all(),
+                                                    'total_selected_transactions':
+                                                        Transaction2.objects.all().aggregate(Sum("amount"))["amount__sum"]
+                                                    })
 
 
 
