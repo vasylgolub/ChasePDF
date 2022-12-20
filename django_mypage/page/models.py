@@ -25,18 +25,13 @@ class Transaction(models.Model):
         return self.description
 
 
+class Transaction2(models.Model):
+    date = models.DateField('Transaction Execution Date')
+    description = models.CharField(max_length=200)
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    objects = models.Manager()
 
-# class Migration(migrations.Migration):
-#     atomic = False # <<<< THIS LINE
-#
-#     dependencies = [
-#         ('shop', '0004_product_imgfeat'),
-#     ]
-#
-#     operations = [
-#         migrations.RenameModel(
-#             old_name='Category',
-#             new_name='CategoryShop',
-#         ),
-#     ]
+    def __str__(self):
+        return self.description
+
 
