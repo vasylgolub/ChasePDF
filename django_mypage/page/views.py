@@ -89,8 +89,15 @@ def result_page(request):
         if "add_to_table" in request.POST:
             selected_items: str = request.POST['add_to_table']
             selected_items: list = json.loads(selected_items)
-
-
+            selected_items = Transaction.objects.filter(id__in=selected_items)  # Get transactions from DB
+            return render(request, 'page/result.html', {'list_of_transactions': transactions,
+                                                        'total': transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'list_of_selected_transactions': selected_items,
+                                                        'total_selected_transactions':
+                                                            selected_items.aggregate(Sum("amount"))["amount__sum"],
+                                                        'selected_statements_ids': id_set})
+            # for i in Transaction.objects.filter(id__in=selected_items):
+            #     print(i)
 
         action = request.POST.get("sort")
         if action == "amount" or action == "description":
