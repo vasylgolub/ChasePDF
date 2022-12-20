@@ -79,12 +79,9 @@
             </div>
 
             <div class="contenuto">
-                <div>
-                    {% if list_of_transactions %}
-                    {% include 'table.html' %}
-                    {% endif %}
-                </div>
-
+                {% if list_of_selected_transactions %}
+                {% include 'table2.html' %}
+                {% endif %}
             </div>
 
 
