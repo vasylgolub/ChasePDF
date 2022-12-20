@@ -1,0 +1,28 @@
+{% load static %}
+   <table>
+      <tr>
+          {% if list_of_transactions.0.dcount %}
+            <th>Count</th>
+          {% else %}
+            <th>Date</th>
+          {% endif %}
+          <th>Description</th>
+          <th>Amount</th>
+      </tr>
+
+    {% for i in list_of_selected_transactions %}
+      <tr id="tr_transactions">
+          {% if i.dcount %}
+            <td>{{i.dcount}}</td>
+          {% else %}
+            <td>{{i.date}}</td>
+          {% endif %}
+          <td id="description1" value={{i.id}}>{{i.description}}</td>
+          <td>{{ i.amount|floatformat:2 }}</td>
+      </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="2" class="reset-style"></td>
+        <td>{{total|floatformat:2}}</td>
+    </tr>
+    </table>
