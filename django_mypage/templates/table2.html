@@ -1,7 +1,7 @@
 {% load static %}
    <table>
       <tr>
-          {% if list_of_transactions.0.dcount %}
+          {% if list_of_selected_transactions.0.dcount %}
             <th>Count</th>
           {% else %}
             <th>Date</th>
@@ -23,6 +23,6 @@
     {% endfor %}
     <tr>
         <td colspan="2" class="reset-style"></td>
-        <td>{{total|floatformat:2}}</td>
+        <td>{{total_selected_transactions|floatformat:2}}</td>
     </tr>
     </table>
