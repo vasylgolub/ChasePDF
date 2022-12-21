@@ -52,7 +52,11 @@ def index(request):
 
             # write each transaction to database: BankStatement
             for transaction in list_of_transactions:
-                mmdd = transaction.date[0].replace('/', '-')  # Ex: dd/dd -> dd-dd
+
+                # example of what transaction date returns: ['01/31', '01/30']
+                # One date tells when the purchase took place. The other date tells when the charge on the
+                # account was made.
+                mmdd = transaction.date[1].replace('/', '-')  # Ex: dd/dd -> dd-dd
 
                 mmddyyyy = get_only_month_and_year(date_in_string, just_year=True) + '-' + mmdd
                 current_object = Statement.objects.get(uploaded_statement_file=date_in_string)
