@@ -117,9 +117,10 @@ def result_page(request):
         action = request.POST.get("sort")
         if action == "amount" or action == "description":
             column = action  # change name
-            sorted_transactions = transactions.order_by(get_negative_sign() + column).\
+            column_with_sign = get_negative_sign() + column
+            sorted_transactions = transactions.order_by(column_with_sign).\
                 exclude(id__in=Transaction2.objects.all())
-            sorted_transactions2 = Transaction2.objects.all().order_by(get_negative_sign() + column)
+            sorted_transactions2 = Transaction2.objects.all().order_by(column_with_sign)
             return render(request, 'page/result.html', {'list_of_transactions': sorted_transactions,
                                                         'total': sorted_transactions.aggregate(Sum("amount"))["amount__sum"],
                                                         'list_of_selected_transactions': sorted_transactions2,
