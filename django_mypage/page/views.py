@@ -93,11 +93,12 @@ def result_page(request):
         if "add_to_table" in request.POST:
             selected_items: str = request.POST['add_to_table']
             selected_items: list = json.loads(selected_items)
-            selected_items = Transaction.objects.filter(id__in=selected_items)  # Get transactions from DB
+            selected_items = transactions.filter(id__in=selected_items)  # Filter items from main table
             for e in selected_items:
-                if not Transaction2.objects.filter(id=e.id):
+                if not Transaction2.objects.filter(id=e.id):  # Do if the item selected is not present in second table.
                     transaction = Transaction2(date=e.date, description=e.description, amount=e.amount, id=e.id)
                     transaction.save()
+
             transactions2 = Transaction2.objects.all()  # Which are the selected items from the main table
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': transactions.aggregate(Sum("amount"))["amount__sum"],
