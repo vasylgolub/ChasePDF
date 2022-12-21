@@ -128,15 +128,24 @@ def result_page(request):
                                                             sorted_transactions2.aggregate(Sum("amount"))["amount__sum"],
                                                         'selected_statements_ids': id_set})
         if "description_group" in request.POST:
-
+            column_with_sign = get_negative_sign() + "dcount"
             grouped_transactions = (transactions
                                     .values('description')
                                     .annotate(dcount=Count('description'))
-                                    .order_by(get_negative_sign() + "dcount")
+                                    .order_by(column_with_sign)
                                     .annotate(amount=Round(Sum('amount'), 2))
                                     ).exclude(id__in=Transaction2.objects.all())
+
+            grouped_transactions2 = (Transaction2.objects.all()
+                                     .values('description')
+                                     .annotate(dcount=Count('description'))
+                                     .order_by(column_with_sign)
+                                     .annotate(amount=Round(Sum('amount'), 2))
+                                     )
             return render(request, 'page/result.html', {'list_of_transactions': grouped_transactions,
-                                                        'total': transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'total': grouped_transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'list_of_selected_transactions': grouped_transactions2,
+                        'total_selected_transactions': grouped_transactions2.aggregate(Sum("amount"))["amount__sum"],
                                                         'selected_statements_ids': id_set})
         if "keyword" in request.POST:
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
