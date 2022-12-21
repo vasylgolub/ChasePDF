@@ -12,7 +12,14 @@ $(function(){
                 var array = [];
 
                 $(highlighted_elements).each( function () {
-                    array.push($(this).attr("value"));
+                    var val = $(this).attr("value");
+                    if (val){  // If value is empty that means we need to pass the description instead
+                        array.push(val);
+                    } else {
+                        array.push($(this).text());  // pass the description (text in between the tags)
+                    }
+
+
                 });
 
                 array = JSON.stringify(array);

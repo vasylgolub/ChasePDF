@@ -93,11 +93,24 @@ def result_page(request):
         if "add_to_table" in request.POST:
             selected_items: str = request.POST['add_to_table']
             selected_items: list = json.loads(selected_items)
-            selected_items = transactions.filter(id__in=selected_items)  # Filter items from main table
-            for e in selected_items:
-                if not Transaction2.objects.filter(id=e.id):  # Do if the item selected is not present in second table.
-                    transaction2 = Transaction2(date=e.date, description=e.description, amount=e.amount, id=e.id)
-                    transaction2.save()
+            if selected_items[0].isdigit():
+                selected_items = transactions.filter(id__in=selected_items)  # Filter items from main table
+                for e in selected_items:
+                    if not Transaction2.objects.filter(id=e.id):  # Do if the item selected is not present in second table.
+                        transaction2 = Transaction2(date=e.date, description=e.description, amount=e.amount, id=e.id)
+                        transaction2.save()
+            else:
+                for each in selected_items:
+                    #  From one description we might get more than one ID.
+                    #  Because some of transactions have exactly the description.
+                    ids_of_transactions = Transaction.objects.filter(description=each).values('id')
+                    for id in ids_of_transactions:
+                        matched_transaction = transactions.get(id=id['id'])
+                        transaction2 = Transaction2(date=matched_transaction.date,
+                                                    description=matched_transaction.description,
+                                                    amount=matched_transaction.amount,
+                                                    id=matched_transaction.id)
+                        transaction2.save()
 
             transactions2 = Transaction2.objects.all()  # Which are the selected items from the main table
             # Exclude second table items from main table
