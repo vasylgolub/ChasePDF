@@ -19,6 +19,7 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
     <script src="{% static 'jquery-3.6.2.min.js' %}"></script>
+    <script src="{% static 'jquery.js' %}"></script>
     <style>
         .highlightable{background-color: rgba(78, 197, 100, 0.6);}
         .right_side{position: fixed; float: right}
@@ -32,72 +33,72 @@
         {% include 'navbar.html' %}
         <h1>{{ text }}</h1>
 
-        <div class="wrapper">
-            <div class="left_side">
+        <div style="display: flex">
+            <div>
                 {% if list_of_transactions %}
                 {% include 'table.html' %}
                 {% endif %}
             </div>
+            <div class="contenuto" style="margin-right: 100px">
+                 <div>
+                    <form action="{% url 'page:result' %}" method="post">
+                        {% csrf_token %}
+                        <div class="buttons">
+<!--                            pass hidden information to the view-->
+                            {% if selected_statements_ids%}
+                                {% for i in selected_statements_ids %}
+                                    <input type="hidden" name="alist_of_ids" value={{i}} />
+                                {% endfor %}
+                            {%endif%}
+                            <button class="button-83" name="sort" value="amount">Sort by Amount</button>
+                            <br>
+                            <button class="button-83" name="sort" value="description">Sort by Description</button>
+                            <br>
+                            <button class="button-83" name="description_group" id="dg">Group by Description</button>
+                        </div>
+                    </form>
 
-            <div style='float:right;'>
-                     <div class="right_side">
-                        <form action="{% url 'page:result' %}" method="post">
-                            {% csrf_token %}
-                            <div class="buttons">
-                                {% if selected_statements_ids%}
-                                    {% for i in selected_statements_ids %}
-                                        <input type="hidden" name="alist_of_ids" value={{i}} />
-                                    {% endfor %}
-                                {%endif%}
-                                <button class="button-83" name="sort" value="amount">Sort by Amount</button>
-                                <br>
-                                <button class="button-83" name="sort" value="description">Sort by Description</button>
-                                <br>
-                                <button class="button-83" name="description_group" id="dg">Group by Description</button>
-                            </div>
-                        </form>
-
-                         <form action="{% url 'page:result' %}" method="post">
-                             {% csrf_token %}
-                             {% if selected_statements_ids%}
-                                    {% for i in selected_statements_ids %}
-                                        <input type="hidden" name="alist_of_ids" value={{i}} />
-                                    {% endfor %}
-                                {%endif%}
+                     <form action="{% url 'page:result' %}" method="post">
+                         {% csrf_token %}
+<!--                         pass hidden information to the view-->
+                         {% if selected_statements_ids%}
+                            {% for i in selected_statements_ids %}
+                                <input type="hidden" name="alist_of_ids" value={{i}} />
+                            {% endfor %}
+                        {%endif%}
+                         <div class="mini_box">
                              <input type="text" name="keyword" id="kw" class="search_text"
-                                       placeholder="search" autocorrect="off">
+                                   placeholder="search/select" autocorrect="off" autocomplete="off">
+                             <br>
+                             <button class="button-83" id="Add" name="add_to_table" value=""
+                                     title="Add selected transactions to new table.">
+                                 Add
+                             </button>
+                         </div>
+                     </form>
 
-                                <script>
-                                      $("#kw").keyup(
-                                          function(){
-                                              typed_text = $(this).val()
+                     <form action="{% url 'page:result' %}" method="post">
+                         {% csrf_token %}
+<!--                         pass hidden information to the view-->
+                         {% if selected_statements_ids%}
+                            {% for i in selected_statements_ids %}
+                                <input type="hidden" name="alist_of_ids" value={{i}} />
+                            {% endfor %}
+                        {%endif%}
+                         <button class="button-83" name="empty_table" value="empty">Empty Second Table</button>
+                     </form>
 
-                                                $('#tr_transactions #description').each(function() {
-                                                  var match = $(this).html().toLowerCase().indexOf(typed_text)
-                                                  if (match > -1){
-                                                      $(this).addClass("highlightable")
-                                                  }else{
-                                                      $(this).removeClass("highlightable")
-                                                  }
-                                                  if (typed_text == ""){
-                                                      $(this).removeClass("highlightable")
-                                                  }
 
-                                                });
-                                          }
-                                      );
-                                </script>
-                         </form>
+                </div>
+            </div>
 
-                    </div>
+            <div class="contenuto">
+                {% if list_of_selected_transactions %}
+                {% include 'table2.html' %}
+                {% endif %}
             </div>
 
 
-
-
-
-
-
-        </div>
+         </div>
     </body>
 </html>

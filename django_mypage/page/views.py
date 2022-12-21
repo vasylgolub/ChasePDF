@@ -5,9 +5,10 @@ from django.urls import reverse
 from .forms import UploadFileForm
 # from .forms import NameForm
 from .handle_uploaded_file import HandleUploadedFile
-from .models import Transaction, Statement
+from .models import Transaction, Transaction2, Statement
 from django.db.models import Count, Sum
 from django.db.models.functions import Round
+import json
 
 
 months = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
@@ -82,9 +83,30 @@ def result_page(request):
             return index(request)  # Not really a good solution. To be reviewed.
 
         id_set = request.POST.getlist("alist_of_ids")
-        statement_ids = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
-        transactions = Transaction.objects.filter(statement_file__in=statement_ids)
+        statement_str = Statement.objects.filter(id__in=id_set)  # Get objects for many IDs
+        transactions = Transaction.objects.filter(statement_file__in=statement_str)
 
+        if "add_to_table" in request.POST:
+            selected_items: str = request.POST['add_to_table']
+            selected_items: list = json.loads(selected_items)
+            selected_items = Transaction.objects.filter(id__in=selected_items)  # Get transactions from DB
+            for e in selected_items:
+                if not Transaction2.objects.filter(id=e.id):
+                    transaction = Transaction2(date=e.date, description=e.description, amount=e.amount, id=e.id)
+                    transaction.save()
+            transactions2 = Transaction2.objects.all()  # Which are the selected items from the main table
+            return render(request, 'page/result.html', {'list_of_transactions': transactions,
+                                                        'total': transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'list_of_selected_transactions': transactions2,
+                                                        'total_selected_transactions':
+                                                            transactions2.aggregate(Sum("amount"))["amount__sum"],
+                                                        'selected_statements_ids': id_set})
+        if "empty_table" in request.POST:
+            Transaction2.objects.all().delete()
+            return render(request, 'page/result.html', {'list_of_transactions': transactions,
+                                                        'total': transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'selected_statements_ids': id_set
+                                                        })
         action = request.POST.get("sort")
         if action == "amount" or action == "description":
             column = action  # change name
@@ -102,7 +124,6 @@ def result_page(request):
             return render(request, 'page/result.html', {'list_of_transactions': grouped_transactions,
                                                         'total': transactions.aggregate(Sum("amount"))["amount__sum"],
                                                         'selected_statements_ids': id_set})
-
         if "keyword" in request.POST:
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': total,
@@ -110,11 +131,19 @@ def result_page(request):
 
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
                                                     'total': total,
-                                                    'selected_statements_ids': get_list_of_ids(list_of_boxes)})
+                                                    'selected_statements_ids': get_list_of_ids(list_of_boxes),
+                                                    'list_of_selected_transactions': Transaction2.objects.all(),
+                                                    'total_selected_transactions':
+                                                        Transaction2.objects.all().aggregate(Sum("amount"))["amount__sum"]
+                                                    })
 
     else:
         return render(request, 'page/result.html', {'list_of_transactions': all_statements_of_selected_pdf_files,
-                                                    'total': total})
+                                                    'total': total,
+                                                    'list_of_selected_transactions': Transaction2.objects.all(),
+                                                    'total_selected_transactions':
+                                                        Transaction2.objects.all().aggregate(Sum("amount"))["amount__sum"]
+                                                    })
 
 
 
