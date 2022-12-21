@@ -44,6 +44,7 @@
                     <form action="{% url 'page:result' %}" method="post">
                         {% csrf_token %}
                         <div class="buttons">
+<!--                            pass hidden information to the view-->
                             {% if selected_statements_ids%}
                                 {% for i in selected_statements_ids %}
                                     <input type="hidden" name="alist_of_ids" value={{i}} />
@@ -59,6 +60,7 @@
 
                      <form action="{% url 'page:result' %}" method="post">
                          {% csrf_token %}
+<!--                         pass hidden information to the view-->
                          {% if selected_statements_ids%}
                                 {% for i in selected_statements_ids %}
                                     <input type="hidden" name="alist_of_ids" value={{i}} />
@@ -74,6 +76,18 @@
                              </button>
                          </div>
                      </form>
+
+                     <form action="{% url 'page:result' %}" method="post">
+                         {% csrf_token %}
+<!--                         pass hidden information to the view-->
+                         {% if selected_statements_ids%}
+                            {% for i in selected_statements_ids %}
+                                <input type="hidden" name="alist_of_ids" value={{i}} />
+                            {% endfor %}
+                        {%endif%}
+                         <button class="button-83" name="empty_table" value="empty">Empty Second Table</button>
+                     </form>
+
 
                 </div>
             </div>
