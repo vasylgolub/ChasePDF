@@ -62,10 +62,10 @@
                          {% csrf_token %}
 <!--                         pass hidden information to the view-->
                          {% if selected_statements_ids%}
-                                {% for i in selected_statements_ids %}
-                                    <input type="hidden" name="alist_of_ids" value={{i}} />
-                                {% endfor %}
-                            {%endif%}
+                            {% for i in selected_statements_ids %}
+                                <input type="hidden" name="alist_of_ids" value={{i}} />
+                            {% endfor %}
+                        {%endif%}
                          <div class="mini_box">
                              <input type="text" name="keyword" id="kw" class="search_text"
                                    placeholder="search/select" autocorrect="off" autocomplete="off">
