@@ -96,8 +96,8 @@ def result_page(request):
             selected_items = transactions.filter(id__in=selected_items)  # Filter items from main table
             for e in selected_items:
                 if not Transaction2.objects.filter(id=e.id):  # Do if the item selected is not present in second table.
-                    transaction = Transaction2(date=e.date, description=e.description, amount=e.amount, id=e.id)
-                    transaction.save()
+                    transaction2 = Transaction2(date=e.date, description=e.description, amount=e.amount, id=e.id)
+                    transaction2.save()
 
             transactions2 = Transaction2.objects.all()  # Which are the selected items from the main table
             transactions = transactions.exclude(id__in=selected_items)  # Exclude selected items from main table
