@@ -101,8 +101,12 @@ def result_page(request):
                                                         'total_selected_transactions':
                                                             transactions2.aggregate(Sum("amount"))["amount__sum"],
                                                         'selected_statements_ids': id_set})
-
-
+        if "empty_table" in request.POST:
+            Transaction2.objects.all().delete()
+            return render(request, 'page/result.html', {'list_of_transactions': transactions,
+                                                        'total': transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'selected_statements_ids': id_set
+                                                        })
         action = request.POST.get("sort")
         if action == "amount" or action == "description":
             column = action  # change name
