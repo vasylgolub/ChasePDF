@@ -100,6 +100,7 @@ def result_page(request):
                     transaction.save()
 
             transactions2 = Transaction2.objects.all()  # Which are the selected items from the main table
+            transactions = transactions.exclude(id__in=selected_items)  # Exclude selected items from main table
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': transactions.aggregate(Sum("amount"))["amount__sum"],
                                                         'list_of_selected_transactions': transactions2,
