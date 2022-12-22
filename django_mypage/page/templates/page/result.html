@@ -40,7 +40,7 @@
                 {% endif %}
             </div>
             <div class="contenuto" style="margin-right: 100px">
-                 <div>
+                 <div style="position: fixed;">
                     <form action="{% url 'page:result' %}" method="post">
                         {% csrf_token %}
                         <div class="buttons">
@@ -92,7 +92,7 @@
                 </div>
             </div>
 
-            <div class="contenuto">
+            <div class="contenuto" style="margin-left: 80px">
                 {% if list_of_selected_transactions %}
                 {% include 'table2.html' %}
                 {% endif %}

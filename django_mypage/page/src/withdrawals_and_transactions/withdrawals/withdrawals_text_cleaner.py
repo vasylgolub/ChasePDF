@@ -8,7 +8,6 @@ class WithdrawalsTextCleaner:
             self.whole_text = whole_text
 
             self.total_info = self.get_total_info_from_whole_text("Total ATM & Debit Card Withdrawals")
-
             whole_text_without_total = self.remove_total_info_from_whole_text()  # And everything that is after it.
             whole_text_without_total_and_title = \
                 whole_text_without_total.replace("ATM & DEBIT CARD WITHDRAWALSDATEDESCRIPTIONAMOUNT", "")
@@ -90,6 +89,6 @@ class WithdrawalsTextCleaner:
 
     @staticmethod
     def get_end_position_of_target(string):
-        pattern = re.compile(r'\d\d\.\d\d')
+        pattern = re.compile(r'\d?\d\.\d\d')
         return pattern.search(string).end()
 

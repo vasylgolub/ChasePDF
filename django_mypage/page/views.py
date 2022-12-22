@@ -52,7 +52,11 @@ def index(request):
 
             # write each transaction to database: BankStatement
             for transaction in list_of_transactions:
-                mmdd = transaction.date[0].replace('/', '-')  # Ex: dd/dd -> dd-dd
+
+                # example of what transaction date returns: ['01/31', '01/30']
+                # One date tells when the purchase took place. The other date tells when the charge on the
+                # account was made.
+                mmdd = transaction.date[1].replace('/', '-')  # Ex: dd/dd -> dd-dd
 
                 mmddyyyy = get_only_month_and_year(date_in_string, just_year=True) + '-' + mmdd
                 current_object = Statement.objects.get(uploaded_statement_file=date_in_string)
@@ -89,12 +93,28 @@ def result_page(request):
         if "add_to_table" in request.POST:
             selected_items: str = request.POST['add_to_table']
             selected_items: list = json.loads(selected_items)
-            selected_items = Transaction.objects.filter(id__in=selected_items)  # Get transactions from DB
-            for e in selected_items:
-                if not Transaction2.objects.filter(id=e.id):
-                    transaction = Transaction2(date=e.date, description=e.description, amount=e.amount, id=e.id)
-                    transaction.save()
+            if selected_items[0].isdigit():
+                selected_items = transactions.filter(id__in=selected_items)  # Filter items from main table
+                for e in selected_items:
+                    if not Transaction2.objects.filter(id=e.id):  # Do if the item selected is not present in second table.
+                        transaction2 = Transaction2(date=e.date, description=e.description, amount=e.amount, id=e.id)
+                        transaction2.save()
+            else:
+                for each in selected_items:
+                    #  From one description we might get more than one ID.
+                    #  Because some of transactions have exactly the description.
+                    ids_of_transactions = Transaction.objects.filter(description=each).values('id')
+                    for id in ids_of_transactions:
+                        matched_transaction = transactions.get(id=id['id'])
+                        transaction2 = Transaction2(date=matched_transaction.date,
+                                                    description=matched_transaction.description,
+                                                    amount=matched_transaction.amount,
+                                                    id=matched_transaction.id)
+                        transaction2.save()
+
             transactions2 = Transaction2.objects.all()  # Which are the selected items from the main table
+            # Exclude second table items from main table
+            transactions = transactions.exclude(id__in=Transaction2.objects.all())
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
                                                         'total': transactions.aggregate(Sum("amount"))["amount__sum"],
                                                         'list_of_selected_transactions': transactions2,
@@ -110,19 +130,35 @@ def result_page(request):
         action = request.POST.get("sort")
         if action == "amount" or action == "description":
             column = action  # change name
-            sorted_transactions = transactions.order_by(get_negative_sign() + column)
+            column_with_sign = get_negative_sign() + column
+            sorted_transactions = transactions.order_by(column_with_sign).\
+                exclude(id__in=Transaction2.objects.all())
+            sorted_transactions2 = Transaction2.objects.all().order_by(column_with_sign)
             return render(request, 'page/result.html', {'list_of_transactions': sorted_transactions,
-                                                        'total': transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'total': sorted_transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'list_of_selected_transactions': sorted_transactions2,
+                                                        'total_selected_transactions':
+                                                            sorted_transactions2.aggregate(Sum("amount"))["amount__sum"],
                                                         'selected_statements_ids': id_set})
         if "description_group" in request.POST:
+            column_with_sign = get_negative_sign() + "dcount"
             grouped_transactions = (transactions
                                     .values('description')
                                     .annotate(dcount=Count('description'))
-                                    .order_by(get_negative_sign() + "dcount")
+                                    .order_by(column_with_sign)
                                     .annotate(amount=Round(Sum('amount'), 2))
-                                    )
+                                    ).exclude(id__in=Transaction2.objects.all())
+
+            grouped_transactions2 = (Transaction2.objects.all()
+                                     .values('description')
+                                     .annotate(dcount=Count('description'))
+                                     .order_by(column_with_sign)
+                                     .annotate(amount=Round(Sum('amount'), 2))
+                                     )
             return render(request, 'page/result.html', {'list_of_transactions': grouped_transactions,
-                                                        'total': transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'total': grouped_transactions.aggregate(Sum("amount"))["amount__sum"],
+                                                        'list_of_selected_transactions': grouped_transactions2,
+                        'total_selected_transactions': grouped_transactions2.aggregate(Sum("amount"))["amount__sum"],
                                                         'selected_statements_ids': id_set})
         if "keyword" in request.POST:
             return render(request, 'page/result.html', {'list_of_transactions': transactions,
