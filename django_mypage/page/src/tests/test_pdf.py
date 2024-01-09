@@ -1,12 +1,10 @@
-from django_mypage.page.src.pdf import Pdf
-from django_mypage.page.src.withdrawals_and_transactions.withdrawals.withdrawals_text_cleaner import\
-    WithdrawalsTextCleaner
-from django_mypage.page.src.withdrawals_and_transactions.extractor import Extractor
-from django_mypage.page.src.withdrawals_and_transactions.helper import Helper
-from django_mypage.page.src.withdrawals_and_transactions.transactions.transaction_details_cleaner import \
-    TransactionCleaner
-from django_mypage.page.src.list_of_files_from_directory import ListOfFilesFromDirectory
 
+from ..pdf import Pdf
+from ..withdrawals_and_transactions.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
+from ..withdrawals_and_transactions.extractor import Extractor
+from ..withdrawals_and_transactions.helper import Helper
+from ..withdrawals_and_transactions.transactions.transaction_details_cleaner import TransactionCleaner
+from ..list_of_files_from_directory import ListOfFilesFromDirectory
 
 list_of_files = ListOfFilesFromDirectory("/Users/vasylgolub/Desktop/pdfs/2019")
 file_path = list_of_files.with_full_path()[0]
