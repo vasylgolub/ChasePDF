@@ -9,9 +9,9 @@ from .withdrawals_and_transactions.transactions.transaction_detail import Transa
 # A bank statement is a list of all transactions for a bank account over a set period, usually monthly.
 
 
-def get_string_from_pdf_document(path_to_file):
-    fd = open(path_to_file, "rb")
-    viewer = SimplePDFViewer(fd)
+def get_string_from_pdf_document(opened_file):
+
+    viewer = SimplePDFViewer(opened_file)
     document_string = ""  # string from all pages
     for canvas in viewer:  # iterate through each page
         page_strings = canvas.strings  # returns a list of strings from a page
@@ -29,6 +29,8 @@ class Pdf:
             self.text = get_string_from_pdf_document(pdf_file_path)
         else:
             self.text = get_string_from_pdf_document(pdf_file_path.open()) # it's actually not a path to a file. It is a file.
+            print("Inside PDF")
+
 
         self.text_length = len(self.text)
 
