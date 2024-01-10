@@ -1,4 +1,4 @@
-from PyPDF2 import PdfFileReader
+from pdfreader import SimplePDFViewer
 from colorama import Fore
 import textwrap
 import os
@@ -9,6 +9,16 @@ from .withdrawals_and_transactions.transactions.transaction_detail import Transa
 # A bank statement is a list of all transactions for a bank account over a set period, usually monthly.
 
 
+def get_string_from_pdf_document(path_to_file):
+    fd = open(path_to_file, "rb")
+    viewer = SimplePDFViewer(fd)
+    document_string = ""  # string from all pages
+    for canvas in viewer:  # iterate through each page
+        page_strings = canvas.strings  # returns a list of strings from a page
+        document_string += "".join(page_strings)
+
+    return document_string
+
 class Pdf:
     def __init__(self, pdf_file_path, is_personal_account=False):
         # let's save the path just in case
@@ -16,24 +26,11 @@ class Pdf:
         if isinstance(pdf_file_path, str):  # If it is a string then it is probably a path to the file
             self.file_full_path = pdf_file_path
             self.file_name = os.path.basename(self.file_full_path)
-            opened_file = open(pdf_file_path, 'rb')
+            self.text = get_string_from_pdf_document(pdf_file_path)
         else:
-            opened_file = pdf_file_path.open()  # it's actually not a path to a file. It is a file.
+            self.text = get_string_from_pdf_document(pdf_file_path.open()) # it's actually not a path to a file. It is a file.
 
-        # opened_file = open(pdf_file_path, 'rb')
-        read_pdf_file = PdfFileReader(opened_file)
-        if read_pdf_file.isEncrypted:
-            read_pdf_file.decrypt("")
-
-        self.text = ''
-        # go through each page and extract text
-        for n in range(0, read_pdf_file.numPages):
-            # creating a page object
-            page = read_pdf_file.getPage(n)
-            # extracting text from page
-            self.text = self.text + " " + page.extractText()
         self.text_length = len(self.text)
-        opened_file.close()
 
         # The chase statement pdf document is broken down into these sections.
         # The header is not included.
@@ -55,12 +52,12 @@ class Pdf:
         self.remove_sections_not_in_the_text()  # from document_sections
 
     # ----------------------------------------------------------------------------------------------------------------
-    # Gate to Withdrawals class methods. This functions is related to only withdrawals info.
+    # Gate to Withdrawals class methods. This function is related to only withdrawals' info.
     def get_withdrawals(self):
         withdrawals_section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
         return Withdrawals(withdrawals_section)
 
-    # Gate to TransactionDetail class methods. This functions is related to only transaction details info in personal
+    # Gate to TransactionDetail class methods. This function is related to only transaction details info in personal
     # bank account.
     def get_transaction_detail(self):
         transaction_detail_section = self.get_desired_section("TRANSACTION DETAIL")

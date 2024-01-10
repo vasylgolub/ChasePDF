@@ -41,6 +41,7 @@ class Helper:
 
     # -------------------------------International transactions-------------------------------------------------
 
+
     @staticmethod
     def get_string_without_Exchg_Rte_text(string):
         exchange_rate_sub_text = Helper.extract_exchange_rate_info(string)

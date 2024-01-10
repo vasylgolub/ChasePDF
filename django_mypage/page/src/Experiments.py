@@ -1,10 +1,11 @@
-from django_mypage.page.src.pdf import Pdf
+# from .pdf import Pdf
+from pdfreader import PDFDocument, SimplePDFViewer
 
 import pickle
-from django_mypage.page.src.list_of_files_from_directory import ListOfFilesFromDirectory
+# from .list_of_files_from_directory import ListOfFilesFromDirectory
 import textwrap
 from PyPDF2 import PdfFileReader
-from django_mypage.page.src.file_rename import FileToRename
+# from .file_rename import FileToRename
 from pathlib import Path
 import os
 import re
@@ -15,6 +16,29 @@ from decimal import Decimal
 # from .withdrawals_and_transactions.extractor import Extractor
 # from .tools.directory_with_files_to_rename import DirectoryWithFilesToRename
 import sys
+
+import os
+
+
+def get_files_in_directory(directory):
+    # Directory path
+    dir_path = directory
+
+    # Get the list of all files and directories
+    dir_files = os.listdir(dir_path)
+
+    return dir_files
+
+# print(get_files_in_directory("/Users/vasylgolub/Desktop/pdfs/2023")[0])
+# fd = open("/Users/vasylgolub/Desktop/pdfs/2023/20231229-statements-7190-.pdf", "rb")
+
+
+
+
+
+
+
+
 
 # def get_total(p):
 #     total = 0
@@ -165,12 +189,6 @@ import sys
 #                     'Auto Glass', 'Juarez Tire Shop', 'East Star Building',
 #                     'U Haul Store', 'Recology', 'Jiffy Lube', 'Harbor Freight Tools']
 #
-# other_stores = ['Paypal', 'Apple', 'Walgreens', 'Target',
-#                 'Costco', 'Coffee', 'Wholefds', 'Venmo', 'T-Mobile',
-#                 'Safeway', 'One65', 'Hawaii', 'Honolulu', 'Starbucks',
-#                 'IN N Out', 'Tpumps', 'Oasis', 'Vegan Picnic', 'Best Buy', 'Via', "Como", "Porlezza"]
-#
-# objs = get_list_of_objects("/Users/vasylgolub/Desktop/list_of_transactions_2021")
 
 
 
