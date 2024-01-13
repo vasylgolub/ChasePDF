@@ -2,8 +2,8 @@ from pdfreader import SimplePDFViewer
 from colorama import Fore
 import textwrap
 import os
-from .withdrawals_and_transactions.withdrawals.withdrawals import Withdrawals
-from .withdrawals_and_transactions.transactions.transaction_detail import TransactionDetail
+from withdrawals_and_transactions.withdrawals.withdrawals import Withdrawals
+from withdrawals_and_transactions.transactions.transaction_detail import TransactionDetail
 
 # This class is supposed to work on a Chase Bank statement in pdf format.
 # A bank statement is a list of all transactions for a bank account over a set period, usually monthly.
@@ -19,17 +19,16 @@ def get_string_from_pdf_document(opened_file):
 
     return document_string
 
+
 class Pdf:
-    def __init__(self, pdf_file_path, is_personal_account=False):
+    def __init__(self, path_or_file, is_personal_account=False):
         # let's save the path just in case
 
-        if isinstance(pdf_file_path, str):  # If it is a string then it is probably a path to the file
-            self.file_full_path = pdf_file_path
-            self.file_name = os.path.basename(self.file_full_path)
-            self.text = get_string_from_pdf_document(pdf_file_path)
+        if isinstance(path_or_file, str):  # If it is a string then it is probably a path to the file
+            opened_file = open(path_or_file, "rb")
+            self.text = get_string_from_pdf_document(opened_file)
         else:
-            self.text = get_string_from_pdf_document(pdf_file_path.open()) # it's actually not a path to a file. It is a file.
-            print("Inside PDF")
+            self.text = get_string_from_pdf_document(path_or_file) # it's actually not a path to a file. It is a file.
 
 
         self.text_length = len(self.text)
