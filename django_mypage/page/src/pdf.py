@@ -2,22 +2,24 @@ from pdfreader import SimplePDFViewer
 from colorama import Fore
 import textwrap
 import os
-from withdrawals_and_transactions.withdrawals.withdrawals import Withdrawals
-from withdrawals_and_transactions.transactions.transaction_detail import TransactionDetail
+from .withdrawals_and_transactions.withdrawals.withdrawals import Withdrawals
+from .withdrawals_and_transactions.transactions.transaction_detail import TransactionDetail
+
 
 # This class is supposed to work on a Chase Bank statement in pdf format.
 # A bank statement is a list of all transactions for a bank account over a set period, usually monthly.
 
 
-def get_string_from_pdf_document(opened_file):
+def get_list_of_strings_from_pdf_document(opened_file):
 
     viewer = SimplePDFViewer(opened_file)
     document_string = ""  # string from all pages
+    list_of_strings = []
     for canvas in viewer:  # iterate through each page
         page_strings = canvas.strings  # returns a list of strings from a page
-        document_string += "".join(page_strings)
+        list_of_strings += page_strings
 
-    return document_string
+    return list_of_strings
 
 
 class Pdf:
@@ -26,9 +28,13 @@ class Pdf:
 
         if isinstance(path_or_file, str):  # If it is a string then it is probably a path to the file
             opened_file = open(path_or_file, "rb")
-            self.text = get_string_from_pdf_document(opened_file)
+            self.list_of_strings = get_list_of_strings_from_pdf_document(opened_file)
+            text = "".join(self.list_of_strings)
+            self.text = text
         else:
-            self.text = get_string_from_pdf_document(path_or_file) # it's actually not a path to a file. It is a file.
+            self.list_of_strings = get_list_of_strings_from_pdf_document(path_or_file)
+            text = "".join(self.list_of_strings)
+            self.text = text # it's actually not a path to a file. It is a file.
 
 
         self.text_length = len(self.text)
@@ -54,14 +60,17 @@ class Pdf:
 
     # ----------------------------------------------------------------------------------------------------------------
     # Gate to Withdrawals class methods. This function is related to only withdrawals' info.
+    # (Not anymore) - 2024
     def get_withdrawals(self):
+        if "TRANSACTION DETAIL" in self.text:  # If it's personal account text
+            return self.get_transaction_detail()
         withdrawals_section = self.get_desired_section("ATM & DEBIT CARD WITHDRAWALS")
         return Withdrawals(withdrawals_section)
 
     # Gate to TransactionDetail class methods. This function is related to only transaction details info in personal
     # bank account.
     def get_transaction_detail(self):
-        transaction_detail_section = self.get_desired_section("TRANSACTION DETAIL")
+        transaction_detail_section = self.get_transaction_detail_text()
         return TransactionDetail(transaction_detail_section)
     # ----------------------------------------------------------------------------------------------------------------
 
@@ -143,6 +152,14 @@ class Pdf:
         next_section_name = self.document_sections[index_of_next_section]
         end = self.text.find(next_section_name)
         return self.text[start: end]
+
+    # Only for personal accounts
+    def get_transaction_detail_text(self):
+        start = self.text.find("TRANSACTION DETAIL")
+        end = self.text.rfind("Ending Balance") + 14
+        ending_balance_total_text = self.text[end: end+20]
+        ending_balance_total_text = ending_balance_total_text[:ending_balance_total_text.rfind('.')+3]
+        return self.text[start: end] + " " + ending_balance_total_text
 
     def get_count_of_occurrences(self, target_str, text=None):
         if text is None:
