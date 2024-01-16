@@ -66,9 +66,16 @@ class Extractor:
         return "0000"  # Meaning that there is no 4 digit card number in the description.
 
     def get_store(self, string):
-        pos_4_digits = string.rfind(self.last_4_digits)
-        pos_second_date = string.rfind(self.date[1])
-        end = pos_4_digits
+        if self.date[1] != "0":
+            pos_second_date = string.rfind(self.date[1])
+        else:
+            pos_second_date = string.rfind(self.date[0])
+
+        if self.last_4_digits == "0000":  # 0000 meaning that there is no 4-digit number of the Card
+            end = string.rfind(str(self.get_amount()))
+        else:
+            end = string.rfind(self.last_4_digits)
+
         if "Card" in string:
             end = end - 5
         return string[pos_second_date+5: end].strip()

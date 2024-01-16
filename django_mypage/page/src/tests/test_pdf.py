@@ -1,4 +1,3 @@
-
 from ..pdf import Pdf
 from ..withdrawals_and_transactions.withdrawals.withdrawals_text_cleaner import WithdrawalsTextCleaner
 from ..withdrawals_and_transactions.extractor import Extractor
