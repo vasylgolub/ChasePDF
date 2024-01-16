@@ -26,10 +26,13 @@ def get_negative_sign():  # Alternate between '-' and ''
     return negative_sign
 
 
+def another_page(request):
+    return render(request, 'page/anotherpage.html')
+
+
 
 def index(request):
     pdf_statements = Statement()
-
 
     if request.method == 'POST':
 
@@ -55,7 +58,7 @@ def index(request):
                 # example of what transaction date returns: ['01/31', '01/30']
                 # One date tells when the purchase took place. The other date tells when the charge on the
                 # account was made.
-                mmdd = transaction.date[1].replace('/', '-')  # Ex: dd/dd -> dd-dd
+                mmdd = transaction.date[0].replace('/', '-')  # Ex: dd/dd -> dd-dd
 
                 mmddyyyy = get_only_month_and_year(date_in_string, just_year=True) + '-' + mmdd
                 current_object = Statement.objects.get(uploaded_statement_file=date_in_string)
