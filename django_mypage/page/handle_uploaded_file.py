@@ -1,5 +1,6 @@
 from .src.useful_funcs import *
 from .src.pdf import Pdf
+from .src.withdrawals_and_transactions.transactions.transaction_detail import TransactionDetail
 
 
 class HandleUploadedFile:
@@ -11,7 +12,11 @@ class HandleUploadedFile:
 
     def get_transactions(self):
         result = []
-        list_of_transactions_in_string = self.opened_pdf.get_withdrawals().list_of_withdrawals
+        if isinstance(self.opened_pdf.get_withdrawals(), TransactionDetail):
+            list_of_transactions_in_string = self.opened_pdf.get_transaction_detail().list_of_transactions
+        else:
+            list_of_transactions_in_string = self.opened_pdf.get_withdrawals().list_of_withdrawals
+
         for transaction_string in list_of_transactions_in_string:
             extractor_of_each_field = Extractor(transaction_string)
             result.append(extractor_of_each_field)
