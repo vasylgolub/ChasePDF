@@ -1,10 +1,14 @@
 # from .pdf import Pdf
+from useful_funcs import Extractor
+
+from pdf import Pdf
+from withdrawals_and_transactions.transactions.transaction_detail import TransactionDetail
+from withdrawals_and_transactions.withdrawals.withdrawals import Withdrawals
 from pdfreader import PDFDocument, SimplePDFViewer
 
 import pickle
 # from .list_of_files_from_directory import ListOfFilesFromDirectory
 import textwrap
-from PyPDF2 import PdfFileReader
 # from .file_rename import FileToRename
 from pathlib import Path
 import os
@@ -26,14 +30,19 @@ def get_files_in_directory(directory):
 
     # Get the list of all files and directories
     dir_files = os.listdir(dir_path)
-
     return dir_files
 
 # print(get_files_in_directory("/Users/vasylgolub/Desktop/pdfs/2023")[0])
 # fd = open("/Users/vasylgolub/Desktop/pdfs/2023/20231229-statements-7190-.pdf", "rb")
+# print(fd.name)
+p = Pdf("/Users/vasylgolub/Desktop/personal-pdfs/2023/20230215-statements-1222-.pdf")
+b = Pdf("/Users/vasylgolub/Desktop/pdfs/2023/20231229-statements-7190-.pdf")
 
 
-
+p_object = p.get_transaction_detail()
+print(p_object.whole_text)
+print(p_object.beginning_balance)
+print(p_object.total_sum_transactions)
 
 
 
