@@ -26,8 +26,6 @@ def get_negative_sign():  # Alternate between '-' and ''
     return negative_sign
 
 
-def another_page(request):
-    return render(request, 'page/anotherpage.html')
 
 
 
