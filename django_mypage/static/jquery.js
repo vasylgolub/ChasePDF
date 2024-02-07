@@ -1,9 +1,30 @@
-$(
-  function(){
-    $("#checkAll").click(function(){$('input:checkbox').not(this).prop('checked', this.checked);});
-  }
+$(function(){
+    $(':checkbox').change(function(){
 
-);
+         if ($(this).is(':checked')) {
+            $('#remove_btn').attr('class', 'button-83 btn btn-primary btn-sm')
+          }
+         else{
+             $('#remove_btn').attr('class', 'button-83 btn btn-primary btn-sm disabled')
+         }
+
+    });
+});
+
+$(function(){
+    $("#checkAll").click(function(){
+        $('input:checkbox').not(this).prop('checked', this.checked);
+
+    });
+});
+
+
+
+
+
+
+
+
 
 
 $(function(){
@@ -26,6 +47,8 @@ $(function(){
                 $("#Add").attr('value',  array);
             });
     });
+
+
 
 
 $(function(){

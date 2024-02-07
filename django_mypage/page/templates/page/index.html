@@ -90,15 +90,13 @@
 {#                 <button class="btn" name="remove_statement" role="button">Remove selected statements</button>#}
 {#            </div>#}
 
-            <div class="d-grid gap-2 my-2">
+{#          BUTTONS#}
+            <div class="container">
+            <div class="d-grid my-2 gap-2">
                 <button class="button-83 btn btn-primary btn-sm" name="view_statements" role="button">View transactions of selected statements</button>
-                {% if list_statements %}
-                    <button class="button-83 btn btn-primary btn-sm" name="remove_statement" role="button">Remove selected statements</button>
-                {% else %}
-                    <button class="button-83 btn btn-primary btn-sm disabled" name="remove_statement" role="button">Remove selected statements</button>
-                {% endif %}
+                <button class="button-83 btn btn-primary btn-sm disabled" id="remove_btn" name="remove_statement" role="button">Remove selected statements</button>
             </div>
-    </div>
+            </div>
 
 </form>
 
