@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     {% load static %}
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}" />
@@ -13,82 +14,61 @@
 </head>
 
 
-<body>
+<body style="background-color: #a4a4c5; opacity: 0.8; background-image:  linear-gradient(135deg, #939db1 25%, transparent 25%), linear-gradient(225deg, #939db1 25%, transparent 25%), linear-gradient(45deg, #939db1 25%, transparent 25%), linear-gradient(315deg, #939db1 25%, #a4a4c5 25%); background-position:  5px 0, 5px 0, 0 0, 0 0; background-size: 5px 5px; background-repeat: repeat;">
     <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
 
-{#    <div class="pos-f-t">#}
-{#  <div class="collapse" id="navbarToggleExternalContent">#}
-{#    <div class="bg-dark p-4">#}
-{#      <h5 class="text-white h4">Collapsed content</h5>#}
-{#      <span class="text-muted">Toggleable via the navbar brand.</span>#}
-{#    </div>#}
-{#  </div>#}
-{#  <nav class="navbar navbar-dark bg-dark">#}
-{#    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">#}
-{#      <span class="navbar-toggler-icon"></span>#}
-{#    </button>#}
-{#  </nav>#}
-{#</div>#}
-    <div class="container-fluid border" style="background-color: #1dcaf0">
-            <form enctype="multipart/form-data" action="{% url 'page:index' %}" method="post" class="form-group">
-                <div class="d-grid">
-                    {% csrf_token %}
-                    {{ form }}
-{#                    <div class="container ">#}
-                        <input class="btn btn-primary btn-sm my-2" type="submit" value="Submit">
-{#                    </div>#}
-                </div>
-            </form>
-    </div>
 
+
+
+{#    File Upload#}
+    <div class="container">
+        <div class="container-fluid" >
+                <form enctype="multipart/form-data" action="{% url 'page:index' %}" method="post" class="form-group">
+                    <div class="d-grid">
+                        {% csrf_token %}
+                        {{ form }}
+                        <input class="btn btn-primary btn-sm my-2" type="submit" value="Submit">
+                    </div>
+                </form>
+        </div>
+    </div>
 
 <br>
 
+{#    List of uploaded files#}
+    <div class="container">
 
-<form action="{% url 'page:result' %}" method="post" >
-    {% csrf_token %}
-{#<div class="container-fluid border border-1 border-dark mb-2">#}
-    <div >
-        <table>
-            <tr>
-              {% if list_statements %}
-                  <th>Uploaded Bank Statements:</th>
-              {% else %}
-                  <th>Uploaded Bank Statements: NONE</th>
-              {% endif %}
-            </tr>
-            {% if list_statements %}
-{#                <div class="container border border-3 p-2" style="background-color: #1dcaf0">#}
-{#                    <tr>#}
-{#                        <td class="select_all">Select All</td>#}
-{#                        <td class="check-b0x"><input type="checkbox" id="checkAll" value="select all"></td>#}
-{#                    </tr>#}
-                    <div class="form-check">
-                        <label class="select_all form-check-label" for="flexCheckDefault"> Select All</label>
-                        <input class="check-b0x form-check-input" type="checkbox" value="" id="checkAll" value="select all">
+    <form action="{% url 'page:result' %}" method="post" id="selezionatore">
+        {% csrf_token %}
+            <div class="container">
+                {% if list_statements %}
+                    <label>Uploaded Bank Statements:</label>
+                {% else %}
+                    <label>No bank statements have been uploaded</label>
+                {% endif %}
+            </div>
+
+            <table>
+                {% if list_statements %}
+                    <div class="container border border-2" style="background-color: rgba(210, 210, 210, 0.5)">
+                        <div class="form-check col-xs-3 border-bottom border-2 border-light">
+                            <label class="select_all form-check-label" for="checkAll">Select All</label>
+                            <input class="check-b0x checkbox form-check-input" type="checkbox" id="checkAll"/>
+                        </div>
+
+
+                            {% for i in list_statements %}
+                                <div class="form-check">
+                                    <label class="name">{{i}}</label>
+                                    <input class="check-b0x checkbox form-check-input" type="checkbox" name="boxes"  value="{{i}}"/>
+                                </div>
+                            {% endfor %}
+
                     </div>
-{#                </div>#}
-                    {% for i in list_statements %}
-                        <tr>
-                          <td class="name">{{i}}</td>
-                          <td class="check-b0x">
-                              <input type="checkbox" name="boxes" value="{{i}}">
-                          </td>
-                        </tr>
-                    {% endfor %}
 
-            {% endif %}
-        </table>
-    </div>
+                {% endif %}
+            </table>
 
-    <div class="container-fluid border border-1 border-dark">
-{#        <div class="row">#}
-{#            <div class="col-lg">#}
-{#                <button class="button-83"  name="view_statements" role="button">View transactions of selected statements</button>#}
-{#            </div>#}
-{#            <div class="col-lg">#}
-{#                 <button class="btn" name="remove_statement" role="button">Remove selected statements</button>#}
-{#            </div>#}
 
 {#          BUTTONS#}
             <div class="container">
@@ -98,9 +78,9 @@
             </div>
             </div>
 
-</form>
+    </form>
+</div>
 
-{#style="white-space: nowrap;"#}
 
 </body>
 </html>
