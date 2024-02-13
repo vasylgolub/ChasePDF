@@ -11,6 +11,8 @@ $(function(){
     });
 });
 
+
+
 $(function(){
     $("#checkAll").click(function(){
         $('input:checkbox').not(this).prop('checked', this.checked);
@@ -51,24 +53,26 @@ $(function(){
 
 
 
+// Typed key will be searched in each text in the list and highlighted if matched
 $(function(){
-     $("#kw").keyup(
-          function(){
-              typed_text = $(this).val();
+    $("#kw").keyup(
+        function(){
+        typed_text = $(this).val().toLowerCase();
+            $('#tr_transactions #description').each(function() {
+                var match = $(this).html().toLowerCase().indexOf(typed_text);
 
-                $('#tr_transactions #description').each(function() {
-                  var match = $(this).html().toLowerCase().indexOf(typed_text);
-                  if (match > -1){
-                      $(this).addClass("highlightable")
-                  }else{
-                      $(this).removeClass("highlightable")
-                  }
-                  if (typed_text == ""){
-                      $(this).removeClass("highlightable")
-                  }
-
+                if (match > -1){
+                    $('table').removeClass('table-striped')
+                    $(this).addClass("highlightable");
+                }else{
+                    $(this).removeClass("highlightable");
                 }
-                );
-          }
-      )}
+                    if (typed_text == ""){
+                    $(this).removeClass("highlightable");
+                    $('table').addClass('table-striped')
+            }
+
+            });
+        }
+    )}
 );
