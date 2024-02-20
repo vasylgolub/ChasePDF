@@ -1,106 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<style>
-        th, td {
-            border: 1px solid black;
-            padding:4px 6px;
-                }
-
-    /* Revert CSS style of target element and its children */
-    .reset-style, .reset-style * {
-        all: revert;
-    }
-</style>
-
 <head>
+
+
     <meta charset="UTF-8">
-{#     <meta name="viewport">#}
-{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">#}
-    <title>result of upload</title>
     {% load static %}
+    <title>result of upload</title>
+
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
     <script src="{% static 'jquery-3.6.2.min.js' %}"></script>
     <script src="{% static 'jquery.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}" />
+{#    This link is related to the script below#}
+{#    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css'>#}
+
+
     <style>
-        .highlightable{background-color: rgba(78, 197, 100, 0.6);}
-        .right_side{position: fixed; float: right}
+        .btn{margin-left:10px;}
+        nav {
+
+            background: rgba(0,0,0, 0.6);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+
+        }
+
+        div.halfOpacity {
+            opacity: 0.8 !important;
+            // or background-color:transparent;
+
+        }
+
+
+
     </style>
 
 
 </head>
 
 
-    <body>
-        {% include 'navbar.html' %}
-        <h1>{{ text }}</h1>
 
-        <div style="display: flex">
-            <div>
-                {% if list_of_transactions %}
-                {% include 'table.html' %}
-                {% endif %}
-            </div>
-            <div class="contenuto" style="margin-right: 100px">
-                 <div style="position: fixed;">
-                    <form action="{% url 'page:result' %}" method="post">
-                        {% csrf_token %}
-                        <div class="buttons">
-<!--                            pass hidden information to the view-->
-                            {% if selected_statements_ids%}
-                                {% for i in selected_statements_ids %}
-                                    <input type="hidden" name="alist_of_ids" value={{i}} />
-                                {% endfor %}
-                            {%endif%}
-                            <button class="button-83" name="sort" value="amount">Sort by Amount</button>
-                            <br>
-                            <button class="button-83" name="sort" value="description">Sort by Description</button>
-                            <br>
-                            <button class="button-83" name="description_group" id="dg">Group by Description</button>
-                        </div>
-                    </form>
-
-                     <form action="{% url 'page:result' %}" method="post">
-                         {% csrf_token %}
-<!--                         pass hidden information to the view-->
-                         {% if selected_statements_ids%}
-                            {% for i in selected_statements_ids %}
-                                <input type="hidden" name="alist_of_ids" value={{i}} />
-                            {% endfor %}
-                        {%endif%}
-                         <div class="mini_box">
-                             <input type="text" name="keyword" id="kw" class="search_text"
-                                   placeholder="search/select" autocorrect="off" autocomplete="off">
-                             <br>
-                             <button class="button-83" id="Add" name="add_to_table" value=""
-                                     title="Add selected transactions to new table.">
-                                 Add
-                             </button>
-                         </div>
-                     </form>
-
-                     <form action="{% url 'page:result' %}" method="post">
-                         {% csrf_token %}
-<!--                         pass hidden information to the view-->
-                         {% if selected_statements_ids%}
-                            {% for i in selected_statements_ids %}
-                                <input type="hidden" name="alist_of_ids" value={{i}} />
-                            {% endfor %}
-                        {%endif%}
-                         <button class="button-83" name="empty_table" value="empty">Empty Second Table</button>
-                     </form>
+{#<body style="padding-top: 80px;">#}
+<body style="padding-top: 80px; background-color: #a4a4c5; opacity: 0.8; background-image:  linear-gradient(135deg, #939db1 25%, transparent 25%), linear-gradient(225deg, #939db1 25%, transparent 25%), linear-gradient(45deg, #939db1 25%, transparent 25%), linear-gradient(315deg, #939db1 25%, #a4a4c5 25%); background-position:  5px 0, 5px 0, 0 0, 0 0; background-size: 5px 5px; background-repeat: repeat;">
 
 
+
+{#    <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>#}
+{#The dropdown in 5.3.2 not working with above bootstrap.js file#}
+    <script defer src='https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js'></script>
+
+
+
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top d-none d-sm-block" id="nav_b">
+        <div class="container-fluid row g-3">
+            <a href="/index" class="bi bi-house btn btn-sm btn-outline-light col-auto"  role="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16"><path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753"/></svg>
+                Home Page
+            </a>
+
+{#            <div class="input-group">#}
+                <div class="col float-end text-end">
+                    {% include 'dropdown_menu.html' %}
                 </div>
-            </div>
 
-            <div class="contenuto" style="margin-left: 80px">
-                {% if list_of_selected_transactions %}
-                {% include 'table2.html' %}
-                {% endif %}
-            </div>
+                <div class="col-auto">
+                    {% include 'select_add.html' %}
+                </div>
+
+                <div class="col-auto">
+                    {% include 'empty_second_table.html' %}
+                </div>
+{#            </div>#}
+
+        </div>
+    </nav>
 
 
-         </div>
-    </body>
+
+{#<div class="row">#}
+{#   <div class="col-lg-12">Item1</div>#}
+{#   <div class="col-lg-12">Item2</div>#}
+{#   <div class="col-lg-12">Item3</div>#}
+{#</div>#}
+
+
+
+{#                 <form action="{% url 'page:result' %}" method="post">#}
+{#                     {% csrf_token %}#}
+{#<!--                         pass hidden information to the view-->#}
+{#                     {% if selected_statements_ids%}#}
+{#                        {% for i in selected_statements_ids %}#}
+{#                            <input type="hidden" name="alist_of_ids" value={{i}} />#}
+{#                        {% endfor %}#}
+{#                    {%endif%}#}
+{#                     <div class="mini_box">#}
+{#                         <input type="text" name="keyword" id="kw" class="search_text"#}
+{#                               placeholder="search/select" autocorrect="off" autocomplete="off">#}
+{#                         <br>#}
+{#                         <button class="button-83" id="Add" name="add_to_table" value=""#}
+{#                                 title="Add selected transactions to new table.">#}
+{#                             Add#}
+{#                         </button>#}
+{#                     </div>#}
+{#                 </form>#}
+
+{#                 <form action="{% url 'page:result' %}" method="post">#}
+{#                     {% csrf_token %}#}
+{#<!--                         pass hidden information to the view-->#}
+{#                     {% if selected_statements_ids%}#}
+{#                        {% for i in selected_statements_ids %}#}
+{#                            <input type="hidden" name="alist_of_ids" value={{i}} />#}
+{#                        {% endfor %}#}
+{#                    {%endif%}#}
+{#                     <button class="button-83" name="empty_table" value="empty">Empty Second Table</button>#}
+{#                 </form>#}
+
+
+
+    <div class="container ">
+        <div class="halfOpacity">
+            {% if list_of_transactions %}
+            {% include 'table.html' %}
+            {% endif %}
+        </div>
+
+        <div class="contenuto" style="margin-left: 80px">
+            {% if list_of_selected_transactions %}
+            {% include 'table2.html' %}
+            {% endif %}
+        </div>
+
+
+     </div>
+</body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{##}
+{##}
+{#  <div class="contenuto" style="margin-right: 100px">#}
+{#             <div style="position: fixed;">#}
+{#                <form action="{% url 'page:result' %}" method="post">#}
+{#                    {% csrf_token %}#}
+{#                    <div class="buttons">#}
+{#<!--                            pass hidden information to the view-->#}
+{#                        {% if selected_statements_ids%}#}
+{#                            {% for i in selected_statements_ids %}#}
+{#                                <input type="hidden" name="alist_of_ids" value={{i}} />#}
+{#                            {% endfor %}#}
+{#                        {%endif%}#}
+{#                        <button class="button-83" name="sort" value="amount">Sort by Amount</button>#}
+{#                        <br>#}
+{#                        <button class="button-83" name="sort" value="description">Sort by Description</button>#}
+{#                        <br>#}
+{#                        <button class="button-83" name="description_group" id="dg">Group by Description</button>#}
+{#                    </div>#}
+{#                </form>#}
+{##}
+{#                 <form action="{% url 'page:result' %}" method="post">#}
+{#                     {% csrf_token %}#}
+{#<!--                         pass hidden information to the view-->#}
+{#                     {% if selected_statements_ids%}#}
+{#                        {% for i in selected_statements_ids %}#}
+{#                            <input type="hidden" name="alist_of_ids" value={{i}} />#}
+{#                        {% endfor %}#}
+{#                    {%endif%}#}
+{#                     <div class="mini_box">#}
+{#                         <input type="text" name="keyword" id="kw" class="search_text"#}
+{#                               placeholder="search/select" autocorrect="off" autocomplete="off">#}
+{#                         <br>#}
+{#                         <button class="button-83" id="Add" name="add_to_table" value=""#}
+{#                                 title="Add selected transactions to new table.">#}
+{#                             Add#}
+{#                         </button>#}
+{#                     </div>#}
+{#                 </form>#}
+{##}
+{#                 <form action="{% url 'page:result' %}" method="post">#}
+{#                     {% csrf_token %}#}
+{#<!--                         pass hidden information to the view-->#}
+{#                     {% if selected_statements_ids%}#}
+{#                        {% for i in selected_statements_ids %}#}
+{#                            <input type="hidden" name="alist_of_ids" value={{i}} />#}
+{#                        {% endfor %}#}
+{#                    {%endif%}#}
+{#                     <button class="button-83" name="empty_table" value="empty">Empty Second Table</button>#}
+{#                 </form>#}
+{##}
+{##}
+{#            </div>#}

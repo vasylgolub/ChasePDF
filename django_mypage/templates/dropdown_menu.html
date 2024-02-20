@@ -1,0 +1,23 @@
+{#{% load static %}#}
+{#class="d-flex"#}
+<form  action="{% url 'page:result' %}" method="post">
+        {% csrf_token %}
+<!--    pass hidden information to the view-->
+        {% if selected_statements_ids%}
+            {% for i in selected_statements_ids %}
+                <input type="hidden" name="alist_of_ids" value={{i}} />
+            {% endfor %}
+        {%endif%}
+
+        <div class="dropdown">
+            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Action
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                <li><button class="nav-item dropdown-item" name="sort" value="amount">Sort by Amount</button></li>
+                <li><button class="nav-item dropdown-item" name="sort" value="description">Sort by Description</button></li>
+                <li><button class="nav-item dropdown-item" name="description_group" id="dg">Group by Description</button></li>
+            </ul>
+        </div>
+</form>

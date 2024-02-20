@@ -1,0 +1,20 @@
+<form action="{% url 'page:result' %}" method="post">
+     {% csrf_token %}
+<!--                         pass hidden information to the view-->
+     {% if selected_statements_ids%}
+        {% for i in selected_statements_ids %}
+            <input type="hidden" name="alist_of_ids" value={{i}} />
+        {% endfor %}
+    {%endif%}
+{#    <div class="input-group mb-3">#}
+{#        <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">#}
+{#        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>#}
+{#    </div>#}
+        <div class="input-group">
+            <input class="form-control" type="text" name="keyword" id="kw" placeholder="search/select" autocorrect="off" autocomplete="off">
+            <button class="btn btn-sm btn-primary" id="Add" name="add_to_table" value="" title="Add selected transactions to new table.">Add</button
+        </div>
+ </form>
+
+
+

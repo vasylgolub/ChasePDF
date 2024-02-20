@@ -2,7 +2,6 @@
         .table td.highlightable {
             background-color: rgba(78, 197, 100, 0.6);
         }
-        {#.right_side{position: fixed; float: right}#}
 </style>
 
 {% load static %}
@@ -18,21 +17,21 @@
                 <th scope="col">Amount</th>
             </tr>
         </thead>
-    <tbody>
-        {% for i in list_of_transactions %}
-            <tr id="tr_transactions">
-                {% if i.dcount %}
-                <td>{{i.dcount}}</td>
-                {% else %}
-                <td class="text-nowrap">{{i.date}}</td>
-                {% endif %}
-                <td id="description" value={{i.id}}>{{i.description}}</td>
-                <td>{{ i.amount|floatformat:2 }}</td>
+        <tbody>
+            {% for i in list_of_transactions %}
+                <tr id="tr_transactions">
+                    {% if i.dcount %}
+                    <td>{{i.dcount}}</td>
+                    {% else %}
+                    <td class="text-nowrap">{{i.date}}</td>
+                    {% endif %}
+                    <td id="description" value={{i.id}}>{{i.description}}</td>
+                    <td>{{ i.amount|floatformat:2 }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" class="reset-style text-center">Total</td>
+                <td>{{total|floatformat:2}}</td>
             </tr>
-        {% endfor %}
-        <tr>
-            <td colspan="2" class="reset-style text-center">Total</td>
-            <td>{{total|floatformat:2}}</td>
-        </tr>
-    </tbody>
+        </tbody>
     </table>
