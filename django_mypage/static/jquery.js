@@ -78,6 +78,7 @@ $(function () {
 
 
 // Typed key will be searched in each text in the list and highlighted if matched
+// enable and disable "Add" button
 $(function () {
         $("#kw").keyup(function () {
             typed_text = $(this).val().toLowerCase();
