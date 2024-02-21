@@ -28,10 +28,9 @@ $(function () {
 });
 
 
-
+// display loading icon when the form is submitted
 $(function() {
   $(".fileToUpload").submit(function(event) {
-        // using setTimeout because at the click of the button the form doesn't get submitted
         $('#submit_text').remove();
         $('#submit_file').prop('disabled', true);
 
@@ -40,6 +39,20 @@ $(function() {
       );
   });
 });
+
+
+
+// $(function(){
+//     // $(".description_main_table").change(function(){
+//     //     console.log("ciaoo")
+//     // });
+//     var all = $(".highlightable").map(function()
+//     {
+//         return this.innerHTML;
+//     }).get();
+//     console.log('ciao')
+//     console.log(all);
+// });
 
 
 $(function () {
@@ -66,25 +79,30 @@ $(function () {
 
 // Typed key will be searched in each text in the list and highlighted if matched
 $(function () {
-        $("#kw").keyup(
-            function () {
-                typed_text = $(this).val().toLowerCase();
-                $('#tr_transactions #description').each(function () {
-                    var match = $(this).html().toLowerCase().indexOf(typed_text);
+        $("#kw").keyup(function () {
+            typed_text = $(this).val().toLowerCase();
 
-                    if (match > -1) {
-                        $('table').removeClass('table-striped')
-                        $(this).addClass("highlightable");
-                    } else {
-                        $(this).removeClass("highlightable");
-                    }
-                    if (typed_text == "") {
-                        $(this).removeClass("highlightable");
-                        $('table').addClass('table-striped')
-                    }
+            $('#tr_transactions #description').each(function () {
+                var match = $(this).html().toLowerCase().indexOf(typed_text);
+                if (match > -1) {
+                    $('table').removeClass('table-striped');
+                    $(this).addClass("highlightable");
+                    $('#Add').removeClass('disabled');
+                } else {
+                    $(this).removeClass("highlightable");
 
-                });
+                }
+            });
+            if ($(".highlightable")[0] === undefined) {
+                $('#Add').addClass('disabled');
             }
-        )
+             if (typed_text === "") {
+                    $('.highlightable').removeClass("highlightable");
+                    $('table').addClass('table-striped');
+                    $('#Add').addClass('disabled');
+                }
+
+
+        })
     }
 );
