@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 # from django.http import HttpResponse
 from django.urls import reverse
-from .forms import UploadFileForm
+from .forms import FileFieldForm
 # from .forms import NameForm
 from .handle_uploaded_file import HandleUploadedFile
 from .models import Transaction, Transaction2, Statement
@@ -30,47 +30,45 @@ def get_negative_sign():  # Alternate between '-' and ''
 
 
 def index(request):
-    pdf_statements = Statement()
 
     if request.method == 'POST':
 
-        form = UploadFileForm(request.POST, request.FILES)
+        form = FileFieldForm(request.POST, request.FILES)
         if form.is_valid():
 
-            file = form.cleaned_data['file']
+            files = form.cleaned_data['files']
+            for f in files:
+                uploaded_file = HandleUploadedFile(f)
+                list_of_transactions: list = uploaded_file.get_transactions()
+                # Uploaded file is a bank statement
+                date_in_string = uploaded_file.date_of_the_statement  # Ex: "March 01, 2022"
+                date_in_string = date_in_string.replace(",", "")  # remove comma
 
-            uploaded_file = HandleUploadedFile(file)
-            list_of_transactions: list = uploaded_file.get_transactions()
+                # Write to Statement table
+                pdf_statements = Statement(uploaded_statement_file=date_in_string)
+                pdf_statements.save()
 
-            # Uploaded file is a bank statement
-            date_in_string = uploaded_file.date_of_the_statement  # Ex: "March 01, 2022"
-            date_in_string = date_in_string.replace(",", "")  # remove comma
+                # write each transaction to database: BankStatement
+                for transaction in list_of_transactions:
 
-            # Write to Statement table
-            pdf_statements.uploaded_statement_file = date_in_string
-            pdf_statements.save()
+                    # example of what transaction date returns: ['01/31', '01/30']
+                    # One date tells when the purchase took place. The other date tells when the charge on the
+                    # account was made.
+                    mmdd = transaction.date[0].replace('/', '-')  # Ex: dd/dd -> dd-dd
 
-            # write each transaction to database: BankStatement
-            for transaction in list_of_transactions:
-
-                # example of what transaction date returns: ['01/31', '01/30']
-                # One date tells when the purchase took place. The other date tells when the charge on the
-                # account was made.
-                mmdd = transaction.date[0].replace('/', '-')  # Ex: dd/dd -> dd-dd
-
-                mmddyyyy = get_only_month_and_year(date_in_string, just_year=True) + '-' + mmdd
-                current_object = Statement.objects.get(uploaded_statement_file=date_in_string)
-                transaction = Transaction(date=mmddyyyy,
-                                             description=transaction.store,
-                                             amount=transaction.amount,
-                                             statement_file=current_object)
-                transaction.save()
+                    mmddyyyy = get_only_month_and_year(date_in_string, just_year=True) + '-' + mmdd
+                    current_object = Statement.objects.get(uploaded_statement_file=date_in_string)
+                    transaction = Transaction(date=mmddyyyy,
+                                                 description=transaction.store,
+                                                 amount=transaction.amount,
+                                                 statement_file=current_object)
+                    transaction.save()
 
 
             return HttpResponseRedirect(reverse("page:index"))
         # return render(request, 'page/result.html', {'checked_boxes': selected_pdf_files})
     else:
-        form = UploadFileForm()
+        form = FileFieldForm()
     return render(request, 'page/index.html', {'form': form,
                                                'list_statements': Statement.objects.all()})
 
@@ -102,7 +100,7 @@ def result_page(request):
             else:
                 for each in selected_items:
                     #  From one description we might get more than one ID.
-                    #  Because some of transactions have exactly the description.
+                    #  Because some of the transactions have exactly the description.
                     ids_of_transactions = Transaction.objects.filter(description=each).values('id')
                     for id in ids_of_transactions:
                         matched_transaction = transactions.get(id=id['id'])
