@@ -1,3 +1,4 @@
+import pdfreader
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 # from django.http import HttpResponse
@@ -43,6 +44,10 @@ def index(request):
                 # Uploaded file is a bank statement
                 date_in_string = uploaded_file.date_of_the_statement  # Ex: "March 01, 2022"
                 date_in_string = date_in_string.replace(",", "")  # remove comma
+
+
+                if this_date_is_already_in_db(date_in_string):
+                    continue
 
                 # Write to Statement table
                 pdf_statements = Statement(uploaded_statement_file=date_in_string)
@@ -219,3 +224,9 @@ def get_total_amount(transactions):
         total += transaction.amount
     return total
 
+
+def this_date_is_already_in_db(date_in_string):
+    for each_statements_date in Statement.objects.all():
+        if date_in_string == str(each_statements_date):
+            return True
+    return False
