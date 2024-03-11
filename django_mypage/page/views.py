@@ -39,7 +39,14 @@ def index(request):
 
             files = form.cleaned_data['files']
             for f in files:
-                uploaded_file = HandleUploadedFile(f)
+
+                # if a file is not a PDF kind
+                try:
+                    uploaded_file = HandleUploadedFile(f)
+                except pdfreader.exceptions.ParserException as e:
+                    print(e)
+                    continue
+
                 list_of_transactions: list = uploaded_file.get_transactions()
                 # Uploaded file is a bank statement
                 date_in_string = uploaded_file.date_of_the_statement  # Ex: "March 01, 2022"
